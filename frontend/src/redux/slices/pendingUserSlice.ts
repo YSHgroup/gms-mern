@@ -54,25 +54,20 @@ export const pendingUserSlice = createSlice({
     builder
         .addCase(fetchPendingUser.pending, (state) => {
             state.loading = true; // Set loading state
-            console.log('pending pending: ')
         })
         .addCase(fetchPendingUser.fulfilled, (state, action) => {
-            console.log('pending fulfilled: ', action.payload)
             state.loading = false; // Reset loading state
             state.pendingUsers = action.payload.pendingUser; // Set the fetched users
         })
         .addCase(fetchPendingUser.rejected, (state, action) => {
-            console.log('pending rejected: ', action.payload)
             state.loading = false; // Reset loading state
             state.error = action.error.message; // Set error message
         })
         .addCase(allowPendingUserController.fulfilled, (state, action) => {
             state.pendingUsers = action.payload.pendingUser; // Set error message
-            console.log('pending: ', action.payload)
         })
         .addCase(rejectPendingUserController.fulfilled, (state, action) => {
             state.pendingUsers = action.payload.pendingUser; // Set error message
-            console.log('pending: ', state.pendingUsers, action.payload)
         })}
 })
 

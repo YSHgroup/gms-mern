@@ -6,7 +6,7 @@ export function withAuthRedirect (WrappedComponent: () => JSX.Element) {
     return (props: any) => {
         const user = getCurrentUser()
 
-        if(!!user) {
+        if(!!user.mail) {
             return <Navigate to='/'/>
         }
 

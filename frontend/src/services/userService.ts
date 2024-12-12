@@ -4,9 +4,9 @@ import { getCurrentUser } from "./authService";
 
 export const getPendingUser = async () => {
 
-  const user = JSON.parse(getCurrentUser())
+  const user = getCurrentUser()
   console.log(user);
-  console.log('email:', JSON.parse(getCurrentUser()))
+  console.log('email:', getCurrentUser())
 
   try {
     const res = await axios.get(`api/pending-user/${user.email}`);
@@ -16,6 +16,8 @@ export const getPendingUser = async () => {
         email: user.email,
         department: user.department,
         role: user.role,
+        allowed: user.allowed,
+        rejected: user.rejected
       }));
     return { pendingUser };
   } catch (err) {
@@ -38,7 +40,7 @@ export const allowPendingUser = async (id: string) => {
 
 export const rejectPendingUser = async (id: string) => {
   try {
-    const res = await axios.delete("api/pending-user/" + id);
+    const res = await axios.patch("api/pending-user/" + id);
     toast.success(res.data.msg);
   } catch (error) {
     if (isAxiosError(error))

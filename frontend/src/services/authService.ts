@@ -61,10 +61,10 @@ const getCurrentUser = () => {
 const logout = async (navigate: Function) => {
   // const refreshToken = localStorage.getItem("refresh");
   // await axios.post("/api/auth/logout", { token: refreshToken });
-  navigate('/login')
   localStorage.removeItem("user");
   localStorage.removeItem("token");
   localStorage.removeItem("refresh");
+  navigate('/login')
 };
 
 export { register, login, refresh, getCurrentUser, logout };

@@ -15,7 +15,7 @@ router.get('/:email', async (req: any, res: Response) => {
         console.log(role, user?.department)
 
     const query = queryByRoleWritter(role, user!.department)
-    User.find(query, '_id firstName lastName email department role').then(result => {
+    User.find(query, '_id firstName lastName email department role allowed rejected').then(result => {
         if(!result) {
             res.status(404).json({msg: ['No user']})
         } else {
@@ -40,14 +40,16 @@ router.put('/:id', (req: Request, res: Response) => {
     })
 })
 
-router.delete('/:id', (req: Request, res: Response) => {
+router.patch('/:id', (req: Request, res: Response) => {
     const id = req.params.id
 
-    User.findOneAndDelete({_id: id}).then(result => {
+    User.findOneAndUpdate({_id: id}, {$set: {
+        rejected: true
+    }}).then(result => {
         if(!result) {
             res.status(404).json({msg: ['No user']})
         } else {
-            res.status(204).json({msg: 'A User deleted successfully.'})
+            res.status(200).json({msg: 'A User rejected successfully.'})
         }
     }).catch(err => {
         res.status(500).json({msg: [err.message]})
