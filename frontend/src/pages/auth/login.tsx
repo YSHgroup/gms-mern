@@ -19,28 +19,26 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "@/services/authService";
 import { useNavigate } from "react-router";
+import { Iconify } from "@/components/iconify";
+import { withAuthRedirect } from "./withAuthRedirect";
 
-export default function SlotsSignIn() {
+export default withAuthRedirect(function SlotsSignIn() {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPwd] = React.useState<string>("");
 
   const [showPassword, setShowPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: React.MouseEvent) => {
-    event.preventDefault();
-  };
-  const navigate = useNavigate()
 
+  const navigate = useNavigate()
 
   const loginTrigger = () => login(email, password, navigate)
 
   return (
-    <Box
-      sx={{ height: "100vh", maxHeight: "100vh" }}
-      className="flex items-center"
-    >
-      <Container maxWidth="sm" className="items-center">
-        <Card>
+    // <Box
+    //   sx={{ height: "100vh", maxHeight: "100vh" }}
+    //   className="flex items-center"
+    // >
+      // <Container maxWidth="sm" className="items-center">
+        <Box display="flex" flexDirection="column" alignItems="flex-end">
           <CardContent sx={{ textAlign: "center" }}>
             <Typography
               variant="h4"
@@ -49,29 +47,23 @@ export default function SlotsSignIn() {
             >
               Login
             </Typography>
-            <Typography variant="subtitle1" component="h6" sx={{ top: "50%" }}>
+            <Typography className="py-4 my-2" variant="subtitle1" component="h6" sx={{ top: "50%" }}>
               Welcome, please sign in to continue
             </Typography>
 
             <TextField
-              id="input-with-icon-textfield"
-              label="Email"
+              fullWidth
               name="email"
+              label="Email address"
               type="email"
               required
-              fullWidth
               value={email}
-              onChange={(val) => setEmail(val.target.value)}
               slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountCircle />
-                    </InputAdornment>
-                  ),
-                },
+                inputLabel: {
+                  shrink: true
+                }
               }}
-              variant="outlined"
+              onChange={(val) => setEmail(val.target.value)}
             />
             <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -85,17 +77,8 @@ export default function SlotsSignIn() {
                 onChange={(val) => setPwd(val.target.value)}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOff fontSize="inherit" />
-                      ) : (
-                        <Visibility fontSize="inherit" />
-                      )}
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
                     </IconButton>
                   </InputAdornment>
                 }
@@ -109,6 +92,7 @@ export default function SlotsSignIn() {
               color="info"
               disableElevation
               fullWidth
+              size="large"
               sx={{ my: 2 }}
               onClick={loginTrigger}
             >
@@ -118,8 +102,8 @@ export default function SlotsSignIn() {
               Don't have an account yet?
             </Link>
           </CardContent>
-        </Card>
-      </Container>
-    </Box>
+        </Box>
+    //   </Container>
+    // </Box>
   );
-}
+})

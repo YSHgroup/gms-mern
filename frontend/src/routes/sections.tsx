@@ -67,11 +67,19 @@ export function Router() {
     },
     {
       path: "/login",
-      element: <Login  />,
+      element: (
+        <AuthLayout>
+          <Login />
+        </AuthLayout>
+      )
     },
     {
       path: "/register",
-      element: <Register />,
+      element: (
+        <AuthLayout>
+          <Register />
+        </AuthLayout>
+      ),
     },
     {
       path: '404',

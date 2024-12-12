@@ -66,11 +66,11 @@ const MuiOutlinedInput: Components<Theme>['MuiOutlinedInput'] = {
     }),
     input: {
       '&:-webkit-autofill': {
-          '-webkit-box-shadow': 'none',
-          '-webkit-text-fill-color': 'inherit'
+          'WebkitBoxShadow': 'none',
+          'WebkitTextFillColor': 'inherit'
       },
       '&:-internal-autofill-selected': {
-        'background-color': 'inherit!important'
+        'backgroundColor': 'inherit!important'
       }
   }
   },

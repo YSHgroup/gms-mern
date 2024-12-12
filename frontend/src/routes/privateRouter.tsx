@@ -5,6 +5,6 @@ export default function PrivatePage({component: Component}: {component: () => JS
     const user = getCurrentUser()
     
     return (
-        user? <Component /> : <Navigate to='/login' replace/>
+        user?.email? <Component /> : <Navigate to='/login' replace/>
     )
 }

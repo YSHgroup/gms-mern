@@ -1,11 +1,13 @@
-
 import BtnGroup from "@mui/material/ButtonGroup";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import TableCell from "@mui/material/TableCell";
 import { Button } from "@mui/material";
 import { useAppDispatch } from "@/redux/hooks";
-import { allowPendingUserController, rejectPendingUserController } from "@/redux/slices/pendingUserSlice";
+import {
+  allowPendingUserController,
+  rejectPendingUserController,
+} from "@/redux/slices/pendingUserSlice";
 import { ROLE } from "@/constants/info";
 
 // ----------------------------------------------------------------------
@@ -23,16 +25,15 @@ export function UserTableRow({
   selected,
   onSelectRow,
 }: UserTableRowProps<any>) {
+  const dispatch = useAppDispatch();
 
-  const dispatch = useAppDispatch()
-
-  const allowUser =(id: string) => {
+  const allowUser = (id: string) => {
     // allowPendingUser(id)
-    dispatch(allowPendingUserController(id))
-  }
-  const rejectUser =(id: string) => {
-    dispatch(rejectPendingUserController(id))
-  }
+    dispatch(allowPendingUserController(id));
+  };
+  const rejectUser = (id: string) => {
+    dispatch(rejectPendingUserController(id));
+  };
 
   return (
     <>
@@ -42,14 +43,24 @@ export function UserTableRow({
         </TableCell>
 
         {headList.map((headItem) => (
-          <TableCell key={row[headItem.id]}>{headItem.id == 'role'? ROLE.find(role => role.id === row['role'])?.name : row[headItem.id]}</TableCell>
+          <TableCell key={row[headItem.id]}><>{headItem.id == 'role'? ROLE.find(role => role.id === row['role'])?.name : row[headItem.id]}</></TableCell>
         ))}
+        
         <TableCell align="center">
-          <BtnGroup >
-            <Button size="small" variant="contained" onClick={() => allowUser(row.id)}>
+          <BtnGroup>
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => allowUser(row.id)}
+            >
               Allow
             </Button>
-            <Button size="small" variant="contained" color="error"  onClick={() => rejectUser(row.id)}>
+            <Button
+              size="small"
+              variant="contained"
+              color="error"
+              onClick={() => rejectUser(row.id)}
+            >
               Reject
             </Button>
           </BtnGroup>

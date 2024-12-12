@@ -55,7 +55,7 @@ const refresh = async () => {
 
 const getCurrentUser = () => {
   const user = localStorage.getItem("user")
-  return user?? '{}';
+  return user? JSON.parse(user): {};
 };
 
 const logout = async (navigate: Function) => {
