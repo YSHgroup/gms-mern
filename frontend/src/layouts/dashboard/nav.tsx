@@ -155,7 +155,7 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
                       gap: 2,
                       pr: 1.5,
                       borderRadius: 0.75,
-                      typography: 'body2',
+                      typography: 'body1',
                       fontWeight: 'fontWeightMedium',
                       color: 'var(--layout-nav-item-color)',
                       minHeight: 'var(--layout-nav-item-height)',
@@ -169,11 +169,11 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
                       }),
                     }}
                   >
-                    <Box component="span" sx={{ width: 24, height: 24 }}>
+                    {/* <Box component="span" sx={{ width: 24, height: 24 }}>
                       {item.icon}
-                    </Box>
+                    </Box> */}
 
-                    <Box component="span"  flexGrow={1}>
+                    <Box component="span" flexGrow={1}>
                       {item.title}
                     </Box>
 

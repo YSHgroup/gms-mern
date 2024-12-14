@@ -67,6 +67,7 @@ router.post("/login", (req: Request, res: Response) => {
         req.body.password,
         result!.password
       );
+
       if (verifyPassword) {
         try {
           const token = await sign(
@@ -84,7 +85,9 @@ router.post("/login", (req: Request, res: Response) => {
           );
 
           result.refreshToken = refreshToken;
-          await result!.save();
+          console.log('saved : ', result)
+          const saved = await result!.save();
+
 
           res.status(200).json({
             user: {
@@ -96,6 +99,7 @@ router.post("/login", (req: Request, res: Response) => {
           });
         } catch (err) {
           if (err) {
+            console.log(err)
             res.status(500).json({ errorType: "Internal", msg: [err] });
           }
         }

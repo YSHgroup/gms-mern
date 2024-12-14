@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   Button,
-  Container,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -9,14 +8,10 @@ import {
   InputAdornment,
   IconButton,
   Box,
-  Card,
   CardContent,
   Typography,
   Link
 } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "@/services/authService";
 import { useNavigate } from "react-router";
 import { Iconify } from "@/components/iconify";

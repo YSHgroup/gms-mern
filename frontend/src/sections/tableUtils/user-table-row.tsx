@@ -57,7 +57,7 @@ export function UserTableRow({
             <Button
               size="small"
               className="pointer-events-none"
-              variant="contained"
+              variant="text"
               color="primary"
             >
               Allowed
@@ -68,7 +68,7 @@ export function UserTableRow({
             <Button
               size="small"
               className="pointer-events-none"
-              variant="contained"
+              variant="text"
               color="error"
             >
               Rejected

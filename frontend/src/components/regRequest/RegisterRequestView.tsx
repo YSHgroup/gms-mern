@@ -50,7 +50,7 @@ export default function RegRequestView() {
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}> 
         <Typography variant="h4" flexGrow={1}>
-          Pending Users
+          User list
         </Typography>
       </Box>
 

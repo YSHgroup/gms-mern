@@ -5,8 +5,6 @@ import { getCurrentUser } from "./authService";
 export const getPendingUser = async () => {
 
   const user = getCurrentUser()
-  console.log(user);
-  console.log('email:', getCurrentUser())
 
   try {
     const res = await axios.get(`api/pending-user/${user.email}`);
