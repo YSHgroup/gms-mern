@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { authRouter } from "./routes/user/auth";
 import { pendingUserRouter } from "./routes/user/pendingUser";
 import { authVerify } from "./middleware/authVerify";
+import { announcementRouter } from "./routes/announcement";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -30,6 +31,7 @@ app.use(cors())
 
 app.use('/api/auth', authRouter)
 app.use('/api/pending-user', authVerify, pendingUserRouter)
+app.use('/api/announcement', authVerify, announcementRouter);
 
 app.listen(port, () => {
     console.log('=========================================')

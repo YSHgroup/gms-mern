@@ -10,6 +10,7 @@ import { DashboardLayout } from '@/layouts/dashboard';
 import RegisterRequest from '@/pages/admin/RegisterRequest';
 import PrivatePage from './privateRouter';
 import EmptyPage from '@/pages/EmptyPage';
+import AnnouncementPortal from '@/pages/admin/AnnouncementPortal';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +54,7 @@ export function Router() {
         { path: 'blog', element: <BlogPage /> },
         { path: 'reg-request', element: <PrivatePage component={RegisterRequest}/>},
         { path: 'grant-request', element: <PrivatePage component={EmptyPage}/>},
-        { path: 'announcement', element: <PrivatePage component={EmptyPage}/>},
+        { path: 'announcement-portal', element: <PrivatePage component={AnnouncementPortal}/>},
         { path: 'apply', element: <PrivatePage component={EmptyPage}/>}
       ],
     },

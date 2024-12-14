@@ -22,11 +22,11 @@ export const navData = [
     title: 'Registry request',
     path: '/reg-request',
     icon: icon('ic-cart'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
+    // info: (
+    //   <Label color="error" variant="inverted">
+    //     +3
+    //   </Label>
+    // ),
   },
   {
     title: 'Apply',
@@ -34,8 +34,8 @@ export const navData = [
     icon: icon('ic-blog'),
   },
   {
-    title: 'Announcement',
-    path: '/announcement',
+    title: 'Announcement Portal',
+    path: '/announcement-portal',
     icon: icon('ic-lock'),
   }
 ];

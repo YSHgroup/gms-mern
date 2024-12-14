@@ -125,12 +125,10 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
       
         <Typography variant="h4">
           Grant
-
         </Typography>
 
         <Typography variant="h4">
           {slots?.topArea}
-
         </Typography>
       </Grid2>
 
