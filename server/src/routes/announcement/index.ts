@@ -1,3 +1,4 @@
+import { upload } from "@/middleware/multer";
 import { Announcement } from "@/models/announcementModel";
 import { queryByRoleWritter } from "@/utils/roleAprpovalQuery";
 import { Request, Response, Router } from "express";
@@ -17,14 +18,15 @@ router.get("/", async (req: any, res: Response) => {
   });
 });
 
-router.post("/", async (req: any, res: Response) => {
+router.post("/", upload.single('image'), async (req: any, res: Response) => {
   if(req.tokenUser.role !== "super_admin") {
     res.status(403).json({ msg: ["You do not have autherization for this route."] })
     return
   }
 
-  const data = req.body;
+  const data = JSON.parse(req.body.data);
   const newAnnouncement = new Announcement(data);
+  if(req.file) newAnnouncement.imageUrl = req.file.path;
 
   try {
     const result = await newAnnouncement.save();

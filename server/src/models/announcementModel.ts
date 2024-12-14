@@ -14,9 +14,9 @@ const announcementShema = new Schema(
         type: String,
         required: true,
     },
-    image: {
+    imageUrl: {
         type: String
     }
   })
   
-export const Announcement = model("Announcement", announcementShema);
+export const Announcement = model("announcement", announcementShema);
