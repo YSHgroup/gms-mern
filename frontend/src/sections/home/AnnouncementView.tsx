@@ -1,17 +1,29 @@
-import { Grid2 as Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import React from "react";
 
-import { _tasks, _posts, _timeline } from '@/_mock';
-import { DashboardContent } from '@/layouts/dashboard';
-import { AnnouncementBox } from './parts/announcementBox';
+import { Grid2 as Grid } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
-import img from '../../../public/img(3).webp'
+import { _tasks, _posts, _timeline } from "@/_mock";
+import { DashboardContent } from "@/layouts/dashboard";
+import { AnnouncementBox } from "./parts/announcementBox";
+
+import { getAnnouncements } from "@/services/announcementServices";
+import { Announcement } from "@/types/announcement";
+
+import text from "./parts/mockText.json";
 
 // ----------------------------------------------------------------------
 
 export default function AnnouncementView() {
+  const [announcements, setAnnouncements] = React.useState<Announcement[]>();
 
-  const text = 'These users can log into their account using their unique institute email id as username and their own password. These users can access (read) their own database only. They can enter a new grant request but can’t make changes in older one. If they want to make change, they will have to cancel the previous grant till it is pending and request for a new one. Limits on request will be there based on the roles.'
+  React.useEffect(() => {
+    getAnnouncements()
+      .then((res) => {
+        console.log('Announcements fetched:', res.data);
+        setAnnouncements(res.data)})
+      .catch((err) => console.error('Error fetching announcements:', err));
+  }, []);
 
   return (
     <DashboardContent maxWidth="xl">
@@ -21,12 +33,22 @@ export default function AnnouncementView() {
 
       <Grid container spacing={3}>
         <Grid size={12}>
-          <AnnouncementBox
-          title="Announcement"
-          img={img}
-          text={text}
-          date='2024-12-10'
-          ></AnnouncementBox>
+          {
+            announcements?.length === 0? (
+              <Typography>No announcements available.</Typography>
+            ) : (
+              announcements?.map((ann) => (
+                <AnnouncementBox
+                  key={ann._id}
+                  className="my-4"
+                  title={ann.title}
+                  img={ann.imageUrl}
+                  text={ann.content}
+                  date={ann.date}
+                />
+              ))
+            )
+          }
         </Grid>
       </Grid>
     </DashboardContent>

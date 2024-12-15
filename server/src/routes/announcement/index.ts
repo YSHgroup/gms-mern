@@ -1,13 +1,15 @@
+import express from 'express'
 import { upload } from "@/middleware/multer";
 import { Announcement } from "@/models/announcementModel";
 import { queryByRoleWritter } from "@/utils/roleAprpovalQuery";
 import { Request, Response, Router } from "express";
+import path from "path";
 
 const router = Router();
 
-router.get("/", async (req: any, res: Response) => {
+router.get("/", (req: any, res: Response) => {
 
-  const user = await Announcement.find().then((announcements) => {
+  Announcement.find().then((announcements) => {
     if (!announcements) {
       res.status(404).json({ msg: ["No announcements"] });
     } else {
@@ -26,7 +28,7 @@ router.post("/", upload.single('image'), async (req: any, res: Response) => {
 
   const data = JSON.parse(req.body.data);
   const newAnnouncement = new Announcement(data);
-  if(req.file) newAnnouncement.imageUrl = req.file.path;
+  if(req.file) newAnnouncement.imageUrl = 'images/' + req.file.filename;
 
   try {
     const result = await newAnnouncement.save();

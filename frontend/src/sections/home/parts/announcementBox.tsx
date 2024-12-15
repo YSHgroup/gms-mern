@@ -12,7 +12,7 @@ import { Grid2, Stack } from "@mui/material";
 
 type Props = CardProps & {
   title: string;
-  img: string;
+  img?: string;
   color?: ColorType;
   text: string;
   date: string;
@@ -47,7 +47,7 @@ export function AnnouncementBox({
       }}
       {...other}
     >
-      <Grid2 container spacing={2}>
+      <Grid2 container spacing={2} justifyContent={'center'}>
         {/* <Grid2 size={{ lg: 4, xs: 12 }}>
           <Box sx={{ width: "100%", height: "100%", mb: 3 }}>
             <img src={img} alt={title} loading="lazy" className="" />
@@ -70,15 +70,17 @@ export function AnnouncementBox({
         </Grid2> */}
 
         <Stack spacing={2} className="items-center">
-          <Box
-            sx={{
-              width: { xs: "100%", sm: "70%", md: "40%" },
-              height: "100%",
-              mb: 3,
-            }}
-          >
-            <img src={img} alt={title} loading="lazy" className="" />
-          </Box>
+          {img? (
+            <Box
+              sx={{
+                width: { xs: "100%", sm: "70%", md: "40%" },
+                height: "100%",
+                mb: 3,
+              }}
+            >
+              <img src={`${import.meta.env.VITE_BASE_URL}${img}`} alt={title} loading="lazy" className="" />
+            </Box>
+          ): <></>}
 
           <Box
             sx={{

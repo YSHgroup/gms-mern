@@ -7,6 +7,7 @@ import { authRouter } from "./routes/user/auth";
 import { pendingUserRouter } from "./routes/user/pendingUser";
 import { authVerify } from "./middleware/authVerify";
 import { announcementRouter } from "./routes/announcement";
+import path from "path";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -28,6 +29,8 @@ mongoose
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(cors())
+
+app.use('/images', express.static(path.resolve(__dirname, "..", "public", "images")))
 
 app.use('/api/auth', authRouter)
 app.use('/api/pending-user', authVerify, pendingUserRouter)

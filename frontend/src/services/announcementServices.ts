@@ -14,3 +14,5 @@ export const publishAnnouncement = (data: Announcement, img?: File) => {
         }
     }).then(res => console.log(res)).catch(err => console.log(err));
 }
+
+export const getAnnouncements = () => axios.get('/api/announcement');
