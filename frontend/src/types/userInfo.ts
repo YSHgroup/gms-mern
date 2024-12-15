@@ -17,3 +17,12 @@ export interface PendingUser {
   email: string
   role: string
 }
+
+export interface User {
+  _id: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  department: string;
+  role: string;
+}

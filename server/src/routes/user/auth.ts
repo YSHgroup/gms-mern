@@ -57,7 +57,7 @@ router.post("/login", (req: Request, res: Response) => {
 
   User.findOne({ email: req.body.email })
     .then(async (result) => {
-      if(!result) return 
+      if(!result) throw Error('No such User')
       if(!result.allowed) {
         res.status(400).json({errorType: 'permission', msg: ["It has not yet been approved by the administrator."]})
         return
@@ -70,7 +70,7 @@ router.post("/login", (req: Request, res: Response) => {
 
       if (verifyPassword) {
         try {
-          const token = await sign(
+          const token = sign(
             {
               exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
               email: result?.email,
@@ -78,16 +78,14 @@ router.post("/login", (req: Request, res: Response) => {
             },
             secret_key
           );
-          const refreshToken = await sign(
+          const refreshToken = sign(
             { email: result!.email },
             secret_key,
             { expiresIn: "7d" }
           );
 
           result.refreshToken = refreshToken;
-          console.log('saved : ', result)
-          const saved = await result!.save();
-
+          await result!.save();
 
           res.status(200).json({
             user: {
@@ -103,6 +101,8 @@ router.post("/login", (req: Request, res: Response) => {
             res.status(500).json({ errorType: "Internal", msg: [err] });
           }
         }
+      } else {
+        res.status(400).json({errorType: "bad", msg: ['Incorrect password.']})
       }
     })
     .catch((err) => {

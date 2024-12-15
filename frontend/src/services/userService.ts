@@ -47,3 +47,34 @@ export const rejectPendingUser = async (id: string) => {
       });
   }
 };
+
+export const fetchUserInfo = () => {
+  const user = getCurrentUser();
+  return axios.get(`api/user/${user.email}`);
+}
+
+export const updateProfile = async (data: any) => {
+  const user = getCurrentUser();
+  try {
+    await axios.put(`api/user/${user.email}`, data);
+    toast.success('Profile updated successfully.');
+  } catch (error) {
+    if (isAxiosError(error))
+      error.response?.data.msg.map((str: string) => {
+        toast.error(str);
+      });
+  }
+}
+
+export const changePassword  = async (passwords: any) => {
+  const user = getCurrentUser();
+  try {
+    await axios.put(`api/user/password/${user.email}`, passwords);
+    toast.success('Password changed.');
+  } catch (error) {
+    if (isAxiosError(error))
+      error.response?.data.msg.map((str: string) => {
+        toast.error(str);
+      });
+  }
+}

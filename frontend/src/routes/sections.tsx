@@ -7,10 +7,10 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import { varAlpha } from '@/theme/styles';
 import { AuthLayout } from '@/layouts/auth';
 import { DashboardLayout } from '@/layouts/dashboard';
-import RegisterRequest from '@/pages/admin/RegisterRequest';
 import PrivatePage from './privateRouter';
 import EmptyPage from '@/pages/EmptyPage';
 import AnnouncementPortal from '@/pages/admin/AnnouncementPortal';
+import Profile from '@/pages/Profile'
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ export const BlogPage = lazy(() => import('@/pages/blog'));
 export const UserPage = lazy(() => import('@/pages/user'));
 export const SignInPage = lazy(() => import('@/pages/sign-in'));
 export const ProductsPage = lazy(() => import('@/pages/products'));
+export const Users = lazy(() => import('@/pages/admin/RegisterRequest'));
 export const Page404 = lazy(() => import('@/pages/page-not-found'));
 export const Register = lazy(() => import("@/pages/auth/register"));
 export const Login = lazy(() => import('@/pages/auth/login'));
@@ -52,7 +53,8 @@ export function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'reg-request', element: <PrivatePage component={RegisterRequest}/>},
+        { path: 'profile', element: <PrivatePage component={Profile} />},
+        { path: 'reg-request', element: <PrivatePage component={Users}/>},
         { path: 'grant-request', element: <PrivatePage component={EmptyPage}/>},
         { path: 'announcement-portal', element: <PrivatePage component={AnnouncementPortal}/>},
         { path: 'apply', element: <PrivatePage component={EmptyPage}/>}

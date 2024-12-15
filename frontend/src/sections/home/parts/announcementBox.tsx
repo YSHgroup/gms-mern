@@ -78,7 +78,7 @@ export function AnnouncementBox({
                 mb: 3,
               }}
             >
-              <img src={`${import.meta.env.VITE_BASE_URL}${img}`} alt={title} loading="lazy" className="" />
+              <img src={`${import.meta.env.VITE_BASE_URL}/${img}`} alt={title} loading="lazy" className="" />
             </Box>
           ): <></>}
 

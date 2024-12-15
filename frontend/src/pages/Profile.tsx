@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from '@/config-global';
+import ProfileView from '@/sections/profile/ProfileView';
 
-import RequestView from '@/components/regRequest/RegisterRequestView';
 
 // ----------------------------------------------------------------------
 
@@ -11,10 +11,10 @@ export default function RegisterRequest() {
   return (
     <>
       <Helmet>
-        <title> {`Request - ${CONFIG.appName}`}</title>
+        <title> {`Profile - ${CONFIG.appName}`}</title>
       </Helmet>
 
-      <RequestView />
+      <ProfileView></ProfileView>
     </>
   );
 }

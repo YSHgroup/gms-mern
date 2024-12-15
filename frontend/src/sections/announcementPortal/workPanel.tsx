@@ -2,7 +2,7 @@ import { Grid2 as Grid, Button, styled, Box, TextField } from "@mui/material";
 import { _tasks, _posts, _timeline } from "@/_mock";
 import { CloudUpload } from "@mui/icons-material";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Label } from "@/components/label";
 import { publishAnnouncement } from "@/services/announcementServices";
 
