@@ -56,7 +56,7 @@ export function Router() {
         { path: 'profile', element: <PrivatePage component={Profile} />},
         { path: 'reg-request', element: <PrivatePage component={Users}/>},
         { path: 'grant-request', element: <PrivatePage component={EmptyPage}/>},
-        { path: 'announcement-portal', element: <PrivatePage component={AnnouncementPortal}/>},
+        { path: 'announcement-portal', element: <PrivatePage requiredRole={['super_admin']} component={AnnouncementPortal}/>},
         { path: 'apply', element: <PrivatePage component={EmptyPage}/>}
       ],
     },

@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import pendingUserReducer from "./slices/pendingUserSlice";
-
+import userReducer from './slices/userSlice'
 export const store = configureStore({
   reducer: {
-    pendingUser: pendingUserReducer
+    pendingUser: pendingUserReducer,
+    user: userReducer,
   },
 });
 
