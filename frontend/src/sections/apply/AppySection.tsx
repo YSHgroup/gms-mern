@@ -12,6 +12,8 @@ import { CloudUpload, Publish } from "@mui/icons-material";
 import React from "react";
 import PDFPreview from "@/components/PdfPreviewer";
 import pdf from "../../../public/php_cookbook.pdf";
+import { requestGrant } from "@/services/grantService";
+import { toast } from "react-toastify";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -30,7 +32,8 @@ export default function ApplySection() {
   const [fileUrl, setFileUrl] = React.useState<string>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
-  const imageUpload = (files: FileList | null) => {
+  const upload = (files: FileList | null) => {
+    setLoading(true);
     if (files && files.length > 0) {
       console.log(files);
       setFile(files[0]);
@@ -39,6 +42,21 @@ export default function ApplySection() {
       setFileUrl(filePath);
     }
   };
+
+  const publishApplication = () => {
+    if(!file) {
+      toast.warn('Please select a file to upload')
+      return
+    }
+    if(fileUrl) {
+      URL.revokeObjectURL(fileUrl)
+    }
+    requestGrant(file)
+  }
+
+  React.useEffect(() => {
+    setLoading(false);
+  }, [file])
 
   return (
     <DashboardContent maxWidth="xl">
@@ -79,7 +97,7 @@ export default function ApplySection() {
                 <VisuallyHiddenInput
                   accept="application/pdf"
                   type="file"
-                  onChange={(event) => imageUpload(event.target.files)}
+                  onChange={(event) => upload(event.target.files)}
                 />
               </Button>
             </Grid>
@@ -89,7 +107,7 @@ export default function ApplySection() {
                 display="flex"
                 justifyContent={"center"}
               >
-                <Button variant="contained" startIcon={<Publish />}>
+                <Button variant="contained" startIcon={<Publish />} onClick={publishApplication}>
                   Publish Application
                 </Button>
               </Grid>

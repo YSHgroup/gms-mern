@@ -20,7 +20,7 @@ export const navData = [
   },
   {
     title: 'Registry request',
-    path: '/reg-request',
+    path: '/users',
     icon: icon('ic-cart'),
     // info: (
     //   <Label color="error" variant="inverted">

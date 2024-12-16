@@ -9,6 +9,7 @@ import { authVerify } from "./middleware/authVerify";
 import { announcementRouter } from "./routes/announcement";
 import path from "path";
 import { profileRouter } from "./routes/user/profile";
+import { applicationRouter } from "./routes/grantApplication/application";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -41,6 +42,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/pending-user', authVerify, pendingUserRouter)
 app.use('/api/announcement', authVerify, announcementRouter);
 app.use('/api/user', authVerify, profileRouter);
+app.use('/api/grant-application', authVerify, applicationRouter);
 
 app.listen(port, () => {
     console.log('=========================================')
