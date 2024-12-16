@@ -13,6 +13,7 @@ type UserTableHeadProps = {
   orderBy: string;
   rowCount: number;
   numSelected: number;
+  checkableCount: number;
   order: 'asc' | 'desc';
   onSort: (id: string) => void;
   headLabel: Record<string, any>[];
@@ -26,6 +27,7 @@ export function UserTableHead({
   rowCount,
   headLabel,
   numSelected,
+  checkableCount,
   onSelectAllRows,
 }: UserTableHeadProps) {
   return (
@@ -33,8 +35,8 @@ export function UserTableHead({
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            indeterminate={numSelected > 0 && numSelected < checkableCount}
+            checked={(rowCount > 0) && (!!numSelected && numSelected === checkableCount)}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               onSelectAllRows(event.target.checked)
             }

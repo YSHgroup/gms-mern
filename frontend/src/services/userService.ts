@@ -24,9 +24,35 @@ export const getPendingUser = async () => {
   }
 };
 
+export const allowPendingUsers = async (ids: string[]) => {
+  console.log(ids)
+  try {
+    await axios.put("api/pending-user/multi-user",  ids );
+    toast.success('The selected users are allowed');
+  } catch (error) {
+    if (isAxiosError(error))
+      error.response?.data.msg.map((str: string) => {
+        toast.error(str);
+      });
+  }
+};
+
+export const rejectPendingUsers = async (ids: string[]) => {
+  console.log("ids")
+  try {
+    await axios.patch("api/pending-user/multi-user", ids);
+    toast.success('The selected users are rejected');
+  } catch (error) {
+    if (isAxiosError(error))
+      error.response?.data.msg.map((str: string) => {
+        toast.error(str);
+      });
+  }
+};
+
 export const allowPendingUser = async (id: string) => {
     try {
-      await axios.put("api/pending-user/" + id);
+      await axios.put("api/pending-user/user/" + id);
       toast.success('The operation was successful.');
     } catch (error) {
       if (isAxiosError(error))
@@ -38,7 +64,7 @@ export const allowPendingUser = async (id: string) => {
 
 export const rejectPendingUser = async (id: string) => {
   try {
-    const res = await axios.patch("api/pending-user/" + id);
+    const res = await axios.patch("api/pending-user/user/" + id);
     toast.success(res.data.msg);
   } catch (error) {
     if (isAxiosError(error))

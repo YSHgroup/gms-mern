@@ -39,7 +39,7 @@ export function UserTableRow({
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
+          {row.allowed || row.rejected ?  <></>: <Checkbox disableRipple checked={selected} onChange={onSelectRow} />}
         </TableCell>
 
         {headList.map((headItem) => (

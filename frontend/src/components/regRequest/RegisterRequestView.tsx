@@ -23,6 +23,7 @@ import { PendingUser } from '@/types/userInfo';
 
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 import { fetchPendingUser } from '@/redux/slices/pendingUserSlice';
+import { allowPendingUsers, rejectPendingUsers } from '@/services/userService';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,14 @@ export default function RegRequestView() {
 
   const notFound = !dataFiltered.length && !!filterName;
 
+  const handleSelectedUsers = (state: boolean) => {
+    if(state) {
+      allowPendingUsers(table.selected)
+    } else {
+      rejectPendingUsers(table.selected)
+    }
+  }
+
   useEffect(() => {
     dispatch(fetchPendingUser())
   }, [])
@@ -58,6 +67,7 @@ export default function RegRequestView() {
         <UserTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
+          onButtonAction={handleSelectedUsers}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
             setFilterName(event.target.value);
             table.onResetPage();
@@ -76,9 +86,10 @@ export default function RegRequestView() {
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    pendingUserData.map((user:any) => user.id)
+                    pendingUserData.filter((user: any) => !user.allowed && !user.rejected).map((user: any) => user.id)
                   )
                 }
+                checkableCount={pendingUserData.filter((user: any) => !user.allowed && !user.rejected).map((user: any) => user.id).length}
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'department', label: 'Department' },
