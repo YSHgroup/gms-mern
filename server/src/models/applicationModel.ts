@@ -20,9 +20,21 @@ const ApplicationSchema = new Schema({
         type: String,
         required: true,
     },
-    status: {
-        type: String,
-        default: 'pending',
+    reviewer: {
+        type: Boolean,
+        default: false,
+    },
+    col_dean: {
+        type: Boolean,
+        default: false,
+    },
+    grant_dep: {
+        type: Boolean,
+        default: false,
+    },
+    grant_dir: {
+        type: Boolean,
+        default: false,
     }
 })
 

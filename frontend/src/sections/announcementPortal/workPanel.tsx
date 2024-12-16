@@ -1,4 +1,4 @@
-import { Grid2 as Grid, Button, styled, Box, TextField } from "@mui/material";
+import { Grid2 as Grid, Button, styled, Box, TextField, Divider } from "@mui/material";
 import { _tasks, _posts, _timeline } from "@/_mock";
 import { CloudUpload } from "@mui/icons-material";
 
@@ -24,7 +24,10 @@ export default function WorkPanel() {
   const [imgUrl, setImgUrl] = React.useState<string>();
   const [img, setImg] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
-  const [date, setDate] = React.useState<string>();
+  const [date, setDate] = React.useState<any>({
+    from: '',
+    until: ''
+  });
   const [content, setContent] = React.useState<string>();
   const imageUpload = (files: FileList | null) => {
     if (files && files.length > 0) {
@@ -47,7 +50,8 @@ export default function WorkPanel() {
     const data = {
         title,
         content,
-        date,
+        from: date.from,
+        until: date.until
       };
       publishAnnouncement(data, img)
     }
@@ -91,7 +95,7 @@ export default function WorkPanel() {
 
       <Grid size={12}>
         <TextField
-          label="Date"
+          label="From"
           variant="outlined"
           slotProps={{
             inputLabel: {
@@ -99,7 +103,19 @@ export default function WorkPanel() {
             },
           }}
           type="date"
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) => setDate((pre: any) => ({...pre, from: e.target.value}))}
+        ></TextField>
+        <span className="p-2"></span>
+        <TextField
+          label="Until"
+          variant="outlined"
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          type="date"
+          onChange={(e) => setDate((pre: any) => ({...pre, until: e.target.value}))}
         ></TextField>
       </Grid>
 

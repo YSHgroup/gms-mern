@@ -44,7 +44,8 @@ export default function AnnouncementView() {
                   title={ann.title}
                   img={ann.imageUrl}
                   text={ann.content}
-                  date={ann.date}
+                  from={ann.from}
+                  until={ann.until}
                 />
               ))
             )

@@ -21,6 +21,7 @@ export const UserPage = lazy(() => import('@/pages/user'));
 export const SignInPage = lazy(() => import('@/pages/sign-in'));
 export const ProductsPage = lazy(() => import('@/pages/products'));
 export const Users = lazy(() => import('@/pages/admin/RegisterRequest'));
+export const GrantRequest = lazy(() => import('@/pages/GrantRequest'));
 export const Page404 = lazy(() => import('@/pages/page-not-found'));
 export const Register = lazy(() => import("@/pages/auth/register"));
 export const Login = lazy(() => import('@/pages/auth/login'));
@@ -56,7 +57,7 @@ export function Router() {
         { path: 'blog', element: <BlogPage /> },
         { path: 'profile', element: <PrivatePage component={Profile} />},
         { path: 'users', element: <PrivatePage requiredRole={['super_admin', 'col_dean']} component={Users}/>},
-        { path: 'grant-request', element: <PrivatePage component={EmptyPage}/>},
+        { path: 'grant-request', element: <PrivatePage component={GrantRequest}/>},
         { path: 'announcement-portal', element: <PrivatePage requiredRole={['super_admin']} component={AnnouncementPortal}/>},
         { path: 'apply', element: <PrivatePage component={Apply}/>}
       ],

@@ -19,7 +19,7 @@ export const navData = [
     icon: icon('ic-user'),
   },
   {
-    title: 'Registry request',
+    title: 'User list',
     path: '/users',
     icon: icon('ic-cart'),
     // info: (

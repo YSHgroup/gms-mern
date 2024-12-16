@@ -7,7 +7,6 @@ import { fetchProfileByEmail } from '@/redux/slices/userSlice'
 
 export default function PrivatePage({requiredRole, component: Component}: {requiredRole?: string[], component: (() => JSX.Element )| React.LazyExoticComponent<() => JSX.Element>}) {
     const user = getCurrentUser()
-    const userRole = useAppSelector(state => state.user.role)
     const router = useRouter()
     const dispatch = useAppDispatch()
 
@@ -15,7 +14,7 @@ export default function PrivatePage({requiredRole, component: Component}: {requi
         dispatch(fetchProfileByEmail());
     }, [])
 
-    if(requiredRole && !requiredRole?.includes(userRole)) {
+    if(requiredRole && !requiredRole.includes(user.role)) {
         router.back()
 
         return <Navigate to='/'/>

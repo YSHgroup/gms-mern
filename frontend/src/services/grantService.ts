@@ -15,3 +15,7 @@ export const requestGrant = (application: File) => {
     }).catch(err => toast.error(err.message))
 }
 
+export const getRequests = () => {
+    const user = getCurrentUser()
+    return axios.get('api/grant-application')
+}

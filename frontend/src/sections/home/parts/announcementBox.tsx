@@ -15,13 +15,15 @@ type Props = CardProps & {
   img?: string;
   color?: ColorType;
   text: string;
-  date: string;
+  from: string;
+  until: string;
 };
 
 export function AnnouncementBox({
   title,
   img,
-  date,
+  from,
+  until,
   color = "primary",
   sx,
   text,
@@ -91,7 +93,7 @@ export function AnnouncementBox({
             }}
           >
             <Box className="w-full text-xl font-semibold">{title}</Box>
-            <Box className="w-full text-slate-900">Date: {date}</Box>
+            <Box className="w-full text-slate-900">From: <span>{`${from} Until: ${until}`}</span></Box>
             <Box sx={{ flexGrow: 1, minWidth: 112 }}>{text}</Box>
           </Box>
         </Stack>
