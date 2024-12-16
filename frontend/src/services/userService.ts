@@ -24,11 +24,11 @@ export const getPendingUser = async () => {
   }
 };
 
-export const allowPendingUsers = async (ids: string[]) => {
-  console.log(ids)
+export const allowPendingUsers = async (ids: string[], dispatch: any) => {
   try {
     await axios.put("api/pending-user/multi-user",  ids );
     toast.success('The selected users are allowed');
+    dispatch()
   } catch (error) {
     if (isAxiosError(error))
       error.response?.data.msg.map((str: string) => {
@@ -37,11 +37,11 @@ export const allowPendingUsers = async (ids: string[]) => {
   }
 };
 
-export const rejectPendingUsers = async (ids: string[]) => {
-  console.log("ids")
+export const rejectPendingUsers = async (ids: string[], dispatch: any) => {
   try {
     await axios.patch("api/pending-user/multi-user", ids);
     toast.success('The selected users are rejected');
+    dispatch()
   } catch (error) {
     if (isAxiosError(error))
       error.response?.data.msg.map((str: string) => {

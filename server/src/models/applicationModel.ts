@@ -20,22 +20,30 @@ const ApplicationSchema = new Schema({
         type: String,
         required: true,
     },
+    signed: {
+        type: Boolean, String,
+        default: 'pending',
+    },
     reviewer: {
-        type: Boolean,
-        default: false,
+        type: Boolean, String,
+        default: 'pending',
     },
     col_dean: {
-        type: Boolean,
-        default: false,
+        type: Boolean, String,
+        default: 'pending',
     },
     grant_dep: {
-        type: Boolean,
-        default: false,
+        type: Boolean, String,
+        default: 'pending',
     },
     grant_dir: {
-        type: Boolean,
-        default: false,
-    }
+        type: Boolean, String ,
+        default: 'pending',
+    },
+    accepted: {
+        type: Boolean, String,
+        default: 'pending',
+    },
 })
 
 export const Application = model('Application', ApplicationSchema);

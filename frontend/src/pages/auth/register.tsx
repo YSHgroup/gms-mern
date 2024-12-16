@@ -150,7 +150,7 @@ export default withAuthRedirect(function Register() {
           label="Department"
           onChange={handleDepartmentChange}
         >
-          <MenuItem value="phylosopy">Phylosopy</MenuItem>
+          <MenuItem value="philosophy">Philosophy</MenuItem>
           <MenuItem value="department1">Department 1</MenuItem>
           <MenuItem value="department2">Department 2</MenuItem>
           <MenuItem value="department3">Department 3</MenuItem>

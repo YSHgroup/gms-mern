@@ -45,10 +45,11 @@ export default function RegRequestView() {
 
   const handleSelectedUsers = (state: boolean) => {
     if(state) {
-      allowPendingUsers(table.selected)
+      allowPendingUsers(table.selected, dispatch(fetchPendingUser()))
     } else {
-      rejectPendingUsers(table.selected)
+      rejectPendingUsers(table.selected, dispatch(fetchPendingUser()))
     }
+    table.onSelectAllRows(false, []);
   }
 
   useEffect(() => {

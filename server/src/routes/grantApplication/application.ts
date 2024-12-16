@@ -16,6 +16,7 @@ router.get("/", (req: any, res: Response) => {
         res.status(404).json({ msg: ["No application"] });
       } else {
         res.status(200).json(application);
+        console.log("Application: ", application);
       }
     })
     .catch((error) => {
@@ -24,17 +25,28 @@ router.get("/", (req: any, res: Response) => {
 });
 
 router.get("/:email", (req: any, res: Response) => {
-  Application.find({ email: req.params.email })
-    .then((application) => {
-      if (!application) {
-        res.status(404).json({ msg: ["No application"] });
-      } else {
-        res.status(200).json(application);
-      }
+    let query: any
+    confirmUserByEmail(req.params.email).then((comfirmedResult) => {
+        if(!comfirmedResult.confirmed) throw new Error('Your email is not available.')
+        if(req.tokenUser.role === "user") {
+            query = { email: req.params.email }
+        } else if(req.tokenUser.role !== "super_admin") {
+            query = { department: comfirmedResult.user?.department }
+        }
+            
+        Application.find(query)
+          .then((application) => {
+            console.log(application, query)
+            if (!application) {
+              res.status(404).json({ msg: ["No application"] });
+            } else {
+              res.status(200).json(application);
+            }
+          })
+          .catch((error) => {
+            res.status(500).json({ msg: [error.message] });
+          });
     })
-    .catch((error) => {
-      res.status(500).json({ msg: [error.message] });
-    });
 });
 
 router.post("/:email", uploadApplication.single('application'), (req: any, res: Response) => {
@@ -54,7 +66,7 @@ router.post("/:email", uploadApplication.single('application'), (req: any, res: 
         }
     })
     .catch((error) => {
-      res.status(404).json({ msg: [error.msg] });
+      res.status(404).json({ msg: [error.message] });
     });
 });
 

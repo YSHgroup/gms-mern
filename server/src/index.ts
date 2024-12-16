@@ -10,6 +10,7 @@ import { announcementRouter } from "./routes/announcement";
 import path from "path";
 import { profileRouter } from "./routes/user/profile";
 import { applicationRouter } from "./routes/grantApplication/application";
+import { requestProcessRouter } from "./routes/grantApplication/requestProcess";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -36,13 +37,14 @@ app.use(cors())
 
 // Serve static data
 app.use('/images', express.static(path.resolve(__dirname, "..", "public", "images")))
+app.use('/application', express.static(path.resolve(__dirname, "..", "public", "applications")))
 
 // router
 app.use('/api/auth', authRouter)
 app.use('/api/pending-user', authVerify, pendingUserRouter)
 app.use('/api/announcement', authVerify, announcementRouter);
 app.use('/api/user', authVerify, profileRouter);
-app.use('/api/grant-application', authVerify, applicationRouter);
+app.use('/api/grant-application', authVerify, [applicationRouter, requestProcessRouter]);
 
 app.listen(port, () => {
     console.log('=========================================')
