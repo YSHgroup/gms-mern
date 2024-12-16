@@ -55,7 +55,11 @@ const refresh = async () => {
 
 const getCurrentUser = () => {
   const user = localStorage.getItem("user")
-  return user? JSON.parse(user): {};
+  const token = localStorage.getItem('token')
+  if(!token || !user) return {}
+  const {role} = JSON.parse(atob(token.split('.')[1]))
+
+  return {...JSON.parse(user), role}
 };
 
 const logout = async (navigate: Function) => {

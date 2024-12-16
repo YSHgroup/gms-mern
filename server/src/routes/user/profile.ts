@@ -5,7 +5,7 @@ import { Request, Response, Router } from "express";
 const router = Router();
 
 router.get("/:email", (req: any, res: Response) => {
-  User.findOne({ email: req.params.email })
+  User.findOne({ email: req.params.email }, '_id firstName lastName email department role')
     .then((result) => {
       res.json(result);
     })

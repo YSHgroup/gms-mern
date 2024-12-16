@@ -1,5 +1,6 @@
 import { Announcement } from "@/types/announcement";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 
 export const publishAnnouncement = (data: Announcement, img?: File) => {
@@ -12,7 +13,9 @@ export const publishAnnouncement = (data: Announcement, img?: File) => {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
-    }).then(res => console.log(res)).catch(err => console.log(err));
+    }).then(res => {
+        toast.success('Announcement published')
+    }).catch(err => console.log(err));
 }
 
 export const getAnnouncements = () => axios.get('/api/announcement');
