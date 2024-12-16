@@ -11,6 +11,7 @@ import PrivatePage from './privateRouter';
 import EmptyPage from '@/pages/EmptyPage';
 import AnnouncementPortal from '@/pages/admin/AnnouncementPortal';
 import Profile from '@/pages/Profile'
+import Apply from '@/pages/Apply';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +58,7 @@ export function Router() {
         { path: 'reg-request', element: <PrivatePage component={Users}/>},
         { path: 'grant-request', element: <PrivatePage component={EmptyPage}/>},
         { path: 'announcement-portal', element: <PrivatePage requiredRole={['super_admin']} component={AnnouncementPortal}/>},
-        { path: 'apply', element: <PrivatePage component={EmptyPage}/>}
+        { path: 'apply', element: <PrivatePage component={Apply}/>}
       ],
     },
     {
