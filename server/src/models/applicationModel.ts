@@ -51,11 +51,11 @@ const ApplicationSchema = new Schema({
         default: 'pending',
     },
     comment: {
-        type: Schema.Types.ObjectId,
+        type: Schema.ObjectId,
         ref: 'Comment',
     },
     announcement: {
-        type: Schema.Types.ObjectId,
+        type: Schema.ObjectId,
         ref: 'Announcement',
     }
 })

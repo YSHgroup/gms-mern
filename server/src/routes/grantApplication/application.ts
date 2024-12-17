@@ -39,7 +39,8 @@ router.get("/:email", (req: any, res: Response) => {
       }
       
       Application.find(query)
-      // .populate("comments").populate("announcements")
+      .populate("comment")
+      .populate("announcement")
       .then((application) => {
           console.log('---', req.params.email)
           if (isEmpty(application)) {
