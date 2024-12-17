@@ -72,7 +72,7 @@ router.post("/login", (req: Request, res: Response) => {
         try {
           const token = sign(
             {
-              exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+              exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
               email: result?.email,
               role: result.role
             },
@@ -81,7 +81,7 @@ router.post("/login", (req: Request, res: Response) => {
           const refreshToken = sign(
             { email: result!.email },
             secret_key,
-            { expiresIn: "7d" }
+            { expiresIn: "60d" }
           );
 
           result.refreshToken = refreshToken;
@@ -132,7 +132,7 @@ router.post("/refresh-token", async (req: Request, res: Response) => {
         return;
       } // Forbidden
 
-      const newToken = sign({ role: user.role, email: user.email }, secret_key, { expiresIn: "1d" });
+      const newToken = sign({ role: user.role, email: user.email }, secret_key, { expiresIn: "30d" });
       res.json({ token: newToken });
     });
   } catch (error: any) {

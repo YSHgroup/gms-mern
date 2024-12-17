@@ -21,29 +21,43 @@ const ApplicationSchema = new Schema({
         required: true,
     },
     signed: {
-        type: Boolean, String,
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
     },
     reviewer: {
-        type: Boolean, String,
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
     },
     col_dean: {
-        type: Boolean, String,
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
     },
     grant_dep: {
-        type: Boolean, String,
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
     },
     grant_dir: {
-        type: Boolean, String ,
+        type: String ,
+        enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
     },
     accepted: {
-        type: Boolean, String,
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
     },
+    comment: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+    },
+    announcement: {
+        type: Schema.Types.ObjectId,
+        ref: 'Announcement',
+    }
 })
 
 export const Application = model('Application', ApplicationSchema);

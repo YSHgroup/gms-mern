@@ -8,6 +8,7 @@ export const getRole = (key: string) => {
         { grant_dir: "Grant Director" },
         { super_admin: "Super Admin" },
     ]
+    if(!key) return null
     const value = roles.find(role => Object.keys(role)[0] === key) as any;
     const role = value[key];
 

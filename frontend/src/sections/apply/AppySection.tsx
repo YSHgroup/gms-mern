@@ -7,6 +7,8 @@ import {
   styled,
   Box,
   LinearProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { CloudUpload, Publish } from "@mui/icons-material";
 import React from "react";
@@ -14,6 +16,7 @@ import PDFPreview from "@/components/PdfPreviewer";
 import pdf from "../../../public/php_cookbook.pdf";
 import { requestGrant } from "@/services/grantService";
 import { toast } from "react-toastify";
+import { getAnnouncements } from "@/services/announcementServices";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -31,6 +34,11 @@ export default function ApplySection() {
   const [file, setFile] = React.useState<File>();
   const [fileUrl, setFileUrl] = React.useState<string>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [announcements, setAnnouncements] = React.useState<any>([]);
+  const [announcement, setAnnouncement] = React.useState<any>([]);
+  
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openCombo = Boolean(anchorEl);
 
   const upload = (files: FileList | null) => {
     setLoading(true);
@@ -44,19 +52,40 @@ export default function ApplySection() {
   };
 
   const publishApplication = () => {
-    if(!file) {
-      toast.warn('Please select a file to upload')
-      return
+    if (!file) {
+      toast.warn("Please select a file to upload");
+      return;
     }
-    if(fileUrl) {
-      URL.revokeObjectURL(fileUrl)
+    if(!announcement?._id) {
+      toast.warn("Please select announcement");
+      return;
     }
-    requestGrant(file)
-  }
+    if (fileUrl) {
+      URL.revokeObjectURL(fileUrl);
+    }
+    requestGrant(file, announcement._id);
+  };
+
+  const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  React.useEffect(() => {
+    getAnnouncements()
+      .then((res) => {
+        setAnnouncements(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   React.useEffect(() => {
     setLoading(false);
-  }, [file])
+  }, [file]);
 
   return (
     <DashboardContent maxWidth="xl">
@@ -66,6 +95,36 @@ export default function ApplySection() {
 
       {/* <Container className="bg-white border-solid border rounded border-stone-100 p-6"> */}
       <Paper elevation={1} className="p-4">
+        <Typography variant="body1" my={2} color="primary.dark">
+          Select announcement
+        </Typography>
+
+        <Box>
+          <Button
+            id="basic-button"
+            aria-controls={openCombo ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            variant="outlined"
+            aria-expanded={openCombo ? "true" : undefined}
+            onClick={handleComboButton}
+          >
+            Announcement {announcement.title &&<span className="text-green-600"> - {announcement.title}</span>}
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={openCombo}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            {announcements.map((item: any) => (
+              <MenuItem key={item._id}  onClick={() => setAnnouncement(item)}>{item.title}</MenuItem>
+            ))}
+          </Menu>
+        </Box>
+
         <Grid container spacing={4}>
           <Grid
             size={12}
@@ -107,7 +166,11 @@ export default function ApplySection() {
                 display="flex"
                 justifyContent={"center"}
               >
-                <Button variant="contained" startIcon={<Publish />} onClick={publishApplication}>
+                <Button
+                  variant="contained"
+                  startIcon={<Publish />}
+                  onClick={publishApplication}
+                >
                   Publish Application
                 </Button>
               </Grid>

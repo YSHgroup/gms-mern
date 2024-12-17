@@ -46,7 +46,7 @@ export default {
       if (!confirmData.result) {
         throw new Error("Your previous step was not performed.");
       }
-      application[confirmData.key] = flag;
+      application[confirmData.key] = flag? 'approved': 'rejected';
       await application.save();
       flag && this.autoEmail(role, confirmData.key, application);
       !flag && sendEmail(denyMail(application.email));

@@ -22,4 +22,4 @@ const announcementShema = new Schema({
   },
 });
 
-export const Announcement = model("announcement", announcementShema);
+export const Announcement = model("Announcement", announcementShema);

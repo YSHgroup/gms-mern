@@ -1,6 +1,10 @@
 import { DashboardContent } from "@/layouts/dashboard";
 import { getCurrentUser } from "@/services/authService";
-import { approveRequest, getRequests, rejectRequest } from "@/services/grantService";
+import {
+  approveRequest,
+  getRequests,
+  rejectRequest,
+} from "@/services/grantService";
 import {
   Box,
   Card,
@@ -9,8 +13,10 @@ import {
   TableContainer,
   TablePagination,
   Typography,
+  Menu,
+  Button,
+  MenuItem,
 } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useCallback, useEffect, useState } from "react";
 import { Scrollbar } from "@/components/scrollbar";
 import { UserTableHead } from "@/components/table/user-table-head";
@@ -22,27 +28,28 @@ import { TableNoData } from "@/components/table/table-no-data";
 import { applyFilter, emptyRows, getComparator } from "../tableUtils/utils";
 import { toast } from "react-toastify";
 import { isAxiosError } from "axios";
+import { getAnnouncements } from "@/services/announcementServices";
 
 type Props = {};
 
 const setTableData = (setData: React.Dispatch<any>) => {
   getRequests()
-      .then((res) => {
-        console.log("Requests fetched:", res.data);
+    .then((res) => {
+      console.log("Requests fetched:", res.data);
 
-        const result = res.data.map((application: any) => {
-          return {
-            ...application,
-            id: application._id,
-            name: application.firstName + " " + application.lastName,
-          };
-        });
-        setData(result);
-      })
-      .catch((err) => {
-        console.error("Error fetching requests:", err);
+      const result = res.data.map((application: any) => {
+        return {
+          ...application,
+          id: application._id,
+          name: application.firstName + " " + application.lastName,
+        };
       });
-}
+      setData(result);
+    })
+    .catch((err) => {
+      console.error("Error fetching requests:", err);
+    });
+};
 
 export default function RequestTable({}: Props) {
   const role = getCurrentUser().role;
@@ -83,6 +90,10 @@ export default function RequestTable({}: Props) {
     },
   ];
   const [data, setData] = useState<any>([]);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openCombo = Boolean(anchorEl);
+  const [announcements, setAnnouncements] = useState<any>([]);
+  const [announcement, setAnnouncement] = useState<any>([]);
 
   //
   const table = useTable();
@@ -101,33 +112,54 @@ export default function RequestTable({}: Props) {
   const handleAccept = (state: any, id: string) => {
     console.log("handleAccept: ", state, id);
     approveRequest(id)
-    .then((response) => {
-      toast.success("Application approved");
-      setTableData(setData)
-    })
-    .catch((error) => {
-      console.log('err: ', error)
-      if (isAxiosError(error))
-        error.response?.data.msg.map((str: string) => {
-          toast.error(str);
-        })});
-  }
+      .then((response) => {
+        toast.success("Application approved");
+        setTableData(setData);
+      })
+      .catch((error) => {
+        console.log("err: ", error);
+        if (isAxiosError(error))
+          error.response?.data.msg.map((str: string) => {
+            toast.error(str);
+          });
+      });
+  };
 
   const handleDeny = (state: any, id: string) => {
     console.log("handleDeny: ", state);
-    rejectRequest(id).then((response) => {
-      toast.success("Application rejected");
-      setTableData(setData)
-    })
-    .catch((error) => {
-      if (isAxiosError(error))
-        error.response?.data.msg.map((str: string) => {
-          toast.error(str);
-        })});
+    rejectRequest(id)
+      .then((response) => {
+        toast.success("Application rejected");
+        setTableData(setData);
+      })
+      .catch((error) => {
+        if (isAxiosError(error))
+          error.response?.data.msg.map((str: string) => {
+            toast.error(str);
+          });
+      });
+  };
+
+  const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const selectAnnouncement = (item: string) => {
+    setAnnouncement(item)
   }
 
   useEffect(() => {
-    setTableData(setData)
+    setTableData(setData);
+    getAnnouncements()
+      .then((res) => {
+        setAnnouncements(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // getComments()
   }, []);
   return (
     <DashboardContent>
@@ -135,8 +167,35 @@ export default function RequestTable({}: Props) {
         <Typography variant="h4" flexGrow={1}>
           {role === "user" ? "My Request" : "Request list"}
         </Typography>
+        <Typography variant="h5">{}</Typography>
       </Box>
 
+        <Box mb={2}>
+          <Button
+            id="basic-button"
+            aria-controls={openCombo ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openCombo ? "true" : undefined}
+            onClick={handleComboButton}
+            variant="outlined"
+          >
+            Announcement {announcement.title &&<span className="text-green-600"> - {announcement.title}</span>}
+          </Button>
+          <Typography></Typography>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={openCombo}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            {announcements.map((item: any) => 
+              <MenuItem key={item._id} onClick={() => setAnnouncement(item)}>{item.title}</MenuItem>
+            )}
+          </Menu>
+        </Box>
       <Card>
         <UserTableToolbar
           numSelected={table.selected.length}

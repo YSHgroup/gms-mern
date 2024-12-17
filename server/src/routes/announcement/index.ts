@@ -4,13 +4,14 @@ import { Announcement } from "@/models/announcementModel";
 import { queryByRoleWritter } from "@/utils/roleAprpovalQuery";
 import { Request, Response, Router } from "express";
 import path from "path";
+import { isEmpty } from '@/utils/isEmpty';
 
 const router = Router();
 
 router.get("/", (req: any, res: Response) => {
 
   Announcement.find().then((announcements) => {
-    if (!announcements) {
+    if (isEmpty(announcements)) {
       res.status(404).json({ msg: ["No announcements"] });
     } else {
       res.status(200).json(announcements);
