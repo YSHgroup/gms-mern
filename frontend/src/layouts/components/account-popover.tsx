@@ -15,8 +15,9 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import { useRouter, usePathname } from '@/routes/hooks';
 
 import { _myAccount } from '@/_mock';
-import { logout } from '@/services/authService';
+import { getCurrentUser, logout } from '@/services/authService';
 import { useNavigate } from 'react-router';
+import { getRole } from '@/utils/roleGetter';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ export type AccountPopoverProps = IconButtonProps & {
 };
 
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
+  const user = getCurrentUser()
   const router = useRouter();
 
   const pathname = usePathname();
@@ -92,11 +94,13 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
       >
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {_myAccount?.displayName}
+            {user.userName}
           </Typography>
-
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {_myAccount?.email}
+            {getRole(user.role)}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {user.email}
           </Typography>
         </Box>
 

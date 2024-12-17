@@ -20,7 +20,7 @@ import { NavUpgrade } from '../components/nav-upgrade';
 import { WorkspacesPopover } from '../components/workspaces-popover';
 
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
-import { Grid2 } from '@mui/material';
+import { Divider, Grid2 } from '@mui/material';
 import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
@@ -121,9 +121,9 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 
   return (
     <>
-      <Grid2  className="flex justify-center items-center">
+      <Grid2  className="flex justify-center items-center py-2">
       
-        <Typography variant="h4">
+        <Typography variant="h4" sx={{ color: "text.primary"}}>
           Grant
         </Typography>
 
@@ -132,7 +132,7 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
         </Typography>
       </Grid2>
 
-
+      <Divider></Divider>
       {/* <WorkspacesPopover data={workspaces} sx={{ my: 2 }} /> */}
 
       <Scrollbar fillContent>
