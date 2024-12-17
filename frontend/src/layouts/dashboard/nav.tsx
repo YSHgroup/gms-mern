@@ -22,6 +22,7 @@ import { WorkspacesPopover } from '../components/workspaces-popover';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 import { Divider, Grid2 } from '@mui/material';
 import { Typography } from '@mui/material';
+import { getCurrentUser } from '@/services/authService';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,8 @@ export type NavContentProps = {
     title: string;
     icon: React.ReactNode;
     info?: React.ReactNode;
+    role?: string[],
+    guard?: any[]
   }[];
   slots?: {
     topArea?: React.ReactNode;
@@ -118,6 +121,7 @@ export function NavMobile({
 
 export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
   const pathname = usePathname();
+  const user = getCurrentUser()
 
   return (
     <>
@@ -138,7 +142,7 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
       <Scrollbar fillContent>
         <Box className='my-4' component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>
           <Box component="ul" gap={0.5} display="flex" flexDirection="column">
-            {data.map((item) => {
+            {data.filter(item => !item.guard?.includes(user?.role)).map((item) => {
               const isActived = item.path === pathname;
 
               return (
