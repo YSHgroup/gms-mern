@@ -75,28 +75,45 @@ router.post("/comment/:id", async (req: any, res: Response) => {
     // if (!confirmData.result) {
     //   throw new Error("Your previous step was not performed.");
     // }
-    if(application.comment) {
-      console.log('alraedy?  ',application.comment)
-    }
-    const comment = new Comment({ [req.tokenUser.role]: content });
-    console.log("coment: ", req.tokenUser.role ,comment);
-    comment
-      .save()
-      .then((result) => {
-        if (!isEmpty(result)) {
-          Application.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: { comment: result._id } }
-          )
+    
+    Comment.findOne({ _id: application.comment })
+    .then((result) => {
+      if (isEmpty(result)) {
+          const comment = new Comment({ [req.tokenUser.role]: content });
+          comment
+            .save()
             .then((result) => {
-              res.status(200).send(result);
+              if (!isEmpty(result)) {
+                Application.findOneAndUpdate(
+                  { _id: req.params.id },
+                  { $set: { comment: result._id } }
+                )
+                  .then((result) => {
+                    res.status(200).send(result);
+                  })
+                  .catch((error) => {
+                    throw new Error(error.message);
+                  });
+              }
             })
             .catch((error) => {
               throw new Error(error.message);
             });
-        } else {
 
-          throw new Error("Error saving comment");
+        } else {
+          
+          Comment.findOneAndUpdate(
+            { _id: application.comment },
+            { $set: { [req.tokenUser.role]: content } }
+          )
+           .then((result) => {
+              if (!isEmpty(result)) {
+                res.status(200).send(result);
+              }
+            })
+           .catch((error) => {
+              throw new Error(error.message);
+            });
         }
       })
       .catch((error) => {

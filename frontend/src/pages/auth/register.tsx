@@ -170,8 +170,7 @@ export default withAuthRedirect(function Register() {
           <MenuItem value="user">User</MenuItem>
           <MenuItem value="reviewer">Reviewer</MenuItem>
           <MenuItem value="col_dean">College Dean</MenuItem>
-          <MenuItem value="grant_dep">Grant Department</MenuItem>
-          <MenuItem value="grant_dir">Grant Director</MenuItem>
+          <MenuItem value="grant_dep">Grand Admin</MenuItem>
         </Select>
       </FormControl>
 

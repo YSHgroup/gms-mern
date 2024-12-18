@@ -94,7 +94,7 @@ export default withAuthRedirect(function SlotsSignIn() {
               Login
             </Button>
             <Link href="/register" variant="body2">
-              Don't have an account yet?
+              Don't you have an account yet?
             </Link>
           </CardContent>
         </Box>
