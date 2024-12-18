@@ -1,6 +1,6 @@
-import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { useAppDispatch } from '@/redux/hooks'
 import { getCurrentUser } from '@/services/authService'
-import { Navigate, redirect } from 'react-router'
+import { Navigate } from 'react-router'
 import { useRouter } from './hooks'
 import { useEffect } from 'react'
 import { fetchProfileByEmail } from '@/redux/slices/userSlice'

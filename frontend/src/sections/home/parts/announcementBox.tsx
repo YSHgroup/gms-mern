@@ -30,7 +30,7 @@ export function AnnouncementBox({
   ...other
 }: Props) {
   const theme = useTheme();
-
+  const timestampOfUntil = new Date(until).getTime();
   return (
     <Card
       sx={{
@@ -49,7 +49,7 @@ export function AnnouncementBox({
       }}
       {...other}
     >
-      <Grid2 container spacing={2} justifyContent={'center'}>
+      <Grid2 container spacing={2} justifyContent={"center"}>
         {/* <Grid2 size={{ lg: 4, xs: 12 }}>
           <Box sx={{ width: "100%", height: "100%", mb: 3 }}>
             <img src={img} alt={title} loading="lazy" className="" />
@@ -72,7 +72,7 @@ export function AnnouncementBox({
         </Grid2> */}
 
         <Stack spacing={2} className="items-center">
-          {img? (
+          {img ? (
             <Box
               sx={{
                 width: { xs: "100%", sm: "70%", md: "40%" },
@@ -80,9 +80,16 @@ export function AnnouncementBox({
                 mb: 3,
               }}
             >
-              <img src={`${import.meta.env.VITE_BASE_URL}/${img}`} alt={title} loading="lazy" className="" />
+              <img
+                src={`${import.meta.env.VITE_BASE_URL}/${img}`}
+                alt={title}
+                loading="lazy"
+                className=""
+              />
             </Box>
-          ): <></>}
+          ) : (
+            <></>
+          )}
 
           <Box
             sx={{
@@ -93,7 +100,16 @@ export function AnnouncementBox({
             }}
           >
             <Box className="w-full text-xl font-semibold">{title}</Box>
-            <Box className="w-full text-slate-900">From: <span>{`${from} Until: ${until}`}</span></Box>
+            {timestampOfUntil < Date.now() ? (
+              <Box className="w-full text-red-700" color={"error"}>
+                Expired
+              </Box>
+            ) : (
+              <Box className="w-full text-slate-900">
+                From: <span>{`${from} Until: ${until}`}</span>
+              </Box>
+            )}
+
             <Box sx={{ flexGrow: 1, minWidth: 112 }}>{text}</Box>
           </Box>
         </Stack>

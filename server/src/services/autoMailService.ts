@@ -24,7 +24,7 @@ export const sendEmail: MailerFunction = async ({
       pass: serverPassword,
     },
   });
-
+console.log('auto email: ', receiverEmail)
   let mailOptions: MailOptions = {
     from: serverName,
     to: receiverEmail,

@@ -11,6 +11,7 @@ import path from "path";
 import { profileRouter } from "./routes/user/profile";
 import { applicationRouter } from "./routes/grantApplication/application";
 import { requestProcessRouter } from "./routes/grantApplication/requestProcess";
+import { seedRouter } from "./routes/seed";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -41,6 +42,8 @@ app.use('/application', express.static(path.resolve(__dirname, "..", "public", "
 
 // router
 app.use('/api/auth', authRouter)
+app.use('/api/seed', seedRouter)
+
 app.use('/api/pending-user', authVerify, pendingUserRouter)
 app.use('/api/announcement', authVerify, announcementRouter);
 app.use('/api/user', authVerify, profileRouter);

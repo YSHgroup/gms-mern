@@ -32,7 +32,7 @@ export default function UserProfile({
 
   const submitChange = () => {
     const data =
-      userState.role === "super_admin"
+      userState.role === "grant_dir"
         ? { firstName, lastName, email }
         : { firstName, lastName };
     updateProfile(data).then(() => {
@@ -77,15 +77,15 @@ export default function UserProfile({
           label="Email"
           name="email"
           type="email"
-          variant={userState.role !== "super_admin" ? "standard" : "outlined"}
+          variant={userState.role !== "grant_dir" ? "standard" : "outlined"}
           fullWidth
-          disabled={userState.role !== "super_admin"}
+          disabled={userState.role !== "grant_dir"}
           value={email}
           onChange={(e) => {
-            userState.role === "super_admin" && setEmail(e.target.value);
+            userState.role === "grant_dir" && setEmail(e.target.value);
           }}
           slotProps={{
-            ...(userState.role !== "super_admin" && {
+            ...(userState.role !== "grant_dir" && {
               input: {
                 endAdornment: (
                   <InputAdornment position="end">

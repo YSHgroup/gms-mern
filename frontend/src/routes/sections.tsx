@@ -56,9 +56,9 @@ export function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'profile', element: <PrivatePage component={Profile} />},
-        { path: 'users', element: <PrivatePage requiredRole={['super_admin', 'col_dean']} component={Users}/>},
+        { path: 'users', element: <PrivatePage requiredRole={['grant_dir', 'col_dean']} component={Users}/>},
         { path: 'grant-request', element: <PrivatePage component={GrantRequest}/>},
-        { path: 'announcement-portal', element: <PrivatePage requiredRole={['super_admin']} component={AnnouncementPortal}/>},
+        { path: 'announcement-portal', element: <PrivatePage requiredRole={['grant_dir']} component={AnnouncementPortal}/>},
         { path: 'apply', element: <PrivatePage component={Apply}/>}
       ],
     },

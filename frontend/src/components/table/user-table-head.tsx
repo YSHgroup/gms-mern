@@ -66,8 +66,7 @@ export function UserTableHead({
             </TableSortLabel>
           </TableCell>
         ))}
-        {(user.role !== "super_admin" &&
-          user.role !== "user") && (
+        {(user.role !== "user") && (
         <TableCell align='right'>Action</TableCell>
           )}
       </TableRow>

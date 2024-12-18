@@ -27,7 +27,7 @@ import { TableEmptyRows } from "@/components/table/table-empty-rows";
 import { TableNoData } from "@/components/table/table-no-data";
 import { applyFilter, emptyRows, getComparator } from "../tableUtils/utils";
 import { toast } from "react-toastify";
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 import { getAnnouncements } from "@/services/announcementServices";
 
 type Props = {};
@@ -109,8 +109,8 @@ export default function RequestTable({}: Props) {
   const notFound = !dataFiltered.length && !!filterName;
   //
 
-  const handleAccept = (state: any, id: string) => {
-    console.log("handleAccept: ", state, id);
+  const handleAccept = (id: string) => {
+    console.log("handleAccept: ", id);
     approveRequest(id)
       .then((response) => {
         toast.success("Application approved");
@@ -125,8 +125,8 @@ export default function RequestTable({}: Props) {
       });
   };
 
-  const handleDeny = (state: any, id: string) => {
-    console.log("handleDeny: ", state);
+  const handleDeny = (id: string) => {
+    console.log("handleDeny: ");
     rejectRequest(id)
       .then((response) => {
         toast.success("Application rejected");

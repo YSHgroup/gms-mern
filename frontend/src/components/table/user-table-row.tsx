@@ -67,13 +67,13 @@ export function UserTableRow({
   };
   const confirmState = (id: string) => {
     if (openDialog) {
-      onAccept(state, id);
+      state && onAccept(id);
+      !state && onDeny(id);
       setOpenDialog(false);
       setState(null);
     }
   };
   const cancelAction = (id: string) => {
-    onDeny(state, id);
     setOpenDialog(false);
     setState(null);
   };
@@ -167,7 +167,7 @@ export function UserTableRow({
           </TableCell>
         ))}
 
-        {user.role !== "super_admin" && user.role !== "user" && (
+        {user.role !== "user" && (
           <TableCell align="right">
             <IconButton onClick={handleOpenPopover}>
               <Iconify icon="eva:more-vertical-fill" />

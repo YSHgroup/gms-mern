@@ -22,7 +22,7 @@ router.get("/", (req: any, res: Response) => {
 });
 
 router.post("/", upload.single('image'), async (req: any, res: Response) => {
-  if(req.tokenUser.role !== "super_admin") {
+  if(req.tokenUser.role !== "grant_dir") {
     res.status(403).json({ msg: ["You do not have autherization for this route."] })
     return
   }
@@ -40,7 +40,7 @@ router.post("/", upload.single('image'), async (req: any, res: Response) => {
 })
 
 router.put("/:id", async (req: any, res: Response) => {
-  if(req.tokenUser.role!== "super_admin") {
+  if(req.tokenUser.role!== "grant_dir") {
     res.status(403).json({ msg: ["You do not have autherization for this route."] })
     return
   }

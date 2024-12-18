@@ -6,7 +6,7 @@ const router = Router()
 
 router.get('/:email', async (req: any, res: Response) => {
     const role = req.tokenUser.role
-    if((role !== "super_admin") && (role != "col_dean")) {
+    if((role !== "grant_dir") && (role != "col_dean")) {
         res.status(403).json({msg: ['You do not have autherization for this route.']})
         return
     }

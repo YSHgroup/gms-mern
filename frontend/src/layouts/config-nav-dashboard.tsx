@@ -21,7 +21,7 @@ export const navData = [
   {
     title: 'User list',
     path: '/users',
-    guard: ['user', 'reviewer', "grant_dep", "grant_dir"],
+    guard: ['user', 'reviewer', "grant_dep", ],
     icon: icon('ic-cart'),
     // info: (
     //   <Label color="error" variant="inverted">
@@ -32,12 +32,13 @@ export const navData = [
   {
     title: 'Apply',
     path: '/apply',
+    guard: ["grant_dep", 'reviewer',"col_dean", "grant_dir"],
     icon: icon('ic-blog'),
   },
   {
     title: 'Announcement Portal',
     path: '/announcement-portal',
-    guard: ["grant_dep", "grant_dir",'user', 'reviewer',"col_dean"],
+    guard: ["grant_dep", 'user', 'reviewer',"col_dean"],
     icon: icon('ic-lock'),
   }
 ];

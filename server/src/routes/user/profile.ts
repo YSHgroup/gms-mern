@@ -15,7 +15,7 @@ router.get("/:email", (req: any, res: Response) => {
 });
 
 router.put("/:email", (req: any, res: Response) => {
-  if ((req.tokenUser.role = "super_admin")) {
+  if ((req.tokenUser.role = "grant_dir")) {
     const { firstName, lastName, email } = req.body;
 
     User.findOneAndUpdate(

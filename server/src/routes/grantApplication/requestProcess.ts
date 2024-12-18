@@ -20,6 +20,7 @@ router.post("/approve/:id", (req: any, res: Response) => {
     .then((response) => {
       if (!isEmpty(response)) {
         res.status(200).send(response);
+        return
       }
       throw new Error("Could not find your role.");
     })
@@ -34,6 +35,7 @@ router.post("/reject/:id", (req: any, res: Response) => {
     .then((response) => {
       if (!isEmpty(response)) {
         res.status(200).send(response);
+        return
       }
       throw new Error("Could not find your role.");
     })
@@ -58,7 +60,7 @@ router.post("/comment/:id", async (req: any, res: Response) => {
   const { content } = req.body;
   const role = req.tokenUser.role;
   try {
-    if (role === "user" || role === "super_admin")
+    if (role === "user" || role === "grant_dir")
       throw new Error("You don't have permission");
     const application = (await Application.findOne({
       _id: req.params.id,
