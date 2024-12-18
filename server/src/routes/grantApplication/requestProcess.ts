@@ -1,13 +1,9 @@
 import express from "express";
 import { upload, uploadApplication } from "@/middleware/multer";
 import { Announcement } from "@/models/announcementModel";
-import { queryByRoleWritter } from "@/utils/roleAprpovalQuery";
 import { Request, Response, Router } from "express";
-import path from "path";
 import { Application } from "@/models/applicationModel";
-import { confirmUserByEmail } from "@/utils/confirmUserByEmail";
 import GrantService from "@/services/grantService";
-import { sendEmail } from "@/services/autoMailService";
 import { Comment } from "@/models/commentModel";
 import { isEmpty } from "@/utils/isEmpty";
 import grantService from "@/services/grantService";
@@ -57,8 +53,10 @@ router.post("/reject/:id", (req: any, res: Response) => {
 // })
 
 router.post("/comment/:id", async (req: any, res: Response) => {
+  
   const { content } = req.body;
   const role = req.tokenUser.role;
+  console.log('comment: ', content)
   try {
     if (role === "user" || role === "grant_dir")
       throw new Error("You don't have permission");
@@ -79,6 +77,7 @@ router.post("/comment/:id", async (req: any, res: Response) => {
     if (!confirmData.result) {
       throw new Error("Your previous step was not performed.");
     }
+
 
     const comment = new Comment({ [req.tokenUser.role]: content });
     comment

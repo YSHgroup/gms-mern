@@ -5,58 +5,64 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import { useTheme } from "@mui/material/styles";
 
-import { varAlpha, bgGradient } from "@/theme/styles";
-import { Grid2, Stack } from "@mui/material";
+import {
+  Button,
+  CardContent,
+  CardMedia,
+  Grid2,
+  Typography,
+} from "@mui/material";
+import { useRouter } from "@/routes/hooks";
+import { Announcement } from "@/types/announcement";
 
 // ----------------------------------------------------------------------
 
-type Props = CardProps & {
-  title: string;
-  img?: string;
-  color?: ColorType;
-  text: string;
-  from: string;
-  until: string;
-};
-
-export function AnnouncementBox({
-  title,
-  img,
-  from,
-  until,
-  color = "primary",
-  sx,
-  text,
-  ...other
-}: Props) {
-  const theme = useTheme();
+export function AnnouncementBox({announcement}: {announcement: Announcement}) {
+  const {
+    _id,
+    title,
+    imageUrl,
+    from,
+    until,
+    content,
+    budget,
+  } = announcement
   const timestampOfUntil = new Date(until).getTime();
+  const theme = useTheme();
+  const router = useRouter()
+
+  const applyForAnnouncement = () => {
+    router.push('/apply/'+ _id)
+  }
   return (
     <Card
+      className="mb-5"
       sx={{
-        ...bgGradient({
-          color: `135deg, ${varAlpha(
-            theme.vars.palette[color].lighterChannel,
-            0.48
-          )}, ${varAlpha(theme.vars.palette[color].lightChannel, 0.48)}`,
-        }),
-        p: 3,
-        boxShadow: "none",
-        position: "relative",
-        color: `${color}.darker`,
-        backgroundColor: "common.white",
-        ...sx,
+        display: "flex",
+        [theme.breakpoints.down("md")]: {
+          display: "block",
+        },
       }}
-      {...other}
+      elevation={4}
     >
-      <Grid2 container spacing={2} justifyContent={"center"}>
-        {/* <Grid2 size={{ lg: 4, xs: 12 }}>
-          <Box sx={{ width: "100%", height: "100%", mb: 3 }}>
-            <img src={img} alt={title} loading="lazy" className="" />
-          </Box>
-        </Grid2>
-
-        <Grid2 size={{ lg: 8, xs: 12 }}>
+      <CardMedia
+        component="img"
+        sx={{
+          width: {
+            xs: "100%",
+            md: "50%",
+            lg: "40%",
+            xl: "35%",
+          },
+        }}
+        image={`${import.meta.env.VITE_BASE_URL}/${imageUrl}`}
+        alt="Live from space album cover"
+      />
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <CardContent sx={{ flex: "1 0 auto" }}>
+          <Typography className="w-full text-xl font-semibold" variant="h4">
+            {title}
+          </Typography>
           <Box
             sx={{
               display: "flex",
@@ -65,55 +71,126 @@ export function AnnouncementBox({
               justifyContent: "center",
             }}
           >
-            <Box>{title}</Box>
-            <Box sx={{ flexGrow: 1, minWidth: 112 }}>{text}</Box>
-          </Box>
-          <Box>{date}</Box>
-        </Grid2> */}
-
-        <Stack spacing={2} className="items-center">
-          {img ? (
-            <Box
-              sx={{
-                width: { xs: "100%", sm: "70%", md: "40%" },
-                height: "100%",
-                mb: 3,
-              }}
+            <Grid2
+              container
+              spacing={{ sm: 0, md: 2 }}
+              className="w-full text-slate-900"
             >
-              <img
-                src={`${import.meta.env.VITE_BASE_URL}/${img}`}
-                alt={title}
-                loading="lazy"
-                className=""
-              />
-            </Box>
-          ) : (
-            <></>
-          )}
+              <Grid2 size={{ md: 5, sm: 12 }}>
+                <span className="text-sky-600">Period : </span> <span>{from}</span> ~ <span>{until}</span>
+              </Grid2>
+              <Grid2 size={{ md: 5, sm: 12 }}>
+              <span className="text-sky-600">Budget : </span> ${budget?.toLocaleString()}
+              </Grid2>
+            </Grid2>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "flex-end",
-              justifyContent: "center",
-            }}
-          >
-            <Box className="w-full text-xl font-semibold">{title}</Box>
-            {timestampOfUntil < Date.now() ? (
+            {timestampOfUntil < Date.now() && (
               <Box className="w-full text-red-700" color={"error"}>
                 Expired
               </Box>
-            ) : (
-              <Box className="w-full text-slate-900">
-                From: <span>{`${from} Until: ${until}`}</span>
-              </Box>
             )}
 
-            <Box sx={{ flexGrow: 1, minWidth: 112 }}>{text}</Box>
+            <Box sx={{ flexGrow: 1, minWidth: 112 }}>{content}</Box>
           </Box>
-        </Stack>
-      </Grid2>
+        </CardContent>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pl: 1,
+            pb: 1,
+          }}
+        >
+          {!(timestampOfUntil < Date.now()) && (
+            <Button size="large" onClick={applyForAnnouncement}>Apply</Button>
+          )}
+        </Box>
+      </Box>
     </Card>
+
+    // <Card
+    //   sx={{
+    //     ...bgGradient({
+    //       color: `135deg, ${varAlpha(
+    //         theme.vars.palette[color].lighterChannel,
+    //         0.48
+    //       )}, ${varAlpha(theme.vars.palette[color].lightChannel, 0.48)}`,
+    //     }),
+    //     p: 3,
+    //     boxShadow: "none",
+    //     position: "relative",
+    //     color: `${color}.darker`,
+    //     backgroundColor: "common.white",
+    //     ...sx,
+    //   }}
+    //   {...other}
+    // >
+    //   <Grid2 container spacing={2} justifyContent={"center"}>
+    //     {/* <Grid2 size={{ lg: 4, xs: 12 }}>
+    //       <Box sx={{ width: "100%", height: "100%", mb: 3 }}>
+    //         <img src={img} alt={title} loading="lazy" className="" />
+    //       </Box>
+    //     </Grid2>
+
+    //     <Grid2 size={{ lg: 8, xs: 12 }}>
+    //       <Box
+    //         sx={{
+    //           display: "flex",
+    //           flexWrap: "wrap",
+    //           alignItems: "flex-end",
+    //           justifyContent: "center",
+    //         }}
+    //       >
+    //         <Box>{title}</Box>
+    //         <Box sx={{ flexGrow: 1, minWidth: 112 }}>{text}</Box>
+    //       </Box>
+    //       <Box>{date}</Box>
+    //     </Grid2> */}
+
+    //     <Stack spacing={2} className="items-center">
+    //       {img ? (
+    //         <Box
+    //           sx={{
+    //             width: { xs: "100%", sm: "70%", md: "40%" },
+    //             height: "100%",
+    //             mb: 3,
+    //           }}
+    //         >
+    //           <img
+    //             src={`${import.meta.env.VITE_BASE_URL}/${img}`}
+    //             alt={title}
+    //             loading="lazy"
+    //             className=""
+    //           />
+    //         </Box>
+    //       ) : (
+    //         <></>
+    //       )}
+
+    //       <Box
+    //         sx={{
+    //           display: "flex",
+    //           flexWrap: "wrap",
+    //           alignItems: "flex-end",
+    //           justifyContent: "center",
+    //         }}
+    //       >
+    //         <Box className="w-full text-xl font-semibold">{title}</Box>
+    //         {timestampOfUntil < Date.now() ? (
+    //           <Box className="w-full text-red-700" color={"error"}>
+    //             Expired
+    //           </Box>
+    //         ) : (
+    //           <Box className="w-full text-slate-900">
+    //             From: <span>{`${from} Until: ${until}`}</span>
+    //           </Box>
+    //         )}
+
+    //         <Box sx={{ flexGrow: 1, minWidth: 112 }}>{text}</Box>
+    //       </Box>
+    //     </Stack>
+    //   </Grid2>
+    // </Card>
   );
 }

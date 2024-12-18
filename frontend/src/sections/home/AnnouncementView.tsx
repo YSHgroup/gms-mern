@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import { Grid2 as Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -10,20 +10,24 @@ import { AnnouncementBox } from "./parts/announcementBox";
 import { getAnnouncements } from "@/services/announcementServices";
 import { Announcement } from "@/types/announcement";
 
-import text from "./parts/mockText.json";
-
 // ----------------------------------------------------------------------
 
 export default function AnnouncementView() {
   const [announcements, setAnnouncements] = React.useState<Announcement[]>();
+  const viewRef = useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
     getAnnouncements()
       .then((res) => {
-        console.log('Announcements fetched:', res.data);
         setAnnouncements(res.data)})
       .catch((err) => console.error('Error fetching announcements:', err));
   }, []);
+
+  React.useEffect(() => {
+    if(viewRef?.current) {
+      viewRef.current.lastElementChild?.scrollIntoView();
+    }
+  }, [announcements])
 
   return (
     <DashboardContent maxWidth="xl">
@@ -33,23 +37,20 @@ export default function AnnouncementView() {
 
       <Grid container spacing={3}>
         <Grid size={12}>
+        <div ref={viewRef}>
           {
             announcements?.length === 0? (
               <Typography>No announcements available.</Typography>
             ) : (
-              announcements?.map((ann) => (
+              announcements?.map((ann: Announcement) => (
                 <AnnouncementBox
                   key={ann._id}
-                  className="my-4"
-                  title={ann.title}
-                  img={ann.imageUrl}
-                  text={ann.content}
-                  from={ann.from}
-                  until={ann.until}
+                  announcement={ann}
                 />
               ))
             )
           }
+          </div>
         </Grid>
       </Grid>
     </DashboardContent>

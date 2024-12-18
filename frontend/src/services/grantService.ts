@@ -5,9 +5,9 @@ import { getCurrentUser } from "./authService";
 export const requestGrant = (application: File, id: string, budget: number, milestone: number) => {
   const user = getCurrentUser();
   const formData = new FormData();
-  formData.append("announcement", id)
+  formData.append("application", application);
   const data = {
-    application,
+    announcement: id,
     budget,
     milestone
   }
@@ -22,7 +22,12 @@ export const requestGrant = (application: File, id: string, budget: number, mile
     .then((response) => {
       toast.success("Application submitted");
     })
-    .catch((err) => toast.error(err.message));
+    .catch((error) => {
+      if (isAxiosError(error))
+        error.response?.data.msg.map((str: string) => {
+          toast.error(str);
+        });
+    });
 };
 
 export const getRequests = () => {

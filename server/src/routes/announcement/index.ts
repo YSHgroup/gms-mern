@@ -28,6 +28,7 @@ router.post("/", upload.single('image'), async (req: any, res: Response) => {
   }
 
   const data = JSON.parse(req.body.data);
+  console.log('announcement: ', data)
   const newAnnouncement = new Announcement(data);
   if(req.file) newAnnouncement.imageUrl = 'images/' + req.file.filename;
 

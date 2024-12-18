@@ -36,7 +36,7 @@ export default function WorkPanel() {
     from: "",
     until: "",
   });
-  const [budget, setBudget] = React.useState<number>()
+  const [budget, setBudget] = React.useState<string>()
   const [content, setContent] = React.useState<string>();
   const imageUpload = (files: FileList | null) => {
     if (files && files.length > 0) {
@@ -149,7 +149,7 @@ export default function WorkPanel() {
             fullWidth
             type="number"
             onChange={(e) =>
-              setBudget((pre: any) => ({ ...pre, budget: e.target.value }))
+              setBudget(e.target.value)
             }
           ></TextField>
         </Grid>

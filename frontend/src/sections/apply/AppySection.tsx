@@ -19,6 +19,8 @@ import pdf from "../../../public/php_cookbook.pdf";
 import { requestGrant } from "@/services/grantService";
 import { toast } from "react-toastify";
 import { getAnnouncements } from "@/services/announcementServices";
+import { usePathname } from "@/routes/hooks";
+import { useParams } from "react-router";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -42,6 +44,8 @@ export default function ApplySection() {
     budget: 0,
     milestone: 0
   })
+
+  const params = useParams()
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openCombo = Boolean(anchorEl);
@@ -58,18 +62,25 @@ export default function ApplySection() {
   };
 
   const publishApplication = () => {
+    if(!budget) {
+      toast.warn("Please select budget.")
+      return
+    }
+    if(!budget.milestone) {
+      toast.warn("Please select milestone.")
+    }
     if (!file) {
       toast.warn("Please select a file to upload");
-      return;
-    }
-    if(!announcement?._id) {
-      toast.warn("Please select announcement");
       return;
     }
     if (fileUrl) {
       URL.revokeObjectURL(fileUrl);
     }
-    requestGrant(file, announcement._id, budget.budget, budget.milestone);
+    if(params?.id) {
+      requestGrant(file, params.id, budget.budget, budget.milestone);
+      return
+    }
+    toast.warn("Please select announcement")
   };
 
   const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {

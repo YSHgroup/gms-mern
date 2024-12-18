@@ -243,7 +243,7 @@ export function UserTableRow({
 
         <Dialog open={openComment} onClose={handleCloseCommentDialog}>
           <DialogTitle mb={1}>Comment</DialogTitle>
-          {user.role == "grant_dir" ? (
+          {user.role == "col_dean" ? (
             <DialogContent>
               <DialogContentText>{row.comment}</DialogContentText>
             </DialogContent>

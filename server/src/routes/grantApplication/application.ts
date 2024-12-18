@@ -63,6 +63,8 @@ router.post(
   uploadApplication.single("application"),
   (req: any, res: Response) => {
 
+    const { announcement, budget, milestone } = JSON.parse(req.body.data)
+
     confirmUserByEmail(req.params.email)
       .then((response) => {
         if (response.confirmed) {
@@ -73,7 +75,9 @@ router.post(
             lastName: user?.lastName,
             department: user?.department,
             application: req.file.filename,
-            announcement: req.body.announcement
+            announcement,
+            budget,
+            milestone
           };
           const newApplication = new Application(data);
 
