@@ -29,27 +29,29 @@ import { applyFilter, emptyRows, getComparator } from "../tableUtils/utils";
 import { toast } from "react-toastify";
 import { isAxiosError } from "axios";
 import { getAnnouncements } from "@/services/announcementServices";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { fetchRequestData } from "@/redux/slices/requestSlice";
 
 type Props = {};
 
-const setTableData = (setData: React.Dispatch<any>) => {
-  getRequests()
-    .then((res) => {
-      console.log("Requests fetched:", res.data);
+// const setTableData = (setData: React.Dispatch<any>) => {
+//   getRequests()
+//     .then((res) => {
+//       console.log("Requests fetched:", res.data);
 
-      const result = res.data.map((application: any) => {
-        return {
-          ...application,
-          id: application._id,
-          name: application.firstName + " " + application.lastName,
-        };
-      });
-      setData(result);
-    })
-    .catch((err) => {
-      console.error("Error fetching requests:", err);
-    });
-};
+//       const result = res.data.map((application: any) => {
+//         return {
+//           ...application,
+//           id: application._id,
+//           name: application.firstName + " " + application.lastName,
+//         };
+//       });
+//       setData(result);
+//     })
+//     .catch((err) => {
+//       console.error("Error fetching requests:", err);
+//     });
+// };
 
 export default function RequestTable({}: Props) {
   const role = getCurrentUser().role;
@@ -101,10 +103,12 @@ export default function RequestTable({}: Props) {
       label: "Accepted",
     },
   ];
-  const [data, setData] = useState<any>([]);
   const [announcements, setAnnouncements] = useState<any>([]);
   const [tableData, setFilteredData] = useState<any>([]);
   const [filterName, setFilterName] = useState("");
+
+  const dispatch = useAppDispatch()
+  const requestData = useAppSelector(state => state.request.data)
 
   const table = useTable();
 
@@ -120,7 +124,7 @@ export default function RequestTable({}: Props) {
     approveRequest(id)
       .then((response) => {
         toast.success("Application approved");
-        setTableData(setData);
+        dispatch(fetchRequestData())
       })
       .catch((error) => {
         console.log("err: ", error);
@@ -135,7 +139,7 @@ export default function RequestTable({}: Props) {
     rejectRequest(id)
       .then((response) => {
         toast.success("Application rejected");
-        setTableData(setData);
+        dispatch(fetchRequestData())
       })
       .catch((error) => {
         if (isAxiosError(error))
@@ -147,16 +151,16 @@ export default function RequestTable({}: Props) {
 
   const selecteAnnouncement = (ann: string) => {
     setFilteredData(
-      data.filter((item: any) => ann == "" || item.announcement._id == ann)
+      requestData.filter((item: any) => ann == "" || item.announcement._id == ann)
     );
   };
 
   useEffect(() => {
-    setFilteredData(data);
-  }, [data]);
-
+    setFilteredData(requestData);
+  }, [requestData]);
+  
   useEffect(() => {
-    setTableData(setData);
+    dispatch(fetchRequestData())
     getAnnouncements()
       .then((res) => {
         setAnnouncements(res.data);
@@ -194,13 +198,13 @@ export default function RequestTable({}: Props) {
               <UserTableHead
                 order={table.order}
                 orderBy={table.orderBy}
-                rowCount={data.length}
+                rowCount={requestData.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    data.map((user: any) => user?.id)
+                    requestData.map((user: any) => user?.id)
                   )
                 }
                 headLabel={columns}
@@ -228,7 +232,7 @@ export default function RequestTable({}: Props) {
                   emptyRows={emptyRows(
                     table.page,
                     table.rowsPerPage,
-                    data.length
+                    requestData.length
                   )}
                 />
 
@@ -241,7 +245,7 @@ export default function RequestTable({}: Props) {
         <TablePagination
           component="div"
           page={table.page}
-          count={data.length}
+          count={requestData.length}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

@@ -25,6 +25,22 @@ router.post("/approve/:id", (req: any, res: Response) => {
     });
 });
 
+router.post("/sign/:id", (req: any, res: Response) => {
+  // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: true}})
+  console.log('signed: ', req.body)
+  Application.findByIdAndUpdate(req.params.id, {$set: {signed: req.body.sign}})
+  .then((response) => {
+      if (!isEmpty(response)) {
+        res.status(200).send(response);
+        return;
+      }
+      throw new Error("Couldn't such data.");
+    })
+    .catch((error) => {
+      res.status(500).json({ msg: [error.message] });
+    });
+});
+
 router.post("/reject/:id", (req: any, res: Response) => {
   // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: false}})
   GrantService.handleRequest(req.params.id, req.tokenUser.role, false)

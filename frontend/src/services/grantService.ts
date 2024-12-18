@@ -38,6 +38,12 @@ export const getRequests = () => {
 export const approveRequest = (id: string) => {
   return axios.post("api/grant-application/approve/" + id);
 };
+export const signApplication = (id: string, sign: string, refetchRequest: Function) => {
+  axios.post("api/grant-application/sign/" + id, {sign}).then(res => {
+    toast.success(`${sign === 'approved'? 'Signed': 'Deny'} this application.`)
+    refetchRequest()
+  })
+};
 
 export const rejectRequest = (id: string) => {
   return axios.post("api/grant-application/reject/" + id);

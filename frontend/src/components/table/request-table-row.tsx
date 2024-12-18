@@ -22,7 +22,9 @@ import {
 import { Button } from "@mui/material";
 import { getCurrentUser } from "@/services/authService";
 import { Box } from "@mui/material";
-import { postComment } from "@/services/grantService";
+import { postComment, signApplication } from "@/services/grantService";
+import { useAppDispatch } from "@/redux/hooks";
+import { fetchRequestData } from "@/redux/slices/requestSlice";
 
 // ----------------------------------------------------------------------
 
@@ -49,8 +51,11 @@ export function UserTableRow({
   const [state, setState] = useState<boolean | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openComment, setOpenComment] = useState<boolean>(false);
+  const [signState, setSignState] = useState<boolean>(false)
   const [comment, setComment] = useState("");
   const user = getCurrentUser();
+
+  const dispatch = useAppDispatch()
 
   const handleAcceptClick = useCallback(() => {
     setState(true);
@@ -69,13 +74,22 @@ export function UserTableRow({
   const confirmState = (id: string) => {
     if (openDialog) {
       state && onAccept(id);
-      !state && onDeny(id);
+      (state !== null && !state) && onDeny(id);
+      if(signState) {
+        signApplication(id, 'approved', () => dispatch(fetchRequestData()))
+        return
+      }
       setOpenDialog(false);
       setState(null);
     }
   };
+  const denySign = (id: string) => {
+    signApplication(id, 'rejected', () => dispatch(fetchRequestData()))
+  }
+
   const cancelAction = () => {
     setOpenDialog(false);
+    setSignState(false)
     setState(null);
   };
 
@@ -105,6 +119,10 @@ export function UserTableRow({
   const handleCloseCommentDialog = () => {
     setOpenComment(false);
   };
+  const handleSign = () => {
+    setOpenDialog(true)
+    setSignState(true)
+  }
 
   return (
     <>
@@ -222,21 +240,32 @@ export function UserTableRow({
               <Iconify icon="solar:paperclip-outline" />
               Comment
             </MenuItem>
+            {user?.role == 'col_dean' &&
+              <MenuItem sx={{ color: "success.main"}} onClick={handleSign}>
+              <Iconify icon="solar:check-circle-linear" />
+              Sign
+            </MenuItem>}
           </MenuList>
         </Popover>
 
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle mb={1}>Confirm action</DialogTitle>
           <Typography p={2}>
-            Are you sure you want to {state ? "accept" : "deny"} this
+            Are you sure you want to {signState? "sign": state ? "accept" : "deny"} this
             application?
           </Typography>
           <DialogActions>
             <Button onClick={() => confirmState(row.id)} color="primary">
-              Yes
+              {signState? 'Sign':'Yes'}
             </Button>
+            {
+              signState
+               && <Button onClick={() => denySign(row._id)} color="error">
+              Deny
+            </Button>
+            }
             <Button onClick={() => cancelAction()} color="secondary">
-              No
+              {signState? 'Close': 'No'}
             </Button>
           </DialogActions>
         </Dialog>
@@ -245,7 +274,32 @@ export function UserTableRow({
           <DialogTitle mb={1}>Comment</DialogTitle>
           {user.role == "col_dean" ? (
             <DialogContent>
-              <DialogContentText>{row.comment}</DialogContentText>
+              {Object.keys(row.comment)
+                .filter((key) =>
+                  [
+                    "reviewer",
+                    "signed",
+                    "col_dean",
+                    "grant_dep",
+                    "grant_dir",
+                    "accepted",
+                  ].includes(key)
+                )
+                .map((key: string) => (
+                  <Box p={2} minWidth={300} key={key}>
+                    <Typography variant="h6">
+                      {key == "reviewer"
+                        ? "Reviewer"
+                        : key == "grant_dep"
+                        ? "Grant Department"
+                        : key == "grant_dir"
+                        ? "Grant Director"
+                        : ""}
+                    </Typography>
+
+                    <Typography variant="body1">{row.comment[key]}</Typography>
+                  </Box>
+                ))}
             </DialogContent>
           ) : (
             <Box px={3}>
@@ -270,7 +324,7 @@ export function UserTableRow({
               ></TextField>
             </Box>
           )}
-          {user.role === "grant_dir" ? (
+          {user.role === "col_dean" ? (
             <Button onClick={() => setOpenComment(false)} size="large">
               Close
             </Button>
