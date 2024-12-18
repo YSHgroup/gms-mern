@@ -9,6 +9,8 @@ import {
   LinearProgress,
   Menu,
   MenuItem,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { CloudUpload, Publish } from "@mui/icons-material";
 import React from "react";
@@ -36,6 +38,10 @@ export default function ApplySection() {
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [announcements, setAnnouncements] = React.useState<any>([]);
   const [announcement, setAnnouncement] = React.useState<any>([]);
+  const [budget, setBudget] = React.useState<any>({
+    budget: 0,
+    milestone: 0
+  })
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openCombo = Boolean(anchorEl);
@@ -63,7 +69,7 @@ export default function ApplySection() {
     if (fileUrl) {
       URL.revokeObjectURL(fileUrl);
     }
-    requestGrant(file, announcement._id);
+    requestGrant(file, announcement._id, budget.budget, budget.milestone);
   };
 
   const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -95,7 +101,7 @@ export default function ApplySection() {
 
       {/* <Container className="bg-white border-solid border rounded border-stone-100 p-6"> */}
       <Paper elevation={1} className="p-4">
-        <Typography variant="body1" my={2} color="primary.dark">
+        {/* <Typography variant="body1" my={2} color="primary.dark">
           Select announcement
         </Typography>
 
@@ -123,7 +129,7 @@ export default function ApplySection() {
               <MenuItem key={item._id}  onClick={() => setAnnouncement(item)}>{item.title}</MenuItem>
             ))}
           </Menu>
-        </Box>
+        </Box> */}
 
         <Grid container spacing={4}>
           <Grid
@@ -137,6 +143,43 @@ export default function ApplySection() {
               Apply with your documentation
             </Typography>
           </Grid>
+
+          <Grid container size={12}>
+        <Grid size={{ sm: 4, xs: 12 }}>
+          <TextField
+            label="Budget"
+            variant="outlined"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+              input: {
+                endAdornment: <InputAdornment position="end">$</InputAdornment>,
+              },
+            }}
+            fullWidth
+            type="number"
+            onChange={(e) =>
+              setBudget((pre: any) => ({ ...pre, budget: e.target.value }))
+            }
+          ></TextField>
+        </Grid>
+        <Grid size={{ sm: 4, xs: 12 }}>
+          <TextField
+            label="Milestone"
+            variant="outlined"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+            onChange={(e) =>
+              setBudget((pre: any) => ({ ...pre, milestone: e.target.value }))
+            }
+          ></TextField>
+        </Grid>
+        <Grid size={4}></Grid>
+      </Grid>
 
           <Grid size={12} container justifyContent={"center"}>
             <Grid

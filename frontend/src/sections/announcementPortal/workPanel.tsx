@@ -1,4 +1,12 @@
-import { Grid2 as Grid, Button, styled, Box, TextField, Divider } from "@mui/material";
+import {
+  Grid2 as Grid,
+  Button,
+  styled,
+  Box,
+  TextField,
+  Divider,
+  InputAdornment,
+} from "@mui/material";
 import { _tasks, _posts, _timeline } from "@/_mock";
 import { CloudUpload } from "@mui/icons-material";
 
@@ -25,9 +33,10 @@ export default function WorkPanel() {
   const [img, setImg] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
   const [date, setDate] = React.useState<any>({
-    from: '',
-    until: ''
+    from: "",
+    until: "",
   });
+  const [budget, setBudget] = React.useState<number>()
   const [content, setContent] = React.useState<string>();
   const imageUpload = (files: FileList | null) => {
     if (files && files.length > 0) {
@@ -45,16 +54,17 @@ export default function WorkPanel() {
   };
 
   const submitAnnouncement = () => {
-    if(!title || !content || !date ) return
-    
+    if (!title || !content || !date) return;
+
     const data = {
-        title,
-        content,
-        from: date.from,
-        until: date.until
-      };
-      publishAnnouncement(data, img)
-    }
+      title,
+      content,
+      from: date.from,
+      until: date.until,
+      budget
+    };
+    publishAnnouncement(data, img);
+  };
 
   return (
     <Grid container spacing={2}>
@@ -103,7 +113,9 @@ export default function WorkPanel() {
             },
           }}
           type="date"
-          onChange={(e) => setDate((pre: any) => ({...pre, from: e.target.value}))}
+          onChange={(e) =>
+            setDate((pre: any) => ({ ...pre, from: e.target.value }))
+          }
         ></TextField>
         <span className="p-2"></span>
         <TextField
@@ -115,8 +127,35 @@ export default function WorkPanel() {
             },
           }}
           type="date"
-          onChange={(e) => setDate((pre: any) => ({...pre, until: e.target.value}))}
+          onChange={(e) =>
+            setDate((pre: any) => ({ ...pre, until: e.target.value }))
+          }
         ></TextField>
+      </Grid>
+
+      <Grid container size={12}>
+        <Grid size={{ sm: 4, xs: 12 }}>
+          <TextField
+            label="Budget"
+            variant="outlined"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+              input: {
+                endAdornment: <InputAdornment position="end">$</InputAdornment>,
+              },
+            }}
+            fullWidth
+            type="number"
+            onChange={(e) =>
+              setBudget((pre: any) => ({ ...pre, budget: e.target.value }))
+            }
+          ></TextField>
+        </Grid>
+        <Grid size={ 4 }>
+        </Grid>
+        <Grid size={4}></Grid>
       </Grid>
 
       <Grid size={12}>

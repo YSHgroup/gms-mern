@@ -13,6 +13,10 @@ const announcementShema = new Schema({
     type: String,
     required: true,
   },
+  budget: {
+    type: Number,
+    required: true,
+  },
   content: {
     type: String,
     required: true,

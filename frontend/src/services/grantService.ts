@@ -2,12 +2,17 @@ import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 import { getCurrentUser } from "./authService";
 
-export const requestGrant = (application: File, id: string) => {
+export const requestGrant = (application: File, id: string, budget: number, milestone: number) => {
   const user = getCurrentUser();
   const formData = new FormData();
-  console.log('id: ', id)
   formData.append("announcement", id)
-  formData.append("application", application);
+  const data = {
+    application,
+    budget,
+    milestone
+  }
+  formData.append("data", JSON.stringify(data));
+
   axios
     .post("api/grant-application/" + user.email, formData, {
       headers: {

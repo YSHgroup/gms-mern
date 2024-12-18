@@ -19,15 +19,15 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { Scrollbar } from "@/components/scrollbar";
-import { UserTableHead } from "@/components/table/user-table-head";
-import { UserTableToolbar } from "@/components/table/user-table-toolbar";
+import { UserTableHead } from "@/components/table/request-table-head";
+import { UserTableToolbar } from "@/components/table/request-table-toolbar";
 import { TableBody } from "@mui/material";
-import { UserTableRow } from "@/components/table/user-table-row";
-import { TableEmptyRows } from "@/components/table/table-empty-rows";
-import { TableNoData } from "@/components/table/table-no-data";
+import { UserTableRow } from "@/components/table/request-table-row";
+import { TableEmptyRows } from "@/components/table/request-empty-rows";
+import { TableNoData } from "@/components/table/request-no-data";
 import { applyFilter, emptyRows, getComparator } from "../tableUtils/utils";
 import { toast } from "react-toastify";
-import axios, { isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { getAnnouncements } from "@/services/announcementServices";
 
 type Props = {};
@@ -55,7 +55,7 @@ export default function RequestTable({}: Props) {
   const role = getCurrentUser().role;
   const columns: any[] = [
     { id: "name", label: "Name" },
-    { id: "email", label: "Email" },
+    // { id: "email", label: "Email" },
     {
       id: "department",
       label: "Department",
@@ -63,6 +63,18 @@ export default function RequestTable({}: Props) {
     {
       id: "application",
       label: "Application",
+    },
+    {
+      id: "announcement",
+      label: "Announcement",
+    },
+    {
+      id: "budget",
+      label: "Budget"
+    },
+    {
+      id: "milestone",
+      label: "Milestone"
     },
     {
       id: "signed",
@@ -90,27 +102,21 @@ export default function RequestTable({}: Props) {
     },
   ];
   const [data, setData] = useState<any>([]);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const openCombo = Boolean(anchorEl);
   const [announcements, setAnnouncements] = useState<any>([]);
-  const [announcement, setAnnouncement] = useState<any>([]);
-
-  //
-  const table = useTable();
-
+  const [tableData, setFilteredData] = useState<any>([]);
   const [filterName, setFilterName] = useState("");
 
+  const table = useTable();
+
   const dataFiltered: any[] = applyFilter({
-    inputData: data,
+    inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-  //
 
   const handleAccept = (id: string) => {
-    console.log("handleAccept: ", id);
     approveRequest(id)
       .then((response) => {
         toast.success("Application approved");
@@ -126,7 +132,6 @@ export default function RequestTable({}: Props) {
   };
 
   const handleDeny = (id: string) => {
-    console.log("handleDeny: ");
     rejectRequest(id)
       .then((response) => {
         toast.success("Application rejected");
@@ -140,21 +145,22 @@ export default function RequestTable({}: Props) {
       });
   };
 
-  const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const selecteAnnouncement = (ann: string) => {
+    setFilteredData(
+      data.filter((item: any) => ann == "" || item.announcement._id == ann)
+    );
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const selectAnnouncement = (item: string) => {
-    setAnnouncement(item)
-  }
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   useEffect(() => {
     setTableData(setData);
     getAnnouncements()
       .then((res) => {
         setAnnouncements(res.data);
+        console.log("data: ", res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -170,38 +176,14 @@ export default function RequestTable({}: Props) {
         <Typography variant="h5">{}</Typography>
       </Box>
 
-        <Box mb={2}>
-          <Button
-            id="basic-button"
-            aria-controls={openCombo ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={openCombo ? "true" : undefined}
-            onClick={handleComboButton}
-            variant="outlined"
-          >
-            Announcement {announcement.title &&<span className="text-green-600"> - {announcement.title}</span>}
-          </Button>
-          <Typography></Typography>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={openCombo}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            {announcements.map((item: any) => 
-              <MenuItem key={item._id} onClick={() => setAnnouncement(item)}>{item.title}</MenuItem>
-            )}
-          </Menu>
-        </Box>
       <Card>
         <UserTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
+          announcements={announcements}
+          filterByAnnouncement={selecteAnnouncement}
+          onFilterName={(name: string) => {
+            setFilterName(name);
             table.onResetPage();
           }}
         />

@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid2,
   Link,
@@ -73,7 +74,7 @@ export function UserTableRow({
       setState(null);
     }
   };
-  const cancelAction = (id: string) => {
+  const cancelAction = () => {
     setOpenDialog(false);
     setState(null);
   };
@@ -85,18 +86,18 @@ export function UserTableRow({
     []
   );
   const submitComment = (id: string) => {
-    console.log('submit comment;', id, comment.trim());
+    console.log("submit comment;", id, comment.trim());
     if (comment.trim()) {
-      postComment(id, comment)
+      postComment(id, comment);
       setOpenComment(false);
       setComment("");
     }
-  }
+  };
 
   const cancelComment = () => {
-      setOpenComment(false);
-      setComment("");
-  }
+    setOpenComment(false);
+    setComment("");
+  };
 
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
@@ -128,21 +129,23 @@ export function UserTableRow({
             }
           >
             <>
-              {[
-                "reviewer",
-                "signed",
-                "col_dean",
-                "grant_dep",
-                "grant_dir",
-                "accepted",
-              ].includes(headItem.id) ? (
-                row[headItem.id] == 'approved' ? (
+              {headItem.id === "announcement" ? (
+                row["announcement"].title
+              ) : [
+                  "reviewer",
+                  "signed",
+                  "col_dean",
+                  "grant_dep",
+                  "grant_dir",
+                  "accepted",
+                ].includes(headItem.id) ? (
+                row[headItem.id] == "approved" ? (
                   <Iconify
                     width={22}
                     icon="solar:check-circle-bold"
                     sx={{ color: "success.main" }}
                   />
-                ) : row[headItem.id] == 'rejected' ? (
+                ) : row[headItem.id] == "rejected" ? (
                   <Iconify
                     width={22}
                     icon="solar:close-circle-bold-duotone"
@@ -232,7 +235,7 @@ export function UserTableRow({
             <Button onClick={() => confirmState(row.id)} color="primary">
               Yes
             </Button>
-            <Button onClick={() => cancelAction(row.id)} color="secondary">
+            <Button onClick={() => cancelAction()} color="secondary">
               No
             </Button>
           </DialogActions>
@@ -240,36 +243,47 @@ export function UserTableRow({
 
         <Dialog open={openComment} onClose={handleCloseCommentDialog}>
           <DialogTitle mb={1}>Comment</DialogTitle>
-
-          <Box px={3}>
-            <TextField
-              label="Comment"
-              variant="outlined"
-              minRows={3}
-              fullWidth
-              multiline
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            ></TextField>
-            <TextField
-              fullWidth
-              hidden
-              sx={{
-                visibility: "hidden",
-                height: 0,
-                m: 0,
-                p: 0,
-              }}
-            ></TextField>
-          </Box>
-          <DialogActions>
-            <Button onClick={() => submitComment(row.id)} color="primary">
-              Submit
+          {user.role == "grant_dir" ? (
+            <DialogContent>
+              <DialogContentText>{row.comment}</DialogContentText>
+            </DialogContent>
+          ) : (
+            <Box px={3}>
+              <TextField
+                label="Comment"
+                variant="outlined"
+                minRows={3}
+                fullWidth
+                multiline
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              ></TextField>
+              <TextField
+                fullWidth
+                hidden
+                sx={{
+                  visibility: "hidden",
+                  height: 0,
+                  m: 0,
+                  p: 0,
+                }}
+              ></TextField>
+            </Box>
+          )}
+          {user.role === "grant_dir" ? (
+            <Button onClick={() => setOpenComment(false)} size="large">
+              Close
             </Button>
-            <Button onClick={() => cancelComment()} color="secondary">
-              Cancel
-            </Button>
-          </DialogActions>
+          ) : (
+            <DialogActions>
+              <Button onClick={() => submitComment(row.id)} color="primary">
+                Submit
+              </Button>
+              <Button onClick={() => cancelComment()} color="secondary">
+                Cancel
+              </Button>
+            </DialogActions>
+          )}
         </Dialog>
       </TableRow>
     </>

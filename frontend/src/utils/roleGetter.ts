@@ -1,5 +1,4 @@
 import { useRouter } from "@/routes/hooks";
-import { Navigate } from "react-router";
 
 export const getRole = (key: string) => {
   const roles = [

@@ -20,6 +20,14 @@ const ApplicationSchema = new Schema({
         type: String,
         required: true,
     },
+    budget: {
+        type: Number,
+        required: true,
+    },
+    milestone: {
+        type: Number,
+        required: true,
+    },
     signed: {
         type: String,
         enum: ['pending', 'approved', 'rejected'],
