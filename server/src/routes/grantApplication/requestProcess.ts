@@ -16,7 +16,7 @@ router.post("/approve/:id", (req: any, res: Response) => {
     .then((response) => {
       if (!isEmpty(response)) {
         res.status(200).send(response);
-        return
+        return;
       }
       throw new Error("Could not find your role.");
     })
@@ -31,7 +31,7 @@ router.post("/reject/:id", (req: any, res: Response) => {
     .then((response) => {
       if (!isEmpty(response)) {
         res.status(200).send(response);
-        return
+        return;
       }
       throw new Error("Could not find your role.");
     })
@@ -53,38 +53,38 @@ router.post("/reject/:id", (req: any, res: Response) => {
 // })
 
 router.post("/comment/:id", async (req: any, res: Response) => {
-  
   const { content } = req.body;
   const role = req.tokenUser.role;
-  console.log('comment: ', content)
   try {
     if (role === "user" || role === "grant_dir")
       throw new Error("You don't have permission");
     const application = (await Application.findOne({
       _id: req.params.id,
     })) as any;
-    if (!application) {
+    if (isEmpty(application)) {
       throw new Error("Application not found");
     }
-    if (
-      application[role] ||
-      (application.signed && role === "col_dean") ||
-      (application.accepted && role === "col_dean")
-    ) {
-      throw new Error("You have already approved this application");
-    }
+    // if (
+    //   application[role] == "" ||
+    //   (application.signed && role === "col_dean") ||
+    //   (application.accepted && role === "col_dean")
+    // ) {
+    //   throw new Error("You have already approved this application");
+    // }
     const confirmData = grantService.checkProcedure(0, role, application);
-    if (!confirmData.result) {
-      throw new Error("Your previous step was not performed.");
+    // if (!confirmData.result) {
+    //   throw new Error("Your previous step was not performed.");
+    // }
+    if(application.comment) {
+      console.log('alraedy?  ',application.comment)
     }
-
-
     const comment = new Comment({ [req.tokenUser.role]: content });
+    console.log("coment: ", req.tokenUser.role ,comment);
     comment
       .save()
       .then((result) => {
         if (!isEmpty(result)) {
-          Application.findOneAndReplace(
+          Application.findOneAndUpdate(
             { _id: req.params.id },
             { $set: { comment: result._id } }
           )
@@ -94,14 +94,16 @@ router.post("/comment/:id", async (req: any, res: Response) => {
             .catch((error) => {
               throw new Error(error.message);
             });
+        } else {
+
+          throw new Error("Error saving comment");
         }
-        throw new Error("Error saving comment");
       })
       .catch((error) => {
         res.status(500).json({ msg: [error.message] });
       });
   } catch (error) {
-    res.status(500).json({ msg: ['Error saving data'] });
+    res.status(500).json({ msg: ["Error saving data"] });
   }
 });
 

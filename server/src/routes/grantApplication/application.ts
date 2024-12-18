@@ -42,7 +42,6 @@ router.get("/:email", (req: any, res: Response) => {
       .populate("comment")
       .populate("announcement")
       .then((application) => {
-          console.log('---', req.params.email)
           if (isEmpty(application)) {
             res.status(404).json({ msg: ["No application"] });
           } else {
@@ -50,6 +49,8 @@ router.get("/:email", (req: any, res: Response) => {
           }
         })
         .catch((error) => {
+      console.log('---', error)
+
           res.status(500).json({ msg: [error.message] });
         });
     })

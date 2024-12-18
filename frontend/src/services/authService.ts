@@ -15,7 +15,7 @@ const register = (userData: RegUser, navigate: Function) => {
     })
     .catch((err) => {
       console.log("error occured: ", err)
-      toast.error('Failed to login')
+      toast.error('Failed to register')
     });
 };
 const login = (email: string, password: string, navigate: Function) => {

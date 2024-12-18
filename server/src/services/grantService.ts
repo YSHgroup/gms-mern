@@ -56,8 +56,8 @@ export default {
       }
       application[confirmData.key] = flag ? "approved" : "rejected";
       await application.save();
-      flag && this.autoEmail(role, confirmData.key, application);
-      !flag && sendEmail(denyMail(application.email));
+      // flag && this.autoEmail(role, confirmData.key, application);
+      // !flag && sendEmail(denyMail(application.email));
       return application;
     } catch (error) {
       throw error;
