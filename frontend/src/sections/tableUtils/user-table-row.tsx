@@ -9,6 +9,7 @@ import {
   rejectPendingUserController,
 } from "@/redux/slices/pendingUserSlice";
 import { ROLE } from "@/constants/info";
+import { getCurrentUser } from "@/services/authService";
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ export function UserTableRow({
   onSelectRow,
 }: UserTableRowProps<any>) {
   const dispatch = useAppDispatch();
+  const user = getCurrentUser()
 
   const allowUser = (id: string) => {
     // allowPendingUser(id)
@@ -52,7 +54,7 @@ export function UserTableRow({
           </TableCell>
         ))}
 
-        {row.allowed ? (
+        {(user.role != 'grant_dir') && row.allowed ? (
           <TableCell align="center">
             <Button
               size="small"
@@ -63,7 +65,7 @@ export function UserTableRow({
               Allowed
             </Button>
           </TableCell>
-        ) : row.rejected ? (
+        ) : (user.role != 'grant_dir') && row.rejected ? (
           <TableCell align="center">
             <Button
               size="small"
@@ -79,18 +81,20 @@ export function UserTableRow({
             <BtnGroup>
               <Button
                 size="small"
-                variant="contained"
+                variant={row.allowed? "outlined": "contained"}
                 onClick={() => allowUser(row.id)}
+                disabled={row.allowed}
               >
-                Allow
+                {row.allowed? "Allowed": "Allow"}
               </Button>
               <Button
                 size="small"
-                variant="contained"
+                variant={row.rejected? "outlined": "contained"}
                 color="error"
                 onClick={() => rejectUser(row.id)}
+                disabled={row.rejected}
               >
-                Reject
+                {row.rejected? "Rejected": "Reject"}
               </Button>
             </BtnGroup>
           </TableCell>

@@ -2,20 +2,15 @@ import { DashboardContent } from "@/layouts/dashboard";
 import { getCurrentUser } from "@/services/authService";
 import {
   approveRequest,
-  getRequests,
   rejectRequest,
 } from "@/services/grantService";
 import {
   Box,
   Card,
-  Paper,
   Table,
   TableContainer,
   TablePagination,
-  Typography,
-  Menu,
-  Button,
-  MenuItem,
+  Typography
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { Scrollbar } from "@/components/scrollbar";

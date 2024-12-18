@@ -1,4 +1,5 @@
 import { User } from '@/models/userModel'
+import { isEmpty } from '@/utils/isEmpty'
 import { queryByRoleWritter } from '@/utils/roleAprpovalQuery'
 import { Request, Response, Router } from 'express'
 
@@ -26,34 +27,55 @@ router.get('/:email', async (req: any, res: Response) => {
     })
 })
 
-router.put('/user/:id', (req: Request, res: Response) => {
+router.put('/user/:id', (req: any, res: Response) => {
     const id = req.params.id
-
-    User.findOneAndUpdate({_id: id}, { $set: {allowed: true}}).then(result => {
-        if(!result) {
+    User.findById(req.params.id).then((user) => {
+        if(isEmpty(user)) {
             res.status(404).json({msg: ['No user']})
         } else {
-            res.status(204).send({success: true})
+            const query: Record<string, boolean> = {allowed: true}
+            if(req.tokenUser.role === 'grant_dir' && user?.rejected) {
+                query.rejected = false
+            }
+            User.findOneAndUpdate({_id: id}, { $set: query}).then(result => {
+                if(isEmpty(result)) {
+                    res.status(404).json({msg: ['No user']})
+                } else {
+                    res.status(204).send({success: true})
+                }
+            }).catch(err => {
+                res.status(500).json({msg: [err.message]})
+            })
         }
-    }).catch(err => {
-        res.status(500).json({msg: [err.message]})
+    }).catch(error => {
+        res.status(500).json({msg: [error.message]})
     })
 })
 
-router.patch('/user/:id', (req: Request, res: Response) => {
+router.patch('/user/:id', (req: any, res: Response) => {
     const id = req.params.id
 
-    User.findOneAndUpdate({_id: id}, {$set: {
-        rejected: true
-    }}).then(result => {
-        if(!result) {
+    User.findById(req.params.id).then((user) => {
+        if(isEmpty(user)) {
             res.status(404).json({msg: ['No user']})
         } else {
-            res.status(200).json({msg: 'A User rejected successfully.'})
+            const query: Record<string, boolean> = {rejected: true}
+            if(req.tokenUser.role === 'grant_dir' && user?.allowed) {
+                query.allowed = false
+            }
+            User.findOneAndUpdate({_id: id}, {$set: query}).then(result => {
+                if(!result) {
+                    res.status(404).json({msg: ['No user']})
+                } else {
+                    res.status(200).json({msg: 'A User rejected successfully.'})
+                }
+            }).catch(err => {
+                res.status(500).json({msg: [err.message]})
+            })
         }
-    }).catch(err => {
-        res.status(500).json({msg: [err.message]})
-    })
+    }).catch(error => {
+        res.status(500).json({msg: [error.message]})
+    })    
 })
 
 router.put('/multi-user', (req: Request, res: Response) => {
