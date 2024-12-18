@@ -100,7 +100,6 @@ export function UserTableRow({
     []
   );
   const submitComment = (id: string) => {
-    console.log("submit comment;", id, comment.trim());
     if (comment.trim()) {
       postComment(id, comment);
       setOpenComment(false);
@@ -240,7 +239,7 @@ export function UserTableRow({
               <Iconify icon="solar:paperclip-outline" />
               Comment
             </MenuItem>
-            {user?.role == 'col_dean' &&
+            {(user?.role == 'col_dean' && row.signed == 'pending') &&
               <MenuItem sx={{ color: "success.main"}} onClick={handleSign}>
               <Iconify icon="solar:check-circle-linear" />
               Sign
@@ -278,11 +277,8 @@ export function UserTableRow({
                 .filter((key) =>
                   [
                     "reviewer",
-                    "signed",
-                    "col_dean",
                     "grant_dep",
                     "grant_dir",
-                    "accepted",
                   ].includes(key)
                 )
                 .map((key: string) => (

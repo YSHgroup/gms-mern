@@ -98,10 +98,10 @@ export default function RequestTable({}: Props) {
       id: "grant_dir",
       label: "Grant Director",
     },
-    {
-      id: "accepted",
-      label: "Accepted",
-    },
+    // {
+    //   id: "accepted",
+    //   label: "Accepted",
+    // },
   ];
   const [announcements, setAnnouncements] = useState<any>([]);
   const [tableData, setFilteredData] = useState<any>([]);

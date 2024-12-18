@@ -12,12 +12,11 @@ import { sendEmail } from "./autoMailService";
 
 export default {
   approveProcedure: [
-    "signed",
     "reviewer",
     "col_dean",
     "grant_dep",
     "grant_dir",
-    "accepted",
+    // "accepted",
   ],
   roles: [
     { user: "User" },
@@ -34,24 +33,26 @@ export default {
         throw new Error("Application not found");
       }
 
-      if (role === "col_dean" && application.signed == "approved")
-        throw new Error("You have already approved this application");
-      if (role === "col_dean" && application.accepted == "approved")
-        throw new Error("You have already approved this application");
-      if (role === "col_dean" && application.signed == "rejected")
-        throw new Error("You have already rejected this application");
-      if (role === "col_dean" && application.accepted == "rejected")
-        throw new Error("You have already rejected this application");
+      // if (role === "col_dean" && application.accepted == "approved")
+      //   throw new Error("You have already approved this application");
+      // if (role === "col_dean" && application.signed == "rejected")
+      //   throw new Error("You have already rejected this application");
+      // if (role === "col_dean" && application.accepted == "rejected")
+      //   throw new Error("You have already rejected this application");
       if (application[role] == "approved")
         throw new Error("You have already approved this application");
-      if (application[role] == "approved")
+      if (application[role] == "rejected")
         throw new Error("You have already rejected this application");
+      if (application[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] == "rejected")
+        throw new Error("This application is rejected already.");
 
-      const confirmData = this.checkProcedure(0, role, application);
+      const confirmData = this.checkProcedure(role, application);
 
       if (!confirmData.result) {
         if (confirmData.doubleError)
           throw new Error("Your action is already taken.");
+        if(confirmData.rejected) throw new Error("This application has been rejected.");
+        
         throw new Error("Your previous step was not performed.");
       }
       application[confirmData.key] = flag ? "approved" : "rejected";
@@ -63,30 +64,41 @@ export default {
       throw error;
     }
   },
-  checkProcedure(index: number, role: string, data: any): Record<string, any> {
+  checkProcedure(role: string, data: any): Record<string, any> {
+    // if (index <= this.approveProcedure.indexOf(role) - 1) {
+    //   if (data[this.approveProcedure[index]] == "pending")
+    //     return { result: false };
+    //   return this.checkProcedure(index + 1, role, data);
+    // } else if (index == this.approveProcedure.indexOf(role)) {
+    //   if (data[this.approveProcedure[index]] == "pending")
+    //     return { key: this.approveProcedure[index], result: true };
+    //   return { result: false, doubleError: true };
+    // }
+    if(role === this.approveProcedure[0]) {
+      if(data['signed'] == 'approved') return {result: true, key: role}
+      if(data['signed'] == 'rejected') return {result: false, rejected: true}
+      return { result: false }
+    } else
     if (
-      index == 0 &&
-      data[this.approveProcedure[index]] != "pending" &&
-      role == this.approveProcedure[2]
+      data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
+      "pending"
     ) {
-      return { key: this.approveProcedure[index], result: true };
-    } else if (index <= this.approveProcedure.indexOf(role) - 1) {
-      if (data[this.approveProcedure[index]] == "pending")
-        return { result: false };
-      return this.checkProcedure(index + 1, role, data);
-    } else if (
-      index == this.approveProcedure.length - 1 &&
-      role === this.approveProcedure[2]
-    ) {
-      if (data[this.approveProcedure[index]] == "pending")
-        return { key: this.approveProcedure[index], result: true };
       return { result: false };
-    } else if (index == this.approveProcedure.indexOf(role)) {
-      if (data[this.approveProcedure[index]] == "pending")
-        return { key: this.approveProcedure[index], result: true };
-      return { result: false, doubleError: true };
+    } else if (
+      data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
+      "rejected"
+    ) {
+      return { result: false };
+    } else if (
+      data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
+      "approved"
+    ) {
+      if (data[role] == "pending") {
+        return { result: true, key: role };
+      } else {
+        return { result: false, doubleError: true };
+      }
     }
-
     return { result: false };
   },
   autoEmail: async function (role: string, process: string, application: any) {

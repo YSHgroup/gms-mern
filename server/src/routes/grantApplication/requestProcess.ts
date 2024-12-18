@@ -27,7 +27,6 @@ router.post("/approve/:id", (req: any, res: Response) => {
 
 router.post("/sign/:id", (req: any, res: Response) => {
   // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: true}})
-  console.log('signed: ', req.body)
   Application.findByIdAndUpdate(req.params.id, {$set: {signed: req.body.sign}})
   .then((response) => {
       if (!isEmpty(response)) {
@@ -72,7 +71,7 @@ router.post("/comment/:id", async (req: any, res: Response) => {
   const { content } = req.body;
   const role = req.tokenUser.role;
   try {
-    if (role === "user" || role === "grant_dir")
+    if (role === "user")
       throw new Error("You don't have permission");
     const application = (await Application.findOne({
       _id: req.params.id,
@@ -87,7 +86,7 @@ router.post("/comment/:id", async (req: any, res: Response) => {
     // ) {
     //   throw new Error("You have already approved this application");
     // }
-    const confirmData = grantService.checkProcedure(0, role, application);
+    const confirmData = grantService.checkProcedure(role, application);
     // if (!confirmData.result) {
     //   throw new Error("Your previous step was not performed.");
     // }
@@ -135,8 +134,8 @@ router.post("/comment/:id", async (req: any, res: Response) => {
       .catch((error) => {
         res.status(500).json({ msg: [error.message] });
       });
-  } catch (error) {
-    res.status(500).json({ msg: ["Error saving data"] });
+  } catch (error: any) {
+    res.status(500).json({ msg: [error.message] });
   }
 });
 
