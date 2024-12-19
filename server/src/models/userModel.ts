@@ -25,6 +25,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    enrolment: {
+      type: Number,
+      unique: true
+    },
     allowed: {
       type: Boolean,
       default: false

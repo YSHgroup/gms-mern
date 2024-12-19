@@ -6,8 +6,9 @@ export interface LoginInfo {
 export interface RegUser extends LoginInfo {
   firstName: String;
   lastName: String;
-  department: String;
+  department?: String;
   role: String;
+  enrolment?: string | number
 }
 
 export interface PendingUser {

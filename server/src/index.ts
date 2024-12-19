@@ -12,6 +12,7 @@ import { profileRouter } from "./routes/user/profile";
 import { applicationRouter } from "./routes/grantApplication/application";
 import { requestProcessRouter } from "./routes/grantApplication/requestProcess";
 import { seedRouter } from "./routes/seed";
+import { checkAndMakeDir } from "./utils/dirChecker";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -48,6 +49,8 @@ app.use('/api/pending-user', authVerify, pendingUserRouter)
 app.use('/api/announcement', authVerify, announcementRouter);
 app.use('/api/user', authVerify, profileRouter);
 app.use('/api/grant-application', authVerify, [applicationRouter, requestProcessRouter]);
+
+checkAndMakeDir()
 
 app.listen(port, () => {
     console.log('=========================================')

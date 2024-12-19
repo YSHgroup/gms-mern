@@ -16,10 +16,11 @@ router.get('/:email', async (req: any, res: Response) => {
         console.log(role, user?.department)
 
     const query = queryByRoleWritter(role, user!.department)
-    User.find(query, '_id firstName lastName email department role allowed rejected').then(result => {
-        if(!result) {
+    User.find(query, '_id firstName lastName email department enrolment role allowed rejected').then(result => {
+        if(isEmpty(result)) {
             res.status(404).json({msg: ['No user']})
         } else {
+            console.log('result: ', result)
             res.status(200).json(result)
         }
     }).catch(err => {

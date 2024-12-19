@@ -24,12 +24,13 @@ import { PendingUser } from '@/types/userInfo';
 import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 import { fetchPendingUser } from '@/redux/slices/pendingUserSlice';
 import { allowPendingUsers, rejectPendingUsers } from '@/services/userService';
+import { userList } from '@/constants/userTable';
 
 // ----------------------------------------------------------------------
 
 export default function RegRequestView() {
+  // const user = getCurrentUser
   const table = useTable();
-
   const [filterName, setFilterName] = useState('');
 
   const pendingUserData = useAppSelector((state) => state.pendingUser.pendingUsers)
@@ -91,12 +92,7 @@ export default function RegRequestView() {
                   )
                 }
                 checkableCount={pendingUserData.filter((user: any) => !user.allowed && !user.rejected).map((user: any) => user.id).length}
-                headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'department', label: 'Department' },
-                  { id: 'email', label: 'Email'},
-                  { id: 'role', label: 'Role' }
-                ]}
+                headLabel={userList}
               />
               <TableBody>
                 {dataFiltered
@@ -107,12 +103,7 @@ export default function RegRequestView() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
-                      headList={[
-                        { id: 'name', label: 'Name' },
-                        { id: 'department', label: 'Department' },
-                        { id: 'email', label: 'Email'},
-                        { id: 'role', label: 'Role' },
-                      ]}
+                      headList={userList}
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}

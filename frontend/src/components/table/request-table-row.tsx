@@ -273,7 +273,7 @@ export function UserTableRow({
           <DialogTitle mb={1}>Comment</DialogTitle>
           {user.role == "col_dean" ? (
             <DialogContent>
-              {Object.keys(row.comment)
+              {row.comment && Object.keys(row.comment)
                 .filter((key) =>
                   [
                     "reviewer",

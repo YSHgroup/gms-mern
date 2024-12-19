@@ -36,9 +36,8 @@ export default withAuthRedirect(function SlotsSignIn() {
         <Box display="flex" flexDirection="column" alignItems="flex-end">
           <CardContent sx={{ textAlign: "center" }}>
             <Typography
-              variant="h4"
+              variant="h3"
               sx={{ fontWeight: "bold", textAlign: "center" }}
-              component="h2"
             >
               Login
             </Typography>
