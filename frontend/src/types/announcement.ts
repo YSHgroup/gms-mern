@@ -5,5 +5,6 @@ export interface Announcement {
     from: string;
     until: string;
     budget?: number | string;
+    currencyType: string
     imageUrl?: string;
 }

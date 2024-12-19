@@ -70,6 +70,10 @@ export default function RequestTable({}: Props) {
       label: "Budget"
     },
     {
+      id: "currencyType",
+      label: "Currency Type"
+    },
+    {
       id: "milestone",
       label: "Milestone"
     },

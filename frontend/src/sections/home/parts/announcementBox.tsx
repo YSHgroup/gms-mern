@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import { useRouter } from "@/routes/hooks";
 import { Announcement } from "@/types/announcement";
+import { currencyTypes } from "@/constants/currencyType";
+import { getCurrentUser } from "@/services/authService";
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +28,12 @@ export function AnnouncementBox({announcement}: {announcement: Announcement}) {
     until,
     content,
     budget,
+    currencyType
   } = announcement
   const timestampOfUntil = new Date(until).getTime();
   const theme = useTheme();
   const router = useRouter()
+  const user = getCurrentUser()
 
   const applyForAnnouncement = () => {
     router.push('/apply/'+ _id)
@@ -73,14 +77,13 @@ export function AnnouncementBox({announcement}: {announcement: Announcement}) {
           >
             <Grid2
               container
-              spacing={{ sm: 0, md: 2 }}
               className="w-full text-slate-900"
             >
-              <Grid2 size={{ md: 5, sm: 12 }}>
-                <span className="text-sky-600">Period : </span> <span>{from}</span> ~ <span>{until}</span>
+              <Grid2 size={{ md: 12, lg: 6, xl: 5 }}>
+                <span className="text-sky-600">Period : </span> <span  className="whitespace-nowrap">{from}</span> ~ <span className="whitespace-nowrap">{until}</span>
               </Grid2>
-              <Grid2 size={{ md: 5, sm: 12 }}>
-              <span className="text-sky-600">Budget : </span> ${budget?.toLocaleString()}
+              <Grid2 size={{ md: 12, lg: 6, xl: 5 }}>
+              <span className="text-sky-600">Budget : </span> {budget?.toLocaleString()} {currencyTypes.filter(cur => cur.value == currencyType)[0]?.label}
               </Grid2>
             </Grid2>
 
@@ -102,7 +105,7 @@ export function AnnouncementBox({announcement}: {announcement: Announcement}) {
             pb: 1,
           }}
         >
-          {!(timestampOfUntil < Date.now()) && (
+          {(timestampOfUntil > Date.now() && user.role === 'user')  && (
             <Button size="large" onClick={applyForAnnouncement}>Apply</Button>
           )}
         </Box>

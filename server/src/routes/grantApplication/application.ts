@@ -64,7 +64,7 @@ router.post(
   uploadApplication.single("application"),
   (req: any, res: Response) => {
 
-    const { announcement, budget, milestone } = JSON.parse(req.body.data)
+    const { announcement, budget, milestone, currencyType } = JSON.parse(req.body.data)
 
     confirmUserByEmail(req.params.email)
       .then((response) => {
@@ -78,7 +78,8 @@ router.post(
             application: req.file.filename,
             announcement,
             budget,
-            milestone
+            milestone,
+            currencyType
           };
           const newApplication = new Application(data);
 

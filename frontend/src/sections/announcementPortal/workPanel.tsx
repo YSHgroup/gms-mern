@@ -6,6 +6,7 @@ import {
   TextField,
   Divider,
   InputAdornment,
+  Autocomplete,
 } from "@mui/material";
 import { _tasks, _posts, _timeline } from "@/_mock";
 import { CloudUpload } from "@mui/icons-material";
@@ -13,6 +14,8 @@ import { CloudUpload } from "@mui/icons-material";
 import React from "react";
 import { Label } from "@/components/label";
 import { publishAnnouncement } from "@/services/announcementServices";
+import { currencyTypes } from "@/constants/currencyType";
+import { useTheme } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -29,24 +32,32 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function WorkPanel() {
+
   const [imgUrl, setImgUrl] = React.useState<string>();
   const [img, setImg] = React.useState<File>();
-  const [title, setTitle] = React.useState<string>();
+  const [title, setTitle] = React.useState<string>("");
+  const [currencyType, setCurrencyType] = React.useState<{
+    value: string;
+    label: string;
+  }| null>({
+    value: "dollar",
+    label: "Dollar",
+  });
   const [date, setDate] = React.useState<any>({
     from: "",
     until: "",
   });
-  const [budget, setBudget] = React.useState<string>()
+  const [budget, setBudget] = React.useState<string>();
   const [content, setContent] = React.useState<string>();
   const imageUpload = (files: FileList | null) => {
     if (files && files.length > 0) {
-      console.log(files);
       setImg(files[0]);
 
       const imageUrl = URL.createObjectURL(files[0]);
       setImgUrl(imageUrl);
     }
   };
+  const theme = useTheme()
 
   const removeImage = () => {
     setImgUrl(undefined);
@@ -54,14 +65,15 @@ export default function WorkPanel() {
   };
 
   const submitAnnouncement = () => {
-    if (!title || !content || !date) return;
+    if (!title || !content || !date || !currencyType) return;
 
     const data = {
       title,
       content,
       from: date.from,
       until: date.until,
-      budget
+      budget,
+      currencyType: currencyType?.value
     };
     publishAnnouncement(data, img);
   };
@@ -134,28 +146,38 @@ export default function WorkPanel() {
       </Grid>
 
       <Grid container size={12}>
-        <Grid size={{ sm: 4, xs: 12 }}>
+        <Grid size={{ sm: 4, xs: 7 }}>
           <TextField
             label="Budget"
             variant="outlined"
             slotProps={{
               inputLabel: {
                 shrink: true,
-              },
-              input: {
-                endAdornment: <InputAdornment position="end">$</InputAdornment>,
-              },
+              }
             }}
             fullWidth
             type="number"
-            onChange={(e) =>
-              setBudget(e.target.value)
-            }
+            onChange={(e) => setBudget(e.target.value)}
           ></TextField>
         </Grid>
-        <Grid size={ 4 }>
+        <Grid size={{ sm: 4, xs: 5 }}>
+          <Autocomplete
+            disablePortal
+            options={currencyTypes}
+            fullWidth
+            value={currencyType}
+            onChange={(e, nv) => setCurrencyType(nv)}
+            renderInput={(params) => (
+              <TextField {...params} label="Currency Type" />
+            )}
+          />
         </Grid>
-        <Grid size={4}></Grid>
+        <Grid size={4} sx={{
+          [theme.breakpoints.down('xs')]: {
+            display: 'none',
+            m: 0
+          }
+        }}></Grid>
       </Grid>
 
       <Grid size={12}>

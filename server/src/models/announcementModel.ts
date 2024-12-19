@@ -17,6 +17,10 @@ const announcementShema = new Schema({
     type: Number,
     required: true,
   },
+  currencyType: {
+    type: String,
+    required: true
+  },
   content: {
     type: String,
     required: true,

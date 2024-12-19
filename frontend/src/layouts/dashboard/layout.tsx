@@ -111,7 +111,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        * Sidebar
        *************************************** */
       sidebarSection={
-        <NavDesktop slots={{topArea: "Website"}} data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
+        <NavDesktop slots={{topArea: "Management System"}} data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
       }
       /** **************************************
        * Footer

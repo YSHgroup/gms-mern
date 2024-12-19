@@ -29,12 +29,12 @@ export const navData = [
     //   </Label>
     // ),
   },
-  {
-    title: 'Apply',
-    path: '/apply',
-    guard: ["grant_dep", 'reviewer',"col_dean", "grant_dir"],
-    icon: icon('ic-blog'),
-  },
+  // {
+  //   title: 'Apply',
+  //   path: '/apply',
+  //   guard: ["grant_dep", 'reviewer',"col_dean", "grant_dir"],
+  //   icon: icon('ic-blog'),
+  // },
   {
     title: 'Announcement Portal',
     path: '/announcement-portal',

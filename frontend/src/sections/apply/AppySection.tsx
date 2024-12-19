@@ -21,6 +21,8 @@ import { toast } from "react-toastify";
 import { getAnnouncements } from "@/services/announcementServices";
 import { usePathname } from "@/routes/hooks";
 import { useParams } from "react-router";
+import { Autocomplete } from "@mui/material";
+import { currencyTypes } from "@/constants/currencyType";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -39,14 +41,20 @@ export default function ApplySection() {
   const [fileUrl, setFileUrl] = React.useState<string>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [announcements, setAnnouncements] = React.useState<any>([]);
-  const [announcement, setAnnouncement] = React.useState<any>([]);
   const [budget, setBudget] = React.useState<any>({
     budget: 0,
-    milestone: 0
-  })
+    milestone: 0,
+  });
+  const [currencyType, setCurrencyType] = React.useState<{
+    value: string;
+    label: string;
+  } | null>({
+    value: "dollar",
+    label: "Dollar",
+  });
 
-  const params = useParams()
-  
+  const params = useParams();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openCombo = Boolean(anchorEl);
 
@@ -62,25 +70,30 @@ export default function ApplySection() {
   };
 
   const publishApplication = () => {
-    if(!budget) {
-      toast.warn("Please select budget.")
-      return
+    if (!budget) {
+      toast.warn("Please select budget.");
+      return;
     }
-    if(!budget.milestone) {
-      toast.warn("Please select milestone.")
+    if (!budget.milestone) {
+      toast.warn("Please select milestone.");
     }
     if (!file) {
       toast.warn("Please select a file to upload");
       return;
     }
+    if (!currencyType) {
+      toast.warn("Please select a currency type.");
+      return;
+    }
+
     if (fileUrl) {
       URL.revokeObjectURL(fileUrl);
     }
-    if(params?.id) {
-      requestGrant(file, params.id, budget.budget, budget.milestone);
-      return
+    if (params?.id) {
+      requestGrant(file, params.id, budget.budget, budget.milestone, currencyType.value);
+      return;
     }
-    toast.warn("Please select announcement")
+    toast.warn("Please select announcement");
   };
 
   const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,15 +103,15 @@ export default function ApplySection() {
     setAnchorEl(null);
   };
 
-  React.useEffect(() => {
-    getAnnouncements()
-      .then((res) => {
-        setAnnouncements(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // React.useEffect(() => {
+  //   getAnnouncements()
+  //     .then((res) => {
+  //       setAnnouncements(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   React.useEffect(() => {
     setLoading(false);
@@ -155,42 +168,62 @@ export default function ApplySection() {
             </Typography>
           </Grid>
 
-          <Grid container size={12}>
-        <Grid size={{ sm: 4, xs: 12 }}>
-          <TextField
-            label="Budget"
-            variant="outlined"
-            slotProps={{
-              inputLabel: {
-                shrink: true,
-              },
-              input: {
-                endAdornment: <InputAdornment position="end">$</InputAdornment>,
-              },
-            }}
-            fullWidth
-            type="number"
-            onChange={(e) =>
-              setBudget((pre: any) => ({ ...pre, budget: e.target.value }))
-            }
-          ></TextField>
-        </Grid>
-        <Grid size={{ sm: 4, xs: 12 }}>
-          <TextField
-            label="Milestone"
-            variant="outlined"
-            slotProps={{
-              inputLabel: {
-                shrink: true,
-              },
-            }}
-            onChange={(e) =>
-              setBudget((pre: any) => ({ ...pre, milestone: e.target.value }))
-            }
-          ></TextField>
-        </Grid>
-        <Grid size={4}></Grid>
-      </Grid>
+          <Grid container size={12} spacing={2}>
+            <Grid container size={{ md: 5, xs: 12 }}>
+              <Grid size={7}>
+                <TextField
+                  label="Budget"
+                  variant="outlined"
+                  fullWidth
+                  type="number"
+                  onChange={(e) =>
+                    setBudget((pre: any) => ({
+                      ...pre,
+                      budget: e.target.value,
+                    }))
+                  }
+                ></TextField>
+              </Grid>
+              <Grid size={5}>
+                <Autocomplete
+                  disablePortal
+                  options={currencyTypes}
+                  value={currencyType}
+                  fullWidth
+                  onChange={(e, nv) => setCurrencyType(nv)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      slotProps={{
+                        inputLabel: {
+                          shrink: true,
+                        },
+                      }}
+                      label="Currency Type"
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid size={{ md: 5, xs: 12 }}>
+              <TextField
+                label="Milestone"
+                variant="outlined"
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                onChange={(e) =>
+                  setBudget((pre: any) => ({
+                    ...pre,
+                    milestone: e.target.value,
+                  }))
+                }
+              ></TextField>
+            </Grid>
+            <Grid size={2}></Grid>
+          </Grid>
 
           <Grid size={12} container justifyContent={"center"}>
             <Grid
