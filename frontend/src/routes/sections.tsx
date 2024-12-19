@@ -8,7 +8,6 @@ import { varAlpha } from '@/theme/styles';
 import { AuthLayout } from '@/layouts/auth';
 import { DashboardLayout } from '@/layouts/dashboard';
 import PrivatePage from './privateRouter';
-import EmptyPage from '@/pages/EmptyPage';
 import AnnouncementPortal from '@/pages/admin/AnnouncementPortal';
 import Profile from '@/pages/Profile'
 import Apply from '@/pages/Apply';

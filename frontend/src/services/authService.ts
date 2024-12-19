@@ -1,6 +1,6 @@
 import { RegUser } from "@/types/userInfo";
 import { isSuccessResult } from "@/utils/responseChecker";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 
 const register = (userData: RegUser, navigate: Function) => {
@@ -13,9 +13,11 @@ const register = (userData: RegUser, navigate: Function) => {
           navigate('/login')
         }
     })
-    .catch((err) => {
-      console.log("error occured: ", err)
-      toast.error('Failed to register')
+    .catch((error) => {
+      if (isAxiosError(error))
+        error.response?.data.msg.map((str: string) => {
+          toast.error(str);
+        });
     });
 };
 const login = (email: string, password: string, navigate: Function) => {
@@ -40,8 +42,11 @@ const login = (email: string, password: string, navigate: Function) => {
       result.token && localStorage.setItem("token", result.token);
       result.refresh && localStorage.setItem("refresh", result.refresh);
     })
-    .catch((err) => {
-      console.log("error occured: ", err)
+    .catch((error) => {
+      if (isAxiosError(error))
+        error.response?.data.msg.map((str: string) => {
+          toast.error(str);
+        });
     });
 };
 

@@ -63,11 +63,6 @@ export default withAuthRedirect(function Register() {
 	};
 
 	return (
-		// <Box
-		//   sx={{ height: "100vh", maxHeight: "100vh" }}
-		//   className="flex items-center"
-		// >
-		//   <Container maxWidth="sm" className="items-center">
 		<Box
 			display="flex"
 			flexDirection="column"

@@ -28,11 +28,6 @@ export default withAuthRedirect(function SlotsSignIn() {
   const loginTrigger = () => login(email, password, navigate)
 
   return (
-    // <Box
-    //   sx={{ height: "100vh", maxHeight: "100vh" }}
-    //   className="flex items-center"
-    // >
-      // <Container maxWidth="sm" className="items-center">
         <Box display="flex" flexDirection="column" alignItems="flex-end">
           <CardContent sx={{ textAlign: "center" }}>
             <Typography

@@ -7,19 +7,13 @@ import {
   styled,
   Box,
   LinearProgress,
-  Menu,
-  MenuItem,
   TextField,
-  InputAdornment,
 } from "@mui/material";
 import { CloudUpload, Publish } from "@mui/icons-material";
 import React from "react";
 import PDFPreview from "@/components/PdfPreviewer";
-import pdf from "../../../public/php_cookbook.pdf";
 import { requestGrant } from "@/services/grantService";
 import { toast } from "react-toastify";
-import { getAnnouncements } from "@/services/announcementServices";
-import { usePathname } from "@/routes/hooks";
 import { useParams } from "react-router";
 import { Autocomplete } from "@mui/material";
 import { currencyTypes } from "@/constants/currencyType";
@@ -40,7 +34,6 @@ export default function ApplySection() {
   const [file, setFile] = React.useState<File>();
   const [fileUrl, setFileUrl] = React.useState<string>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
-  const [announcements, setAnnouncements] = React.useState<any>([]);
   const [budget, setBudget] = React.useState<any>({
     budget: 0,
     milestone: 0,
@@ -55,8 +48,8 @@ export default function ApplySection() {
 
   const params = useParams();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const openCombo = Boolean(anchorEl);
+  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  // const openCombo = Boolean(anchorEl);
 
   const upload = (files: FileList | null) => {
     setLoading(true);
@@ -96,22 +89,12 @@ export default function ApplySection() {
     toast.warn("Please select announcement");
   };
 
-  const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  // React.useEffect(() => {
-  //   getAnnouncements()
-  //     .then((res) => {
-  //       setAnnouncements(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  // const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   React.useEffect(() => {
     setLoading(false);

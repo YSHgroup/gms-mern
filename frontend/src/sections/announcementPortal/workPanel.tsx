@@ -4,18 +4,16 @@ import {
   styled,
   Box,
   TextField,
-  Divider,
-  InputAdornment,
   Autocomplete,
 } from "@mui/material";
 import { _tasks, _posts, _timeline } from "@/_mock";
 import { CloudUpload } from "@mui/icons-material";
 
 import React from "react";
-import { Label } from "@/components/label";
 import { publishAnnouncement } from "@/services/announcementServices";
 import { currencyTypes } from "@/constants/currencyType";
 import { useTheme } from "@mui/material";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -65,7 +63,10 @@ export default function WorkPanel() {
   };
 
   const submitAnnouncement = () => {
-    if (!title || !content || !date || !currencyType) return;
+    if (!title || !content || !date || !currencyType || !img) {
+      toast.warn('Please confirm all fields. those are mandatory.')
+      return
+    }
 
     const data = {
       title,
@@ -181,7 +182,6 @@ export default function WorkPanel() {
       </Grid>
 
       <Grid size={12}>
-        {/* <Label>Text Content: </Label> */}
         <TextField
           label="Text Content"
           multiline
