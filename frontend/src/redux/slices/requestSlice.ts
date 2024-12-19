@@ -19,7 +19,6 @@ export const fetchRequestData = createAsyncThunk('request/fetchRequestData', asy
               name: application.firstName + " " + application.lastName,
             };
           })
-          console.log('re data: ', requestData)
         
         return requestData
     } catch (error) {

@@ -16,9 +16,6 @@
 /* scrollbar */
 @import './components/scrollbar/styles.css';
 
-/* chart */
-@import './components/chart/styles.css';
-
 @tailwind components;
 @tailwind utilities;
 /** **************************************

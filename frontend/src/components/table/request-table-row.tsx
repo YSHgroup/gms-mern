@@ -77,6 +77,7 @@ export function UserTableRow({
       (state !== null && !state) && onDeny(id);
       if(signState) {
         signApplication(id, 'approved', () => dispatch(fetchRequestData()))
+        setSignState(false)
         return
       }
       setOpenDialog(false);
@@ -85,6 +86,8 @@ export function UserTableRow({
   };
   const denySign = (id: string) => {
     signApplication(id, 'rejected', () => dispatch(fetchRequestData()))
+    setOpenDialog(false);
+    setSignState(false)
   }
 
   const cancelAction = () => {
@@ -272,8 +275,8 @@ export function UserTableRow({
         <Dialog open={openComment} onClose={handleCloseCommentDialog}>
           <DialogTitle mb={1}>Comment</DialogTitle>
           {user.role == "col_dean" ? (
-            <DialogContent>
-              {row.comment && Object.keys(row.comment)
+            <DialogContent sx={{minWidth: 300}}>
+              {row.comment ? Object.keys(row.comment)
                 .filter((key) =>
                   [
                     "reviewer",
@@ -295,7 +298,7 @@ export function UserTableRow({
 
                     <Typography variant="body1">{row.comment[key]}</Typography>
                   </Box>
-                ))}
+                )): <Typography variant="h6" color="info" textAlign={'center'}>No comment</Typography>}
             </DialogContent>
           ) : (
             <Box px={3}>

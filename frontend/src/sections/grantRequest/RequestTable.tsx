@@ -26,82 +26,13 @@ import { isAxiosError } from "axios";
 import { getAnnouncements } from "@/services/announcementServices";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchRequestData } from "@/redux/slices/requestSlice";
+import { columns } from "@/constants/requestTableColumns";
 
 type Props = {};
 
-// const setTableData = (setData: React.Dispatch<any>) => {
-//   getRequests()
-//     .then((res) => {
-//       console.log("Requests fetched:", res.data);
-
-//       const result = res.data.map((application: any) => {
-//         return {
-//           ...application,
-//           id: application._id,
-//           name: application.firstName + " " + application.lastName,
-//         };
-//       });
-//       setData(result);
-//     })
-//     .catch((err) => {
-//       console.error("Error fetching requests:", err);
-//     });
-// };
-
 export default function RequestTable({}: Props) {
   const role = getCurrentUser().role;
-  const columns: any[] = [
-    { id: "name", label: "Name" },
-    // { id: "email", label: "Email" },
-    {
-      id: "department",
-      label: "Department",
-    },
-    {
-      id: "application",
-      label: "Application",
-    },
-    {
-      id: "announcement",
-      label: "Announcement",
-    },
-    {
-      id: "budget",
-      label: "Budget"
-    },
-    {
-      id: "currencyType",
-      label: "Currency Type"
-    },
-    {
-      id: "milestone",
-      label: "Milestone"
-    },
-    {
-      id: "signed",
-      label: "Signed",
-    },
-    {
-      id: "reviewer",
-      label: "Reviwer",
-    },
-    {
-      id: "col_dean",
-      label: "College Dean",
-    },
-    {
-      id: "grant_dep",
-      label: "Grant Department",
-    },
-    {
-      id: "grant_dir",
-      label: "Grant Director",
-    },
-    // {
-    //   id: "accepted",
-    //   label: "Accepted",
-    // },
-  ];
+
   const [announcements, setAnnouncements] = useState<any>([]);
   const [tableData, setFilteredData] = useState<any>([]);
   const [filterName, setFilterName] = useState("");
@@ -163,7 +94,6 @@ export default function RequestTable({}: Props) {
     getAnnouncements()
       .then((res) => {
         setAnnouncements(res.data);
-        console.log("data: ", res.data);
       })
       .catch((err) => {
         console.log(err);
