@@ -1,7 +1,7 @@
 import { DashboardContent } from "@/layouts/dashboard";
 import { fetchUserInfo } from "@/services/userService";
 import { User } from "@/types/userInfo";
-import { Typography, Grid2 as Grid, Container } from "@mui/material";
+import { Typography, Container } from "@mui/material";
 import React from "react";
 import UserProfile from "./UserProfile";
 

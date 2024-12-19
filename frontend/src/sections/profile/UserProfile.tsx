@@ -7,13 +7,13 @@ import {
   Grid2 as Grid,
   InputAdornment,
   TextField,
-  Link,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { PasswordDialog } from "./PasswordDialog";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchProfileByEmail } from "@/redux/slices/userSlice";
+import { getRole } from "@/utils/roleGetter";
 
 export default function UserProfile({
   user,
@@ -125,7 +125,7 @@ export default function UserProfile({
           variant="standard"
           fullWidth
           disabled
-          value={user?.role}
+          value={getRole(user?.role || '')}
           slotProps={{
             input: {
               endAdornment: (

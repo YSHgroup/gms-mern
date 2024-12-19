@@ -11,13 +11,13 @@ export const getRole = (key: string) => {
 
   const router = useRouter();
   if (!key) {
-    return null;
+    return '';
   }
 
   const value = roles.find((role) => Object.keys(role)[0] === key) as any;
   if (!value) {
     router.replace("/login");
-    return null;
+    return '';
   }
   const role = value[key];
 

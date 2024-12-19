@@ -60,7 +60,7 @@ export function AnnouncementBox({announcement}: {announcement: Announcement}) {
           },
         }}
         image={`${import.meta.env.VITE_BASE_URL}/${imageUrl}`}
-        alt="Live from space album cover"
+        alt={title}
       />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CardContent sx={{ flex: "1 0 auto" }}>

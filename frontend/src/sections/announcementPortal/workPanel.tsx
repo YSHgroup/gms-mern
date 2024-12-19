@@ -6,7 +6,6 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import { _tasks, _posts, _timeline } from "@/_mock";
 import { CloudUpload } from "@mui/icons-material";
 
 import React from "react";

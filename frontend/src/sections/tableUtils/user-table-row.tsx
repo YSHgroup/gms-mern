@@ -2,7 +2,7 @@ import BtnGroup from "@mui/material/ButtonGroup";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import TableCell from "@mui/material/TableCell";
-import { Button, Tab } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Tab } from "@mui/material";
 import { useAppDispatch } from "@/redux/hooks";
 import {
   allowPendingUserController,
@@ -10,6 +10,7 @@ import {
 } from "@/redux/slices/pendingUserSlice";
 import { ROLE } from "@/constants/info";
 import { getCurrentUser } from "@/services/authService";
+import { useState } from "react";
 
 // ----------------------------------------------------------------------
 
@@ -28,13 +29,28 @@ export function UserTableRow({
 }: UserTableRowProps<any>) {
   const dispatch = useAppDispatch();
   const user = getCurrentUser()
+  const [dialog, setDialog] = useState(false)
+  const [action, setAction] = useState<'allow' | 'reject' | null>(null)
 
-  const allowUser = (id: string) => {
+  const handleConfirm = (id: string) => {
+    if(action == 'allow') {
+
+      dispatch(allowPendingUserController(id));
+    } else if(action == 'reject') {
+      dispatch(rejectPendingUserController(id));
+    }
+    setDialog(false)
+  }
+
+  const allowUser = () => {
     // allowPendingUser(id)
-    dispatch(allowPendingUserController(id));
+    console.log('allow : ', action)
+    setAction('allow')
+    setDialog(true)
   };
-  const rejectUser = (id: string) => {
-    dispatch(rejectPendingUserController(id));
+  const rejectUser = () => {
+    setAction('reject')
+    setDialog(true)
   };
 
   return (
@@ -82,7 +98,7 @@ export function UserTableRow({
               <Button
                 size="small"
                 variant={row.allowed? "outlined": "contained"}
-                onClick={() => allowUser(row.id)}
+                onClick={allowUser}
                 disabled={row.allowed}
               >
                 {row.allowed? "Allowed": "Allow"}
@@ -91,7 +107,7 @@ export function UserTableRow({
                 size="small"
                 variant={row.rejected? "outlined": "contained"}
                 color="error"
-                onClick={() => rejectUser(row.id)}
+                onClick={rejectUser}
                 disabled={row.rejected}
               >
                 {row.rejected? "Rejected": "Reject"}
@@ -99,6 +115,13 @@ export function UserTableRow({
             </BtnGroup>
           </TableCell>
         )}
+        <Dialog open={dialog} onClose={() => setDialog(false)}>
+          <DialogTitle>Do you want to {action} this user?</DialogTitle>
+          <DialogActions>
+            <Button color="primary" size="large" onClick={() => handleConfirm(row.id)}>Confirm</Button>
+            <Button color="secondary" size="large" onClick={() => setDialog(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </TableRow>
     </>
   );
