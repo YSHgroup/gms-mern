@@ -1,13 +1,8 @@
-import express from "express";
-import { upload, uploadApplication } from "@/middleware/multer";
-import { Announcement } from "@/models/announcementModel";
-import { queryByRoleWritter } from "@/utils/roleAprpovalQuery";
-import { Request, Response, Router } from "express";
-import path from "path";
+import { Response, Router } from "express";
+import { uploadApplication } from "@/middleware/multer";
 import { Application } from "@/models/applicationModel";
 import { confirmUserByEmail } from "@/utils/confirmUserByEmail";
 import { isEmpty } from "@/utils/isEmpty";
-import { Schema } from "mongoose";
 
 const router = Router();
 
