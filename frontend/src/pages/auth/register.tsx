@@ -37,10 +37,11 @@ export default withAuthRedirect(function Register() {
 
 	const EmailVali = z.string().email();
 	const PassVali = z.string().min(6);
-	const FirstNameVali = z.string().min(3);
+	const FirstNameVali = z.string().min(3, 'Name must be at least 3 characters long.');
 
 	const emailMessage = EmailVali.safeParse(email).error?.errors[0].message;
 	const pasMessage = PassVali.safeParse(password).error?.errors[0].message;
+	const firstNameMessage = FirstNameVali.safeParse(firstName).error?.errors[0].message;
 
 	const navigate = useNavigate();
 
@@ -108,6 +109,8 @@ export default withAuthRedirect(function Register() {
 							label="Fist Name"
 							type="text"
 							variant="outlined"
+							error={!!firstName && !!firstNameMessage}
+							helperText={!!firstName && !!firstNameMessage ? firstNameMessage: undefined}
 							fullWidth
 							name="fist_name"
 							value={firstName}
