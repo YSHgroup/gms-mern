@@ -23,6 +23,7 @@ import { withAuthRedirect } from "./withAuthRedirect";
 import { Helmet } from "react-helmet-async";
 import { CONFIG } from "@/config-global";
 import { FormHelperText } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default withAuthRedirect(function Register() {
 	const [showPassword, setShowPassword] = React.useState(false);
@@ -61,7 +62,20 @@ export default withAuthRedirect(function Register() {
 	};
 
 	const registerTrigger = () => {
-		if (re_pwd !== password) {
+		if(role !== 'grant_dep' && !department) {
+			toast.warn('Please note the all fields')
+			return;
+		}
+		if (!role) {
+			toast.warn('Please select your role.')
+			return;
+		}
+		if (!enrolment && role == 'user' || role == 'user' || role !== 'grant_dep' && !department) {
+			toast.warn('Please note the all fields')
+			return;
+		}
+		if (re_pwd !== password || !password || !role || !firstName) {
+			toast.warn('Please note the all fields')
 			return;
 		}
 

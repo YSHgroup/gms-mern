@@ -32,7 +32,7 @@ export const requestSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder.addCase(fetchRequestData.fulfilled, (state, action) => {
-            state.data = action.payload
+            state.data = action.payload??[]
         }).addCase(fetchRequestData.pending, (state) => {
             state.loading = true
         }).addCase(fetchRequestData.rejected, (state, action) => {
