@@ -19,15 +19,13 @@ const userSchema = new Schema(
     },
     department: {
       type: String,
-      required: true
     },
     role: {
       type: String,
       required: true,
     },
     enrolment: {
-      type: Number,
-      unique: true
+      type: Number
     },
     allowed: {
       type: Boolean,

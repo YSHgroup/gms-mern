@@ -67,7 +67,7 @@ const seedDatabase = async () => {
 
 	User.findOne({ role: "grant_dir" })
 		.then((user) => {
-			if (isEmpty(user)) {
+			if (!isEmpty(user)) {
 				superUser
 					.save()
 					.then(() => {
