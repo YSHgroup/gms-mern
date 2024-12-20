@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
@@ -14,7 +13,6 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { useRouter, usePathname } from '@/routes/hooks';
 
-import { _myAccount } from '@/_mock';
 import { getCurrentUser, logout } from '@/services/authService';
 import { useNavigate } from 'react-router';
 import { getRole } from '@/utils/roleGetter';

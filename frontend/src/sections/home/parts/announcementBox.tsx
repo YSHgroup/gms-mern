@@ -49,16 +49,16 @@ export function AnnouncementBox({
 	const router = useRouter();
 	const user = getCurrentUser();
 	const upMd = useMediaQuery(theme.breakpoints.up("md"));
-  const requestState = useAppSelector(state => state.request.data)
-  const dispatch = useAppDispatch()
+	const requestState = useAppSelector((state) => state.request.data);
+	const dispatch = useAppDispatch();
 
 	const handleShowMore = (value: boolean) => {
 		setShowMore(value);
 	};
 
-  useEffect(() => {
-    dispatch(fetchRequestData())
-  }, [])
+	useEffect(() => {
+		dispatch(fetchRequestData());
+	}, []);
 
 	const applyForAnnouncement = () => {
 		router.push("/apply/" + _id);
@@ -67,8 +67,8 @@ export function AnnouncementBox({
 		<Card
 			className="mb-5"
 			sx={{
-				display: (upMd && showMore ? "block": "flex"),
-        justifyContent: "center",
+				display: upMd && showMore ? "block" : "flex",
+				justifyContent: "center",
 				[theme.breakpoints.down("md")]: {
 					display: "block",
 				},
@@ -76,7 +76,13 @@ export function AnnouncementBox({
 			elevation={4}
 		>
 			{upMd && showMore ? (
-				<Box minWidth={300} maxHeight={'500px'} width={'full'} display={"flex"} justifyContent={'center'}>
+				<Box
+					minWidth={300}
+					maxHeight={300}
+					width={"full"}
+					display={"flex"}
+					justifyContent={"center"}
+				>
 					<img
 						src={`${import.meta.env.VITE_BASE_URL}/${imageUrl}`}
 						alt={title}
@@ -92,12 +98,23 @@ export function AnnouncementBox({
 							lg: "40%",
 							xl: "35%",
 						},
+						maxHeight: "300px",
 					}}
 					image={`${import.meta.env.VITE_BASE_URL}/${imageUrl}`}
 					alt={title}
 				/>
 			)}
-			<Box sx={{ display: "flex", flexDirection: "column" }}>
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					...(!showMore && {width: {
+						md: "50%",
+						lg: "60%",
+						xl: "65%",
+					}}),
+				}}
+			>
 				<CardContent sx={{ flex: "1 0 auto" }}>
 					<Typography className="w-full text-xl font-semibold" variant="h4">
 						{title}
@@ -111,12 +128,12 @@ export function AnnouncementBox({
 						}}
 					>
 						<Grid2 container className="w-full text-slate-900">
-							<Grid2 size={{ md: 12, lg: 6, xl: 5 }}>
+							<Grid2 size={{ md: 12, lg: 7, xl: 5 }}>
 								<span className="text-sky-600">Period : </span>{" "}
 								<span className="whitespace-nowrap">{from}</span> ~{" "}
 								<span className="whitespace-nowrap">{until}</span>
 							</Grid2>
-							<Grid2 size={{ md: 12, lg: 6, xl: 5 }}>
+							<Grid2 size={{ md: 12, lg: 5, xl: 5 }}>
 								<span className="text-sky-600">Budget : </span>{" "}
 								{budget?.toLocaleString()}{" "}
 								{
@@ -132,7 +149,7 @@ export function AnnouncementBox({
 							</Box>
 						)}
 						<ShowMoreText
-							lines={7}
+							lines={5}
 							more={<Button>Show more</Button>}
 							less={<Button>Show less</Button>}
 							className="w-full"
@@ -145,21 +162,25 @@ export function AnnouncementBox({
 						</ShowMoreText>
 					</Box>
 				</CardContent>
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						pl: 1,
-						pb: 1,
-					}}
-				>
-					{timestampOfUntil > Date.now() && user.role === "user" && !requestState.filter((request: any) => request.announcement._id === _id).length && (
-						<Button size="large" onClick={applyForAnnouncement}>
-							Apply
-						</Button>
+				{timestampOfUntil > Date.now() &&
+					user.role === "user" &&
+					!requestState.filter(
+						(request: any) => request.announcement._id === _id
+					).length && (
+						<Box
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								pl: 1,
+								pb: 1,
+							}}
+						>
+							<Button size="large" onClick={applyForAnnouncement}>
+								Apply
+							</Button>
+						</Box>
 					)}
-				</Box>
 			</Box>
 		</Card>
 
