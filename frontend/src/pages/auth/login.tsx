@@ -11,28 +11,36 @@ import {
 	CardContent,
 	Typography,
 	Link,
+	FormHelperText,
 } from "@mui/material";
-import { login } from "@/services/authService";
 import { useNavigate } from "react-router";
+import { Helmet } from "react-helmet-async";
+import z from "zod";
+import { login } from "@/services/authService";
 import { Iconify } from "@/components/iconify";
 import { withAuthRedirect } from "./withAuthRedirect";
-import { Helmet } from "react-helmet-async";
 import { CONFIG } from "@/config-global";
 
 export default withAuthRedirect(function SlotsSignIn() {
+	const navigate = useNavigate();
+	
 	const [email, setEmail] = React.useState<string>("");
 	const [password, setPwd] = React.useState<string>("");
-
 	const [showPassword, setShowPassword] = React.useState(false);
 
-	const navigate = useNavigate();
+	const EmailVali = z.string().email();
+	const PassVali = z.string().min(6);
+
+	const emailMessage = EmailVali.safeParse(email).error?.errors[0].message;
+	const pasMessage = PassVali.safeParse(password).error?.errors[0].message;
+
 
 	const loginTrigger = () => login(email, password, navigate);
 
 	return (
 		<>
 			<Helmet>
-				<title> {`Apply - ${CONFIG.appName}`}</title>
+				<title> {`Login - ${CONFIG.appName}`}</title>
 			</Helmet>
 			<Box display="flex" flexDirection="column" alignItems="flex-end">
 				<CardContent sx={{ textAlign: "center" }}>
@@ -57,6 +65,8 @@ export default withAuthRedirect(function SlotsSignIn() {
 						label="Email address"
 						type="email"
 						required
+						error={!!(emailMessage && email)}
+						helperText={email ? emailMessage : undefined}
 						value={email}
 						slotProps={{
 							inputLabel: {
@@ -66,7 +76,10 @@ export default withAuthRedirect(function SlotsSignIn() {
 						onChange={(val) => setEmail(val.target.value)}
 					/>
 					<FormControl sx={{ my: 2 }} fullWidth variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">
+						<InputLabel
+							htmlFor="outlined-adornment-password"
+							error={!!(pasMessage && password)}
+						>
 							Password
 						</InputLabel>
 						<OutlinedInput
@@ -74,6 +87,7 @@ export default withAuthRedirect(function SlotsSignIn() {
 							type={showPassword ? "text" : "password"}
 							name="password"
 							value={password}
+							error={!!(pasMessage && password)}
 							onChange={(val) => setPwd(val.target.value)}
 							endAdornment={
 								<InputAdornment position="end">
@@ -93,6 +107,11 @@ export default withAuthRedirect(function SlotsSignIn() {
 							}
 							label="Password"
 						/>
+						{!!(pasMessage && password) && (
+							<FormHelperText error={!!(pasMessage && password)}>
+								{pasMessage}
+							</FormHelperText>
+						)}
 					</FormControl>
 
 					<Button

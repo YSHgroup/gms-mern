@@ -32,7 +32,8 @@
     "react-router": "^7.0.2",
     "react-show-more-text": "^1.7.1",
     "react-toastify": "^10.0.6",
-    "simplebar-react": "^3.3.0"
+    "simplebar-react": "^3.3.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

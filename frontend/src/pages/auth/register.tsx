@@ -15,12 +15,14 @@ import {
 	Link,
 	Grid2 as Grid,
 } from "@mui/material";
+import z from "zod";
 import { register } from "@/services/authService";
 import { useNavigate } from "react-router";
 import { Iconify } from "@/components/iconify";
 import { withAuthRedirect } from "./withAuthRedirect";
 import { Helmet } from "react-helmet-async";
 import { CONFIG } from "@/config-global";
+import { FormHelperText } from "@mui/material";
 
 export default withAuthRedirect(function Register() {
 	const [showPassword, setShowPassword] = React.useState(false);
@@ -32,6 +34,13 @@ export default withAuthRedirect(function Register() {
 	const [department, setDepartment] = React.useState<string | undefined>("");
 	const [role, setRole] = React.useState<string>("user");
 	const [enrolment, setEnrolment] = React.useState<string>("");
+
+	const EmailVali = z.string().email();
+	const PassVali = z.string().min(6);
+	const FirstNameVali = z.string().min(3);
+
+	const emailMessage = EmailVali.safeParse(email).error?.errors[0].message;
+	const pasMessage = PassVali.safeParse(password).error?.errors[0].message;
 
 	const navigate = useNavigate();
 
@@ -75,7 +84,7 @@ export default withAuthRedirect(function Register() {
 	return (
 		<>
 			<Helmet>
-				<title> {`Apply - ${CONFIG.appName}`}</title>
+				<title> {`Register - ${CONFIG.appName}`}</title>
 			</Helmet>
 
 			<Box
@@ -124,11 +133,16 @@ export default withAuthRedirect(function Register() {
 					type="email"
 					required
 					fullWidth
+					error={!!(emailMessage && email)}
+					helperText={email ? emailMessage : undefined}
 					value={email}
 					onChange={(val) => setEmail(val.target.value)}
 				/>
 				<FormControl sx={{ my: 2 }} fullWidth variant="outlined">
-					<InputLabel htmlFor="outlined-adornment-password">
+					<InputLabel
+						htmlFor="outlined-adornment-password"
+						error={!!(pasMessage && password)}
+					>
 						Password
 					</InputLabel>
 					<OutlinedInput
@@ -153,10 +167,18 @@ export default withAuthRedirect(function Register() {
 						}
 						label="Password"
 					/>
+					{!!(pasMessage && password) && (
+						<FormHelperText error={!!(pasMessage && password)}>
+							{pasMessage}
+						</FormHelperText>
+					)}
 				</FormControl>
 
 				<FormControl sx={{ mb: 2 }} fullWidth variant="outlined">
-					<InputLabel htmlFor="outlined-adornment-password">
+					<InputLabel
+						error={!!re_pwd && re_pwd !== password}
+						htmlFor="outlined-adornment-password"
+					>
 						Confirm Password
 					</InputLabel>
 					<OutlinedInput
@@ -164,6 +186,7 @@ export default withAuthRedirect(function Register() {
 						type={showPassword ? "text" : "password"}
 						name="password-confirm"
 						value={re_pwd}
+						error={!!re_pwd && re_pwd !== password}
 						onChange={(val) => setRe_pwd(val.target.value)}
 						endAdornment={
 							<InputAdornment position="end">
@@ -181,6 +204,11 @@ export default withAuthRedirect(function Register() {
 						}
 						label="Confirm Password"
 					/>
+					{re_pwd && re_pwd !== password && (
+						<FormHelperText error={!!(pasMessage && password)}>
+							Passwords don't match
+						</FormHelperText>
+					)}
 				</FormControl>
 				{role !== "grant_dep" && (
 					<FormControl fullWidth>
