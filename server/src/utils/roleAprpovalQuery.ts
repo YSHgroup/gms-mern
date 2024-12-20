@@ -1,4 +1,4 @@
-export const queryByRoleWritter = (role: string, department: string) => {
+export const queryByRoleWritter = (role: string, department?: string) => {
     let query: any = {}
 
     if(role === "grant_dir") query.role = ["grant_dep", "col_dean"]

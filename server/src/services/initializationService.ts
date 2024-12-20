@@ -11,22 +11,22 @@ const dirPath_1 = path.resolve(__dirname, "../..", "public", "applications");
 const dirPath_2 = path.resolve(__dirname, "../..", "public", "images");
 
 const checkAndMakeDir = () => {
-  let state = false;
+	let state = false;
 	if (!fs.existsSync(dirPath_1)) {
 		// Create the directory
-    state = true
+		state = true;
 		fs.mkdirSync(dirPath_1, { recursive: true });
 		console.log("Directory created: ", dirPath_1);
 		// return true
 	}
-  if (!fs.existsSync(dirPath_2)) {
+	if (!fs.existsSync(dirPath_2)) {
 		// Create the directory
-    state = true
+		state = true;
 		fs.mkdirSync(dirPath_2, { recursive: true });
 		console.log("Directory created: ", dirPath_2);
 		// return true
-	} 
-  if(!state) {
+	}
+	if (!state) {
 		console.log("Public directories already exist");
 	}
 };
@@ -47,8 +47,8 @@ const seedDatabase = async () => {
 						throw Error(error.message);
 					});
 			} else {
-        console.log("Roles exists already.");
-      }
+				console.log("Roles exists already.");
+			}
 		})
 		.catch((err) => {
 			console.error("Failed to seed: ", err.message);
@@ -57,17 +57,18 @@ const seedDatabase = async () => {
 	const salt = await bcrypt.genSalt(10);
 	const hashedPwd = await bcrypt.hash("grantdirector", salt);
 
-	const superUser = new User({
-		role: "grant_dir",
-		firstName: "Grant",
-		lastName: "Director",
-		email: "grantdirector@gmail.com",
-		password: hashedPwd,
-	});
-
 	User.findOne({ role: "grant_dir" })
 		.then((user) => {
+			console.log("role: ", user);
 			if (!isEmpty(user)) {
+				const superUser = new User({
+					role: "grant_dir",
+					firstName: "Grant",
+					lastName: "Director",
+					email: "grantdirector@gmail.com",
+					password: hashedPwd,
+				});
+
 				superUser
 					.save()
 					.then(() => {
@@ -80,15 +81,16 @@ const seedDatabase = async () => {
 				console.log("Grant director exists.");
 			}
 		})
-		.catch(() => {
-			superUser
-				.save()
-				.then(() => {
-					console.log("Grant director seeded.");
-				})
-				.catch((err) => {
-					throw new Error(err.message);
-				});
+		.catch((err) => {
+			// superUser
+			// 	.save()
+			// 	.then(() => {
+			// 		console.log("Grant director seeded.");
+			// 	})
+			// 	.catch((err) => {
+			// 		throw new Error(err.message);
+			// 	});
+			console.log(err);
 		});
 };
 

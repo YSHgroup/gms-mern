@@ -13,14 +13,14 @@ router.get('/:email', async (req: any, res: Response) => {
     }
 
     const user = await User.findOne({email: req.params.email})
-        console.log(role, user?.department)
-
-    const query = queryByRoleWritter(role, user!.department?? '')
+    
+    const query = queryByRoleWritter(role, user!.department?? undefined )
+    console.log(query)
     User.find(query, '_id firstName lastName email department enrolment role allowed rejected').then(result => {
+        console.log('result: ', result)
         if(isEmpty(result)) {
             res.status(404).json({msg: ['No user']})
         } else {
-            console.log('result: ', result)
             res.status(200).json(result)
         }
     }).catch(err => {
