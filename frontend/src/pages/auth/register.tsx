@@ -70,7 +70,7 @@ export default withAuthRedirect(function Register() {
 			toast.warn('Please select your role.')
 			return;
 		}
-		if (!enrolment && role == 'user' || role == 'user' || role !== 'grant_dep' && !department) {
+		if (!enrolment && role == 'user' || role == 'user' ) {
 			toast.warn('Please note the all fields')
 			return;
 		}
