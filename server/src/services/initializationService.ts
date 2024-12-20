@@ -67,7 +67,6 @@ const seedDatabase = async () => {
 	
 	User.find({ role: "grant_dir" })
 		.then((user) => {
-			console.log("role: ", user);
 			if (isEmpty(user)) {
 				superUser
 					.save()

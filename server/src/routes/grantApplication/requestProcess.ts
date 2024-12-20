@@ -90,6 +90,7 @@ router.post("/comment/:id", async (req: any, res: Response) => {
     
     Comment.findOne({ _id: application.comment })
     .then((result) => {
+      console.log('comment: ', isEmpty(result))
       if (isEmpty(result)) {
           const comment = new Comment({ [req.tokenUser.role]: content });
           comment
