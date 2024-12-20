@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import { Grid2 as Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { _tasks, _posts, _timeline } from "@/_mock";
 import { DashboardContent } from "@/layouts/dashboard";
 import { AnnouncementBox } from "./parts/announcementBox";
 
