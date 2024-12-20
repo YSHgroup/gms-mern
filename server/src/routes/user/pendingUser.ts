@@ -14,7 +14,7 @@ router.get('/:email', async (req: any, res: Response) => {
 
     const user = await User.findOne({email: req.params.email})
     
-    const query = queryByRoleWritter(role, user!.department?? undefined )
+    const query = queryByRoleWritter(role, user?.department?? undefined )
     console.log(query)
     User.find(query, '_id firstName lastName email department enrolment role allowed rejected').then(result => {
         console.log('result: ', result)

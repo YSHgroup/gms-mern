@@ -56,19 +56,19 @@ const seedDatabase = async () => {
 
 	const salt = await bcrypt.genSalt(10);
 	const hashedPwd = await bcrypt.hash("grantdirector", salt);
-
-	User.findOne({ role: "grant_dir" })
+	
+	const superUser = new User({
+		role: "grant_dir",
+		firstName: "Grant",
+		lastName: "Director",
+		email: "grantdirector@gmail.com",
+		password: hashedPwd,
+	});
+	
+	User.find({ role: "grant_dir" })
 		.then((user) => {
 			console.log("role: ", user);
-			if (!isEmpty(user)) {
-				const superUser = new User({
-					role: "grant_dir",
-					firstName: "Grant",
-					lastName: "Director",
-					email: "grantdirector@gmail.com",
-					password: hashedPwd,
-				});
-
+			if (isEmpty(user)) {
 				superUser
 					.save()
 					.then(() => {
@@ -92,6 +92,7 @@ const seedDatabase = async () => {
 			// 	});
 			console.log(err);
 		});
+		// 
 };
 
 export default function initializeServer() {
