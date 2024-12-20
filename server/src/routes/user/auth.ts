@@ -58,7 +58,7 @@ router.post("/login", (req: Request, res: Response) => {
   User.findOne({ email: req.body.email })
     .then(async (result) => {
       if(!result) throw Error('No such User')
-      if(!result.allowed) {
+      if(result.role !=="grant_dir" && !result.allowed) {
         res.status(400).json({errorType: 'permission', msg: ["It has not yet been approved by the administrator."]})
         return
       }
