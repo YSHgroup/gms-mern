@@ -34,7 +34,7 @@ router.put('/user/:id', (req: any, res: Response) => {
             res.status(404).json({msg: ['No user']})
         } else {
             const query: Record<string, boolean> = {allowed: true}
-            if(req.tokenUser.role === 'grant_dir' && user?.rejected) {
+            if(user?.rejected) {
                 query.rejected = false
             }
             User.findOneAndUpdate({_id: id}, { $set: query}).then(result => {
@@ -60,14 +60,14 @@ router.patch('/user/:id', (req: any, res: Response) => {
             res.status(404).json({msg: ['No user']})
         } else {
             const query: Record<string, boolean> = {rejected: true}
-            if(req.tokenUser.role === 'grant_dir' && user?.allowed) {
+            if(user?.allowed) {
                 query.allowed = false
             }
             User.findOneAndUpdate({_id: id}, {$set: query}).then(result => {
                 if(!result) {
                     res.status(404).json({msg: ['No user']})
                 } else {
-                    res.status(200).json({msg: 'A User rejected successfully.'})
+                    res.status(200).json({msg: 'The user rejected successfully.'})
                 }
             }).catch(err => {
                 res.status(500).json({msg: [err.message]})

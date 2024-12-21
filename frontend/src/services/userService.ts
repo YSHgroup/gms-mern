@@ -53,7 +53,7 @@ export const rejectPendingUsers = async (ids: string[], dispatch: any) => {
 export const allowPendingUser = async (id: string) => {
     try {
       await axios.put("api/pending-user/user/" + id);
-      toast.success('The operation was successful.');
+      toast.success('The user allowed successfully.');
     } catch (error) {
       if (isAxiosError(error))
         error.response?.data.msg.map((str: string) => {

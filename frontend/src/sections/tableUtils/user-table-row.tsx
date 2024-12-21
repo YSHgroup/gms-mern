@@ -70,29 +70,30 @@ export function UserTableRow({
           </TableCell>
         ))}
 
-        {(user.role != 'grant_dir') && row.allowed ? (
-          <TableCell align="center">
-            <Button
-              size="small"
-              className="pointer-events-none"
-              variant="text"
-              color="primary"
-            >
-              Allowed
-            </Button>
-          </TableCell>
-        ) : (user.role != 'grant_dir') && row.rejected ? (
-          <TableCell align="center">
-            <Button
-              size="small"
-              className="pointer-events-none"
-              variant="text"
-              color="error"
-            >
-              Rejected
-            </Button>
-          </TableCell>
-        ) : (
+        {
+        // (user.role != 'grant_dir') && row.allowed ? (
+        //   <TableCell align="center">
+        //     <Button
+        //       size="small"
+        //       className="pointer-events-none"
+        //       variant="text"
+        //       color="primary"
+        //     >
+        //       Allowed
+        //     </Button>
+        //   </TableCell>
+        // ) : (user.role != 'grant_dir') && row.rejected ? (
+        //   <TableCell align="center">
+        //     <Button
+        //       size="small"
+        //       className="pointer-events-none"
+        //       variant="text"
+        //       color="error"
+        //     >
+        //       Rejected
+        //     </Button>
+        //   </TableCell>
+        // ) : (
           <TableCell align="center">
             <BtnGroup>
               <Button
@@ -114,7 +115,7 @@ export function UserTableRow({
               </Button>
             </BtnGroup>
           </TableCell>
-        )}
+        }
         <Dialog open={dialog} onClose={() => setDialog(false)}>
           <DialogTitle>Do you want to {action} this user?</DialogTitle>
           <DialogActions>
