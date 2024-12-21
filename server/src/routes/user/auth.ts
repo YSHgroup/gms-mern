@@ -43,6 +43,7 @@ router.post("/register", (req: Request, res: Response) => {
             errorType: "existence_error",
             msg: ["The enrollment exists already."]
           })
+          return
         }
       }
       newUser

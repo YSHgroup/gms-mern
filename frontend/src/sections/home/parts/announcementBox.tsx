@@ -41,13 +41,15 @@ export function AnnouncementBox({
 }: {
 	announcement: Announcement;
 }) {
-	const [showMore, setShowMore] = useState(false);
+	const user = getCurrentUser();
 	const { _id, title, imageUrl, from, until, content, budget, currencyType } =
-		announcement;
+	announcement;
 	const timestampOfUntil = new Date(until).getTime();
+	const timestampOfNow = new Date(`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`).getTime();
+	
+	const [showMore, setShowMore] = useState(false);
 	const theme = useTheme();
 	const router = useRouter();
-	const user = getCurrentUser();
 	const upMd = useMediaQuery(theme.breakpoints.up("md"));
 	const requestState = useAppSelector((state) => state.request.data);
 	const dispatch = useAppDispatch();
@@ -143,7 +145,7 @@ export function AnnouncementBox({
 							</Grid2>
 						</Grid2>
 
-						{timestampOfUntil < Date.now() && (
+						{timestampOfUntil < timestampOfNow && (
 							<Box className="w-full text-red-700" color={"error"}>
 								Expired
 							</Box>
@@ -162,7 +164,7 @@ export function AnnouncementBox({
 						</ShowMoreText>
 					</Box>
 				</CardContent>
-				{timestampOfUntil > Date.now() &&
+				{timestampOfUntil > timestampOfNow &&
 					user.role === "user" &&
 					!requestState.filter(
 						(request: any) => request.announcement._id === _id

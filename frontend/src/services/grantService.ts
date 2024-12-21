@@ -14,21 +14,12 @@ export const requestGrant = (application: File, id: string, budget: number, mile
   }
   formData.append("data", JSON.stringify(data));
 
-  axios
+  return axios
     .post("api/grant-application/" + user.email, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     })
-    .then((response) => {
-      toast.success("Application submitted");
-    })
-    .catch((error) => {
-      if (isAxiosError(error))
-        error.response?.data.msg.map((str: string) => {
-          toast.error(str);
-        });
-    });
 };
 
 export const getRequests = () => {
