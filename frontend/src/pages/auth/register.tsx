@@ -24,6 +24,7 @@ import { Helmet } from "react-helmet-async";
 import { CONFIG } from "@/config-global";
 import { FormHelperText } from "@mui/material";
 import { toast } from "react-toastify";
+import { ROLE } from "@/constants/info";
 
 export default withAuthRedirect(function Register() {
 	const [showPassword, setShowPassword] = React.useState(false);
@@ -47,7 +48,7 @@ export default withAuthRedirect(function Register() {
 	const navigate = useNavigate();
 
 	React.useEffect(() => {
-		if (role === "grant_dep") {
+		if (role === "grant_dep" ) {
 			setDepartment("");
 		} else if (department == undefined) {
 			setDepartment("");
@@ -62,8 +63,8 @@ export default withAuthRedirect(function Register() {
 	};
 
 	const registerTrigger = () => {
-		if(role !== 'grant_dep' && !department) {
-			toast.warn('Please note the all fields')
+		if(role !== 'grant_dep' && role !== 'finance' && !department) {
+			toast.warn('Please select department.')
 			return;
 		}
 		if (!role) {
@@ -71,7 +72,7 @@ export default withAuthRedirect(function Register() {
 			return;
 		}
 		if (!enrollment && role == 'user' ) {
-			toast.warn('Please note the all fields')
+			toast.warn('Please input the enrollment number.')
 			return;
 		}
 		if (re_pwd !== password || !password || !role || !firstName) {
@@ -227,7 +228,7 @@ export default withAuthRedirect(function Register() {
 						</FormHelperText>
 					)}
 				</FormControl>
-				{role !== "grant_dep" && (
+				{role !== "grant_dep" && role !== "finance" && (
 					<FormControl fullWidth>
 						<InputLabel id="department-select-label">Department</InputLabel>
 						<Select
@@ -239,7 +240,7 @@ export default withAuthRedirect(function Register() {
 							onChange={handleDepartmentChange}
 						>
 							<MenuItem value="philosophy">Philosophy</MenuItem>
-							<MenuItem value="department1">Department 1</MenuItem>
+							<MenuItem value="finance_department">Finance Department</MenuItem>
 							<MenuItem value="department2">Department 2</MenuItem>
 							<MenuItem value="department3">Department 3</MenuItem>
 						</Select>
@@ -258,10 +259,13 @@ export default withAuthRedirect(function Register() {
 								className="text-start"
 								onChange={handleRoleChange}
 							>
-								<MenuItem value="user">User</MenuItem>
-								<MenuItem value="reviewer">Reviewer</MenuItem>
-								<MenuItem value="col_dean">College Dean</MenuItem>
-								<MenuItem value="grant_dep">Grand Admin</MenuItem>
+								{
+									ROLE.filter(role => role.id != 'grant_dir').map((role: any) => (
+										<MenuItem value={role.id}>
+											{role?.name}
+										</MenuItem>
+									))
+								}
 							</Select>
 						</FormControl>
 					</Grid>

@@ -11,12 +11,13 @@ export default function PrivatePage({requiredRole, component: Component}: {requi
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        if(requiredRole && !requiredRole.includes(user.role)) {
+            router.back()
+        }
         dispatch(fetchProfileByEmail());
     }, [])
-
+    
     if(requiredRole && !requiredRole.includes(user.role)) {
-        router.back()
-
         return <Navigate to='/'/>
     }
 

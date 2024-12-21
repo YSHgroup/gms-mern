@@ -1,5 +1,3 @@
-import { useRouter } from "@/routes/hooks";
-
 export const getRole = (key: string) => {
   const roles = [
     { user: "User" },
@@ -7,16 +5,11 @@ export const getRole = (key: string) => {
     { col_dean: "College Dean" },
     { grant_dep: "Grant Department" },
     { grant_dir: "Grant Director" },
+    { finance: "Finance Director" },
   ];
 
-  const router = useRouter();
-  if (!key) {
-    return '';
-  }
-
   const value = roles.find((role) => Object.keys(role)[0] === key) as any;
-  if (!value) {
-    router.replace("/login");
+  if (!value || !key) {
     return '';
   }
   const role = value[key];

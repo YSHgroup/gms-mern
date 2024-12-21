@@ -3,5 +3,6 @@ export const ROLE = [
     {id: 'reviewer', name: 'Reviewer'},
     {id: 'col_dean', name: 'College Dean'},
     {id: 'grant_dep', name: 'Grant Department'},
-    {id: 'grant_dir', name: 'Grant Director'}
+    {id: 'finance', name: 'Finance Director'},
+    {id: 'grant_dir', name: 'Grant Director'},
 ] 

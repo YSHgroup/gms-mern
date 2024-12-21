@@ -46,8 +46,8 @@ export const columns: any[] = [
 		id: "grant_dir",
 		label: "Grant Director",
 	},
-	// {
-	//   id: "accepted",
-	//   label: "Accepted",
-	// },
+	{
+	  id: "finance",
+	  label: "Finance Director",
+	},
 ];

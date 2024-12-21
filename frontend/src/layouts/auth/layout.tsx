@@ -1,13 +1,6 @@
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
-import Link from '@mui/material/Link';
-import Alert from '@mui/material/Alert';
-
-import { RouterLink } from '@/routes/components';
-
 import { stylesMode } from '@/theme/styles';
-
-import { Logo } from '@/components/logo';
 
 import { Main } from './main';
 import { HeaderSection } from '../core/header-section';

@@ -12,9 +12,7 @@ import {
 	Dialog,
 	DialogActions,
 	DialogContent,
-	DialogContentText,
 	DialogTitle,
-	Grid2,
 	Link,
 	TextField,
 	Typography,
@@ -41,7 +39,7 @@ export function UserTableRow({
 	headList,
 	row,
 	selected,
-	onSelectRow,
+	// onSelectRow,
 	onAccept,
 	onDeny,
 }: UserTableRowProps) {
@@ -122,17 +120,17 @@ export function UserTableRow({
 	}, []);
 	const handleCloseCommentDialog = () => {
 		setOpenComment(false);
-    setViewComment(false)
+		setViewComment(false);
 	};
 	const handleSign = () => {
 		setOpenDialog(true);
 		setSignState(true);
 	};
 
-  const viewComment = () => {
-    setOpenComment(true)
-    setViewComment(true)
-  }
+	const viewComment = () => {
+		setOpenComment(true);
+		setViewComment(true);
+	};
 
 	return (
 		<>
@@ -150,7 +148,7 @@ export function UserTableRow({
 								"col_dean",
 								"grant_dep",
 								"grant_dir",
-								"accepted",
+								"finance",
 							].includes(headItem.id)
 								? "center"
 								: "left"
@@ -165,7 +163,7 @@ export function UserTableRow({
 									"col_dean",
 									"grant_dep",
 									"grant_dir",
-									"accepted",
+									"finance",
 							  ].includes(headItem.id) ? (
 								row[headItem.id] == "approved" ? (
 									<Iconify
@@ -246,17 +244,19 @@ export function UserTableRow({
 									<Iconify icon="solar:forbidden-circle-broken" />
 									Deny
 								</MenuItem>
-                </>
-              )}
+							</>
+						)}
 
-								{user.role !== "user" && <MenuItem
-									onClick={() => setOpenComment((pre) => !pre)}
-									sx={{ color: "info.main" }}
-								>
-									<Iconify icon="solar:paperclip-outline" />
-									Comment
-								</MenuItem>}
-            {/* {
+						{user.role !== "user" && (
+							<MenuItem
+								onClick={() => setOpenComment((pre) => !pre)}
+								sx={{ color: "info.main" }}
+							>
+								<Iconify icon="solar:paperclip-outline" />
+								Comment
+							</MenuItem>
+						)}
+						{/* {
               (user?.role != "col_dean" || user?.role != "user") && (row.signed && row.rejected) && (
                 <>
                   No available action
@@ -264,10 +264,7 @@ export function UserTableRow({
               )
             } */}
 						{(user?.role == "col_dean" || user?.role == "user") && (
-							<MenuItem
-								onClick={viewComment}
-								sx={{ color: "success.main" }}
-							>
+							<MenuItem onClick={viewComment} sx={{ color: "success.main" }}>
 								<Iconify icon="solar:paperclip-outline" />
 								View Comments
 							</MenuItem>
@@ -309,7 +306,9 @@ export function UserTableRow({
 							{row.comment ? (
 								Object.keys(row.comment)
 									.filter((key) =>
-										["reviewer", "grant_dep", "grant_dir", "col_dean"].includes(key)
+										["reviewer", "grant_dep", "grant_dir", "col_dean"].includes(
+											key
+										)
 									)
 									.map((key: string) => (
 										<Box p={2} minWidth={300} key={key}>

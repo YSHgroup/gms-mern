@@ -76,7 +76,7 @@ export default function WorkPanel() {
 			currencyType: currencyType?.value,
 		};
 		publishAnnouncement(data, img)
-			.then((res) => {
+			.then(() => {
 				setImgUrl("");
 				setImg(null);
 				setTitle("");
@@ -193,7 +193,7 @@ export default function WorkPanel() {
 						options={currencyTypes}
 						fullWidth
 						value={currencyType}
-						onChange={(e, nv) => setCurrencyType(nv)}
+						onChange={(_, nv) => setCurrencyType(nv)}
 						renderInput={(params) => (
 							<TextField {...params} label="Currency Type" />
 						)}

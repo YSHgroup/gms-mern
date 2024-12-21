@@ -21,7 +21,7 @@ export const navData = [
   {
     title: 'User list',
     path: '/users',
-    guard: ['user', 'reviewer', "grant_dep", ],
+    guard: ['user', 'reviewer', "grant_dep", 'finance'],
     icon: icon('ic-cart'),
     // info: (
     //   <Label color="error" variant="inverted">
@@ -38,7 +38,7 @@ export const navData = [
   {
     title: 'Announcement Portal',
     path: '/announcement-portal',
-    guard: ["grant_dep", 'user', 'reviewer',"col_dean"],
+    guard: ["grant_dep", 'user', 'reviewer',"col_dean", "finance"],
     icon: icon('ic-lock'),
   }
 ];

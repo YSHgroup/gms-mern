@@ -29,7 +29,7 @@ router.get("/:email", (req: any, res: Response) => {
         throw new Error("Your email is not available.");
       if (req.tokenUser.role === "user") {
         query = { email: req.params.email };
-      } else if (req.tokenUser.role !== "grant_dir" && req.tokenUser.role !== "grant_dep" ) {
+      } else if (req.tokenUser.role !== "grant_dir" && req.tokenUser.role !== "grant_dep" && req.tokenUser.role !== "finance" ) {
         query = { department: comfirmedResult.user?.department };
       }
       

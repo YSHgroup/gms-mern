@@ -16,7 +16,7 @@ export default {
     "col_dean",
     "grant_dep",
     "grant_dir",
-    // "accepted",
+    "finance",
   ],
   roles: [
     { user: "User" },
@@ -24,6 +24,7 @@ export default {
     { col_dean: "College Dean" },
     { grant_dep: "Grant Department" },
     { grant_dir: "Grant Director" },
+    { finance: "Finance Director" },
   ],
   handleRequest: async function (id: string, role: string, flag: boolean) {
     if (role === "user") throw new Error("You don't have permission");
@@ -32,13 +33,7 @@ export default {
       if (!application) {
         throw new Error("Application not found");
       }
-
-      // if (role === "col_dean" && application.accepted == "approved")
-      //   throw new Error("You have already approved this application");
-      // if (role === "col_dean" && application.signed == "rejected")
-      //   throw new Error("You have already rejected this application");
-      // if (role === "col_dean" && application.accepted == "rejected")
-      //   throw new Error("You have already rejected this application");
+      
       if (application[role] == "approved")
         throw new Error("You have already approved this application");
       if (application[role] == "rejected")

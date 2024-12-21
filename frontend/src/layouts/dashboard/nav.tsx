@@ -7,21 +7,15 @@ import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
 import ListItemButton from "@mui/material/ListItemButton";
 import Drawer, { drawerClasses } from "@mui/material/Drawer";
+import { Divider, Grid2 } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import { usePathname } from "@/routes/hooks";
 import { RouterLink } from "@/routes/components";
-
 import { varAlpha } from "@/theme/styles";
-
-import { Logo } from "@/components/logo";
 import { Scrollbar } from "@/components/scrollbar";
 
-import { NavUpgrade } from "../components/nav-upgrade";
-import { WorkspacesPopover } from "../components/workspaces-popover";
-
 import type { WorkspacesPopoverProps } from "../components/workspaces-popover";
-import { Divider, Grid2 } from "@mui/material";
-import { Typography } from "@mui/material";
 import { getCurrentUser } from "@/services/authService";
 
 // ----------------------------------------------------------------------

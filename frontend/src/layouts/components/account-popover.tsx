@@ -14,7 +14,6 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import { useRouter, usePathname } from '@/routes/hooks';
 
 import { getCurrentUser, logout } from '@/services/authService';
-import { useNavigate } from 'react-router';
 import { getRole } from '@/utils/roleGetter';
 
 // ----------------------------------------------------------------------
@@ -52,11 +51,9 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
     [handleClosePopover, router]
   );
 
-  const navigate = useNavigate()
-
 
   const handleLogout = () => {
-    logout(navigate)
+    logout(router.push)
   }
 
   return (

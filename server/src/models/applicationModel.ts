@@ -60,7 +60,7 @@ const ApplicationSchema = new Schema({
     enum: ["pending", "approved", "rejected"],
     default: "pending",
   },
-  accepted: {
+  finance: {
     type: String,
     enum: ["pending", "approved", "rejected"],
     default: "pending",
