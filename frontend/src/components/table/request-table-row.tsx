@@ -229,7 +229,7 @@ export function UserTableRow({
 							},
 						}}
 					>
-						{user?.role != "user" && row.signed == "peding" && (
+						{user?.role != "user" && row[user?.role] == "pending" && (
 							<>
 								<MenuItem
 									onClick={handleAcceptClick}
