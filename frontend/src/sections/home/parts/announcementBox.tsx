@@ -88,6 +88,9 @@ export function AnnouncementBox({
 					<img
 						src={`${import.meta.env.VITE_BASE_URL}/${imageUrl}`}
 						alt={title}
+						style={{
+							objectFit: 'contain'
+						}}
 					/>
 				</Box>
 			) : (
