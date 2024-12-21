@@ -66,9 +66,7 @@ export function UserTableHead({
             </TableSortLabel>
           </TableCell>
         ))}
-        {(user.role !== "user") && (
         <TableCell align='right'>Action</TableCell>
-          )}
       </TableRow>
     </TableHead>
   );
