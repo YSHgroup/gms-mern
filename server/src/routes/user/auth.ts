@@ -6,6 +6,7 @@ import {
 import { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { sign, verify } from "jsonwebtoken";
+import { checkEnrollmentUniqueness } from "@/utils/confirmEnrollment";
 
 const router = Router();
 const secret_key = process.env.SECRET_KEY ?? "sh";
@@ -35,6 +36,15 @@ router.post("/register", (req: Request, res: Response) => {
       const hashedPwd = await bcrypt.hash(req.body.password, salt);
 
       const newUser = new User({ ...req.body, password: hashedPwd });
+      if(req.body.role == 'user') {
+        const uniqueEnrollment = await checkEnrollmentUniqueness(req.body.enrollment)
+        if(!uniqueEnrollment) {
+          res.status(400).json({
+            errorType: "existence_error",
+            msg: ["The enrollment exists already."]
+          })
+        }
+      }
       newUser
         .save()
         .then((result) => {
