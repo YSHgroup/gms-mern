@@ -5,9 +5,9 @@ export const checkEnrollmentUniqueness = async (newEnrollment: number) => {
     try {
         const users = await User.find({enrolment: newEnrollment})
         if(!isEmpty(users)) {
-            return false
+            return true
         }
-        return true
+        return false
     } catch (error) {
         console.error(error)
         return true
