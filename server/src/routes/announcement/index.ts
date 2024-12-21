@@ -18,6 +18,19 @@ router.get("/", (req: any, res: Response) => {
   });
 });
 
+router.get("/:id", (req: any, res: Response) => {
+
+  Announcement.findById(req.params.id).then((announcements) => {
+    if (isEmpty(announcements)) {
+      res.status(404).json({ msg: ["No announcements"] });
+    } else {
+      res.status(200).json(announcements);
+    }
+  }).catch((error) => {
+    res.status(500).json({ msg: [error.message] });
+  });
+});
+
 router.post("/", upload.single('image'), async (req: any, res: Response) => {
   if(req.tokenUser.role !== "grant_dir") {
     res.status(403).json({ msg: ["You do not have autherization for this route."] })

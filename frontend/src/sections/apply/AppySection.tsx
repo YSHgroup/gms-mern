@@ -9,6 +9,7 @@ import {
 	LinearProgress,
 	TextField,
 } from "@mui/material";
+
 import { CloudUpload, Publish } from "@mui/icons-material";
 import React from "react";
 import PDFPreview from "@/components/PdfPreviewer";
@@ -19,6 +20,7 @@ import { Autocomplete } from "@mui/material";
 import { currencyTypes } from "@/constants/currencyType";
 import { isAxiosError } from "axios";
 import { useRouter } from "@/routes/hooks";
+import { getAnnouncementById } from "@/services/announcementServices";
 
 const VisuallyHiddenInput = styled("input")({
 	clip: "rect(0 0 0 0)",
@@ -33,14 +35,15 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function ApplySection() {
-  const router = useRouter()
+	const router = useRouter();
 	const [file, setFile] = React.useState<File | null>(null);
 	const [fileUrl, setFileUrl] = React.useState<string>();
 	const [isLoading, setLoading] = React.useState<boolean>(false);
 	const [budget, setBudget] = React.useState<any>({
-		budget: '',
-		milestone: '',
+		budget: "",
+		milestone: "",
 	});
+	const [budgetLimitation, setLimit] = React.useState(10000);
 	const [currencyType, setCurrencyType] = React.useState<{
 		value: string;
 		label: string;
@@ -53,6 +56,18 @@ export default function ApplySection() {
 
 	// const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	// const openCombo = Boolean(anchorEl);
+
+	React.useEffect(() => {
+		if (params.id) {
+			getAnnouncementById(params.id)
+				.then((res) => {
+					setLimit(res.data.budget);
+				})
+				.catch(() => {
+					setLimit(10000);
+				});
+		}
+	}, []);
 
 	const upload = (files: FileList | null) => {
 		setLoading(true);
@@ -82,7 +97,6 @@ export default function ApplySection() {
 			return;
 		}
 
-		
 		if (params?.id) {
 			requestGrant(
 				file,
@@ -95,15 +109,15 @@ export default function ApplySection() {
 					setFile(null);
 					setLoading(false);
 					setBudget({
-						budget: '',
-						milestone: '',
+						budget: "",
+						milestone: "",
 					});
-          if (fileUrl) {
-            URL.revokeObjectURL(fileUrl);
-          }
-          setFileUrl('')
+					if (fileUrl) {
+						URL.revokeObjectURL(fileUrl);
+					}
+					setFileUrl("");
 					toast.success("Application submitted");
-          router.push('/')
+					router.push("/");
 				})
 				.catch((error) => {
 					if (isAxiosError(error))
@@ -116,16 +130,20 @@ export default function ApplySection() {
 		toast.warn("Please select announcement");
 	};
 
-	// const handleComboButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-	//   setAnchorEl(event.currentTarget);
-	// };
-	// const handleClose = () => {
-	//   setAnchorEl(null);
-	// };
-
 	React.useEffect(() => {
 		setLoading(false);
 	}, [file]);
+
+	const handleBudgetChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
+		if (Number(e.target.value) <= budgetLimitation) {
+			setBudget((pre: any) => ({
+				...pre,
+				budget: e.target.value,
+			}));
+		}
+	};
 
 	return (
 		<DashboardContent maxWidth="xl">
@@ -133,38 +151,7 @@ export default function ApplySection() {
 				Apply
 			</Typography>
 
-			{/* <Container className="bg-white border-solid border rounded border-stone-100 p-6"> */}
 			<Paper elevation={1} className="p-4">
-				{/* <Typography variant="body1" my={2} color="primary.dark">
-          Select announcement
-        </Typography>
-
-        <Box>
-          <Button
-            id="basic-button"
-            aria-controls={openCombo ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            variant="outlined"
-            aria-expanded={openCombo ? "true" : undefined}
-            onClick={handleComboButton}
-          >
-            Announcement {announcement.title &&<span className="text-green-600"> - {announcement.title}</span>}
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={openCombo}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            {announcements.map((item: any) => (
-              <MenuItem key={item._id}  onClick={() => setAnnouncement(item)}>{item.title}</MenuItem>
-            ))}
-          </Menu>
-        </Box> */}
-
 				<Grid container spacing={4}>
 					<Grid
 						size={12}
@@ -186,13 +173,8 @@ export default function ApplySection() {
 									variant="outlined"
 									fullWidth
 									type="number"
-                  value={budget.budget}
-									onChange={(e) =>
-										setBudget((pre: any) => ({
-											...pre,
-											budget: e.target.value,
-										}))
-									}
+									value={budget.budget}
+									onChange={handleBudgetChange}
 								></TextField>
 							</Grid>
 							<Grid size={5}>
@@ -225,7 +207,7 @@ export default function ApplySection() {
 										shrink: true,
 									},
 								}}
-                value={budget.milestone}
+								value={budget.milestone}
 								onChange={(e) =>
 									setBudget((pre: any) => ({
 										...pre,

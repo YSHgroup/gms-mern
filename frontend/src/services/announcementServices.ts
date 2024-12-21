@@ -17,3 +17,4 @@ export const publishAnnouncement = (data: Announcement, img?: File) => {
 };
 
 export const getAnnouncements = () => axios.get("/api/announcement");
+export const getAnnouncementById = (id: string) => axios.get("/api/announcement/" + id);
