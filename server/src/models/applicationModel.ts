@@ -8,6 +8,9 @@ const ApplicationSchema = new Schema({
   lastName: {
     type: String,
   },
+  enrollment: {
+    type: Number,
+  },
   email: {
     type: String,
     required: true,

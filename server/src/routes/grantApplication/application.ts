@@ -65,6 +65,7 @@ router.post(
           const user = response.user;
           const data = {
             email: user?.email,
+            enrollment: user?.enrollment,
             firstName: user?.firstName,
             lastName: user?.lastName,
             department: user?.department,
