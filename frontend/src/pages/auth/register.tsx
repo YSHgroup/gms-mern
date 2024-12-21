@@ -34,7 +34,7 @@ export default withAuthRedirect(function Register() {
 	const [re_pwd, setRe_pwd] = React.useState<string>("");
 	const [department, setDepartment] = React.useState<string | undefined>("");
 	const [role, setRole] = React.useState<string>("user");
-	const [enrolment, setEnrolment] = React.useState<string>("");
+	const [enrollment, setEnrollment] = React.useState<string>("");
 
 	const EmailVali = z.string().email();
 	const PassVali = z.string().min(6);
@@ -70,7 +70,7 @@ export default withAuthRedirect(function Register() {
 			toast.warn('Please select your role.')
 			return;
 		}
-		if (!enrolment && role == 'user' ) {
+		if (!enrollment && role == 'user' ) {
 			toast.warn('Please note the all fields')
 			return;
 		}
@@ -80,7 +80,7 @@ export default withAuthRedirect(function Register() {
 		}
 
 		const departmentValue = role === "grant_dep" ? undefined : department;
-		const tempDepartment = role === "user" ? enrolment : undefined;
+		const tempDepartment = role === "user" ? enrollment : undefined;
 
 		register(
 			{
@@ -90,7 +90,7 @@ export default withAuthRedirect(function Register() {
 				password,
 				department: departmentValue,
 				role,
-				enrolment: tempDepartment,
+				enrollment: tempDepartment,
 			},
 			navigate
 		);
@@ -268,7 +268,7 @@ export default withAuthRedirect(function Register() {
 					{role == "user" && (
 						<Grid size={6} mt={2}>
 							<TextField
-								label="Enrolment number"
+								label="enrollment number"
 								fullWidth
 								type="number"
 								slotProps={{
@@ -276,8 +276,8 @@ export default withAuthRedirect(function Register() {
 										shrink: true,
 									},
 								}}
-								value={enrolment}
-								onChange={(e) => setEnrolment(e.target.value)}
+								value={enrollment}
+								onChange={(e) => setEnrollment(e.target.value)}
 							></TextField>
 						</Grid>
 					)}

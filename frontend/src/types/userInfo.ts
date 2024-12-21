@@ -8,7 +8,7 @@ export interface RegUser extends LoginInfo {
   lastName: String;
   department?: String;
   role: String;
-  enrolment?: string | number
+  enrollment?: string | number
 }
 
 export interface PendingUser {

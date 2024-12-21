@@ -18,7 +18,7 @@ const storageOfApplication = multer.diskStorage({
   filename: async function (req, file, cb) {
     try {
       const user = await User.findOne({email: req.params.email})
-      cb(null, user?.enrolment + '-' + Date.now() + '.' + file.originalname.split('.').pop())
+      cb(null, user?.enrollment + '-' + Date.now() + '.' + file.originalname.split('.').pop())
       // cb(null, file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.').pop())
       
     } catch (error: any) {

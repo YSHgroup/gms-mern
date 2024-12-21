@@ -24,7 +24,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    enrolment: {
+    enrollment: {
       type: Number
     },
     allowed: {

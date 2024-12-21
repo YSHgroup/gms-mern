@@ -38,7 +38,7 @@ router.post("/register", (req: Request, res: Response) => {
       const newUser = new User({ ...req.body, password: hashedPwd });
       if(req.body.role == 'user') {
         const uniqueEnrollment = await checkEnrollmentUniqueness(req.body.enrollment)
-        if(!uniqueEnrollment) {
+        if(uniqueEnrollment) {
           res.status(400).json({
             errorType: "existence_error",
             msg: ["The enrollment exists already."]
