@@ -1,4 +1,3 @@
-import { Label } from '@/components/label';
 import { SvgColor } from '@/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -21,7 +20,7 @@ export const navData = [
   {
     title: 'User list',
     path: '/users',
-    guard: ['user', 'reviewer', "grant_dep", 'finance'],
+    guard: ['user', 'reviewer_1', 'reviewer_2', "grant_dep", 'finance'],
     icon: icon('ic-cart'),
     // info: (
     //   <Label color="error" variant="inverted">
@@ -38,7 +37,7 @@ export const navData = [
   {
     title: 'Announcement Portal',
     path: '/announcement-portal',
-    guard: ["grant_dep", 'user', 'reviewer',"col_dean", "finance"],
+    guard: ["grant_dep", 'user', 'reviewer_1', 'reviewer_2', "col_dean", "finance"],
     icon: icon('ic-lock'),
   }
 ];

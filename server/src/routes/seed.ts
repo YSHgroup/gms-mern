@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { isEmpty } from '@/utils/isEmpty';
 import { Role } from '@/models/seedModel';
-import { roles } from '@/constant';
+import { roles } from '@/constant/user';
 
 const router = Router();
 

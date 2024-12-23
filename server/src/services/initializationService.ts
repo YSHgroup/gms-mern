@@ -4,7 +4,7 @@ import path from "path";
 
 import { isEmpty } from "@/utils/isEmpty";
 import { Role } from "@/models/seedModel";
-import { roles } from "@/constant";
+import { roles } from "@/constant/user";
 import { User } from "@/models/userModel";
 
 const dirPath_1 = path.resolve(__dirname, "../..", "public", "applications");

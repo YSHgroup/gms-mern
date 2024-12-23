@@ -261,7 +261,7 @@ export default withAuthRedirect(function Register() {
 							>
 								{
 									ROLE.filter(role => role.id != 'grant_dir').map((role: any) => (
-										<MenuItem value={role.id}>
+										<MenuItem key={role.id} value={role.id}>
 											{role?.name}
 										</MenuItem>
 									))
