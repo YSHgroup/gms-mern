@@ -12,7 +12,8 @@ import { sendEmail } from "./autoMailService";
 
 export default {
   approveProcedure: [
-    "reviewer",
+    "reviewer_1",
+    "reviewer_2",
     "col_dean",
     "grant_dep",
     "grant_dir",
@@ -20,7 +21,8 @@ export default {
   ],
   roles: [
     { user: "User" },
-    { reviewer: "Reviewer" },
+    { reviewer_1: "Reviewer 1" },
+    { reviewer_2: "Reviewer 2" },
     { col_dean: "College Dean" },
     { grant_dep: "Grant Department" },
     { grant_dir: "Grant Director" },
@@ -70,8 +72,8 @@ export default {
     //   return { result: false, doubleError: true };
     // }
     if(role === this.approveProcedure[0]) {
-      if(data['signed'] == 'approved') return {result: true, key: role}
-      if(data['signed'] == 'rejected') return {result: false, rejected: true}
+      if(data['assigned'] == 'approved') return {result: true, key: role}
+      if(data['assigned'] == 'rejected') return {result: false, rejected: true}
       return { result: false }
     } else
     if (
@@ -100,7 +102,7 @@ export default {
     const nextRole =
       this.approveProcedure[this.approveProcedure.indexOf(role) + 1];
     try {
-      if (process === "signed") {
+      if (process === "assigned") {
         sendEmail(signedMail(application.email));
       }
       if (nextRole === "accepted") {

@@ -9,6 +9,7 @@ import { User } from "@/models/userModel";
 
 const dirPath_1 = path.resolve(__dirname, "../..", "public", "applications");
 const dirPath_2 = path.resolve(__dirname, "../..", "public", "images");
+const dirPath_3 = path.resolve(__dirname, "../..", "public", "reviews");
 
 const checkAndMakeDir = () => {
 	let state = false;
@@ -24,6 +25,13 @@ const checkAndMakeDir = () => {
 		state = true;
 		fs.mkdirSync(dirPath_2, { recursive: true });
 		console.log("Directory created: ", dirPath_2);
+		// return true
+	}
+	if (!fs.existsSync(dirPath_3)) {
+		// Create the directory
+		state = true;
+		fs.mkdirSync(dirPath_3, { recursive: true });
+		console.log("Directory created: ", dirPath_3);
 		// return true
 	}
 	if (!state) {

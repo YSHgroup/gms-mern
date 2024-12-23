@@ -43,7 +43,7 @@ export function LayoutSection({
     <>
       {inputGlobalStyles}
 
-      <Box id="root__layout" className={layoutClasses.root} sx={sx}>
+      <Box id="root__layout" borderRight={1} borderColor={'primary'} className={layoutClasses.root} sx={sx}>
         {sidebarSection}
         <Box
           display="flex"

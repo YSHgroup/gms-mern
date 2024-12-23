@@ -3,8 +3,8 @@ const date = new Date().toLocaleString()
 
 export const signedMail = (receiver: string) => ({
     receiverEmail: receiver,
-    subject: 'Application has been signed',
-    content: 'Your application has been signed by College Dean.',
+    subject: 'Application has been assigned',
+    content: 'Your application has been assigned by College Dean.',
     date: date
 })
 

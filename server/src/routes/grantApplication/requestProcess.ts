@@ -4,6 +4,7 @@ import GrantService from "@/services/grantService";
 import { Comment } from "@/models/commentModel";
 import { isEmpty } from "@/utils/isEmpty";
 import grantService from "@/services/grantService";
+import { uploadReview } from "@/middleware/multer";
 
 const router = Router();
 
@@ -24,7 +25,7 @@ router.post("/approve/:id", (req: any, res: Response) => {
 
 router.post("/sign/:id", (req: any, res: Response) => {
   // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: true}})
-  Application.findByIdAndUpdate(req.params.id, {$set: {signed: req.body.sign}})
+  Application.findByIdAndUpdate(req.params.id, {$set: {assigned: req.body.sign}})
   .then((response) => {
       if (!isEmpty(response)) {
         res.status(200).send(response);
@@ -64,8 +65,10 @@ router.post("/reject/:id", (req: any, res: Response) => {
 //     })
 // })
 
-router.post("/comment/:id", async (req: any, res: Response) => {
-  const { content } = req.body;
+router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res: Response) => {
+  const content = JSON.parse(req.body.content);
+  console.log(content)
+
   const role = req.tokenUser.role;
   try {
     if (role === "user")
@@ -90,9 +93,8 @@ router.post("/comment/:id", async (req: any, res: Response) => {
     
     Comment.findOne({ _id: application.comment })
     .then((result) => {
-      console.log('comment: ', isEmpty(result))
       if (isEmpty(result)) {
-          const comment = new Comment({ [req.tokenUser.role]: content });
+          const comment = new Comment({ [req.tokenUser.role]: {text: content, url: req.file.filename} });
           comment
             .save()
             .then((result) => {

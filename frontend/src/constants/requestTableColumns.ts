@@ -27,8 +27,8 @@ export const columns: any[] = [
 		label: "Milestone",
 	},
 	{
-		id: "signed",
-		label: "Signed",
+		id: "assigned",
+		label: "Assigned",
 	},
 	{
 		id: "reviewer_1",

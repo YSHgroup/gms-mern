@@ -39,6 +39,7 @@ app.use(cors())
 
 // Serve static data
 app.use('/images', express.static(path.resolve(__dirname, "..", "public", "images")))
+app.use('/reviews', express.static(path.resolve(__dirname, "..", "public", "reviews")))
 app.use('/application', express.static(path.resolve(__dirname, "..", "public", "applications")))
 
 // router

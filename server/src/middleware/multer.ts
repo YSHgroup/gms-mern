@@ -27,10 +27,24 @@ const storageOfApplication = multer.diskStorage({
   }
 })
 
+const storageOfReview = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/reviews/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.').pop())
+  }
+})
+
+
 export const upload = multer({
   storage: storageOfImage
 })
 
 export const uploadApplication = multer({
   storage: storageOfApplication
+})
+
+export const uploadReview = multer({
+  storage: storageOfReview
 })

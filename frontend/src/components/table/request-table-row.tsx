@@ -14,15 +14,14 @@ import {
 	DialogContent,
 	DialogTitle,
 	Link,
-	TextField,
 	Typography,
 } from "@mui/material";
 import { Button } from "@mui/material";
 import { getCurrentUser } from "@/services/authService";
-import { Box } from "@mui/material";
 import { postComment, signApplication } from "@/services/grantService";
 import { useAppDispatch } from "@/redux/hooks";
 import { fetchRequestData } from "@/redux/slices/requestSlice";
+import CommentDialog from "../dialogs/CommentDialog";
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +51,7 @@ export function UserTableRow({
 	const [signState, setSignState] = useState<boolean>(false);
 	const [comment, setComment] = useState("");
 	const [viewCommentState, setViewComment] = useState(false);
+	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 	const user = getCurrentUser();
 
 	const dispatch = useAppDispatch();
@@ -104,7 +104,7 @@ export function UserTableRow({
 	);
 	const submitComment = (id: string) => {
 		if (comment.trim()) {
-			postComment(id, comment);
+			postComment(id, comment, uploadedFile);
 			setOpenComment(false);
 			setComment("");
 		}
@@ -132,6 +132,15 @@ export function UserTableRow({
 		setViewComment(true);
 	};
 
+	const uploadFile = (file: File) => {
+		setUploadedFile(file)
+	}
+	const removeFile = () => {
+		if(uploadedFile) {
+			setUploadedFile(null)
+		}
+	}
+
 	return (
 		<>
 			<TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -143,8 +152,9 @@ export function UserTableRow({
 						key={row.id + row[headItem.id] + i}
 						align={
 							[
-								"reviewer",
-								"signed",
+								"reviewer_1",
+								"reviewer_2",
+								"assigned",
 								"col_dean",
 								"grant_dep",
 								"grant_dir",
@@ -158,8 +168,9 @@ export function UserTableRow({
 							{headItem.id === "announcement" ? (
 								row["announcement"].title
 							) : [
-									"reviewer",
-									"signed",
+									"reviewer_1",
+									"reviewer_2",
+									"assigned",
 									"col_dean",
 									"grant_dep",
 									"grant_dir",
@@ -269,7 +280,7 @@ export function UserTableRow({
 								View Comments
 							</MenuItem>
 						)}
-						{user?.role == "col_dean" && row.signed == "pending" && (
+						{user?.role == "col_dean" && row.assigned == "pending" && (
 							<MenuItem sx={{ color: "success.main" }} onClick={handleSign}>
 								<Iconify icon="solar:check-circle-linear" />
 								Sign
@@ -299,78 +310,21 @@ export function UserTableRow({
 					</DialogActions>
 				</Dialog>
 
-				<Dialog open={openComment} onClose={handleCloseCommentDialog}>
-					<DialogTitle mb={1}>Comment</DialogTitle>
-					{viewCommentState ? (
-						<DialogContent sx={{ minWidth: 300 }}>
-							{row.comment ? (
-								Object.keys(row.comment)
-									.filter((key) =>
-										["reviewer", "grant_dep", "grant_dir", "col_dean"].includes(
-											key
-										)
-									)
-									.map((key: string) => (
-										<Box p={2} minWidth={300} key={key}>
-											<Typography variant="h6">
-												{key == "reviewer"
-													? "Reviewer"
-													: key == "grant_dep"
-													? "Grant Department"
-													: key == "grant_dir"
-													? "Grant Director"
-													: "College Dean"}
-											</Typography>
-
-											<Typography variant="body1">
-												{row.comment[key]}
-											</Typography>
-										</Box>
-									))
-							) : (
-								<Typography variant="h6" color="info" textAlign={"center"}>
-									No comment
-								</Typography>
-							)}
-						</DialogContent>
-					) : (
-						<Box px={3}>
-							<TextField
-								label="Comment"
-								variant="outlined"
-								minRows={3}
-								fullWidth
-								multiline
-								value={comment}
-								onChange={(e) => setComment(e.target.value)}
-							></TextField>
-							<TextField
-								fullWidth
-								hidden
-								sx={{
-									visibility: "hidden",
-									height: 0,
-									m: 0,
-									p: 0,
-								}}
-							></TextField>
-						</Box>
-					)}
-					{viewCommentState ? (
-						<Button onClick={() => setOpenComment(false)} size="large">
-							Close
-						</Button>
-					) : (
-						<DialogActions>
-							<Button onClick={() => submitComment(row.id)} color="primary">
-								Submit
-							</Button>
-							<Button onClick={() => cancelComment()} color="secondary">
-								Cancel
-							</Button>
-						</DialogActions>
-					)}
-				</Dialog>
+				<CommentDialog
+					row={row}
+					user={user}
+					openComment={openComment}
+					comment={comment}
+					uploadedFile={uploadedFile}
+					handleCloseCommentDialog={handleCloseCommentDialog}
+					setOpenComment={setOpenComment}
+					cancelComment={cancelComment}
+					setComment={setComment}
+					submitComment={submitComment}
+					viewCommentState={viewCommentState}
+					onUploadFile={uploadFile}
+					onRemove={removeFile}
+				></CommentDialog>
 			</TableRow>
 		</>
 	);

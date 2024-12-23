@@ -41,8 +41,16 @@ export const rejectRequest = (id: string) => {
   return axios.post("api/grant-application/reject/" + id);
 };
 
-export const postComment = (id: string, content: string) => {
-  axios.post("api/grant-application/comment/" + id, {content})
+export const postComment = (id: string, content: string, file?: File | null) => {
+  const formdata = new FormData()
+  formdata.append('content', JSON.stringify(content))
+  if(file) formdata.append('reivew', file)
+
+  axios.post("api/grant-application/comment/" + id, formdata, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
   .then(response => {
     toast.success("Comment submited")
   })

@@ -35,12 +35,17 @@ const ApplicationSchema = new Schema({
     type: Number,
     required: true,
   },
-  signed: {
+  assigned: {
     type: String,
     enum: ["pending", "approved", "rejected"],
     default: "pending",
   },
-  reviewer: {
+  reviewer_1: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
+  reviewer_2: {
     type: String,
     enum: ["pending", "approved", "rejected"],
     default: "pending",
