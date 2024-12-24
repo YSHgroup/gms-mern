@@ -284,7 +284,7 @@ export function UserTableRow({
                 </>
               )
             } */}
-						{(user?.role == "col_dean" || user?.role == "user") && (
+						{(user?.role == "col_dean" || user?.role == "user" || user?.role == "finance" && row["grant_dir"] == "approved") && (
 							<MenuItem onClick={viewComment} sx={{ color: "success.main" }}>
 								<Iconify icon="solar:paperclip-outline" />
 								View Comments
