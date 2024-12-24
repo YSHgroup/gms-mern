@@ -171,7 +171,7 @@ export default function CommentDialog({
 				</Box>
 			)}
 			{viewCommentState ? (
-				<Button onClick={() => setOpenComment(false)} size="large">
+				<Button onClick={() => cancelComment()} size="large">
 					Close
 				</Button>
 			) : (

@@ -107,11 +107,14 @@ export function UserTableRow({
 			postComment(id, comment, uploadedFile);
 			setOpenComment(false);
 			setComment("");
+			setViewComment(false)
+			if(uploadedFile) setUploadedFile(null)
 		}
 	};
 
 	const cancelComment = () => {
 		setOpenComment(false);
+		setViewComment(false)
 		setComment("");
 	};
 

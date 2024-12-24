@@ -1,17 +1,24 @@
 import { Schema, model } from "mongoose";
 
+
+const reviewObject = new Schema({
+  url: {
+    type: String
+  },
+  text: {
+    type: String
+  }
+})
+
 const commentShema = new Schema({
   reviewer_1: {
-    url: String,
-    text: String,
+    type: reviewObject
   },
   reviewer_2: {
-    url: String,
-    text: String,
+    type: reviewObject
   },
   col_dean: {
-    url: String,
-    text: String,
+    type: reviewObject
   },
   grant_dep: {
     text: String,

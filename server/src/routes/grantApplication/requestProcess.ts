@@ -53,21 +53,9 @@ router.post("/reject/:id", (req: any, res: Response) => {
     });
 });
 
-// router.get("/comment/get", async (req: any, res: Response) => {
-//     console.log('comment: --')
-
-//     Comment.find().then((result) => {
-//         if(result) {
-//             console.log('comment: ', result)
-//         }
-//     }).catch((error) => {
-//         res.status(500).json({ msg: [error.message] });
-//     })
-// })
-
+// Set comment router
 router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res: Response) => {
   const content = JSON.parse(req.body.content);
-  console.log(content)
 
   const role = req.tokenUser.role;
   try {
@@ -79,17 +67,6 @@ router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res:
     if (isEmpty(application)) {
       throw new Error("Application not found");
     }
-    // if (
-    //   application[role] == "" ||
-    //   (application.signed && role === "col_dean") ||
-    //   (application.accepted && role === "col_dean")
-    // ) {
-    //   throw new Error("You have already approved this application");
-    // }
-    const confirmData = grantService.checkProcedure(role, application);
-    // if (!confirmData.result) {
-    //   throw new Error("Your previous step was not performed.");
-    // }
     
     Comment.findOne({ _id: application.comment })
     .then((result) => {
@@ -116,12 +93,11 @@ router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res:
             });
 
         } else {
-          
           Comment.findOneAndUpdate(
             { _id: application.comment },
-            { $set: { [req.tokenUser.role]: content } }
+            { $set: { [req.tokenUser.role]: {text: content, url: req.file.filename} } }
           )
-           .then((result) => {
+          .then((result) => {
               if (!isEmpty(result)) {
                 res.status(200).send(result);
               }
