@@ -5,6 +5,7 @@ import { Comment } from "@/models/commentModel";
 import { isEmpty } from "@/utils/isEmpty";
 import grantService from "@/services/grantService";
 import { uploadReview } from "@/middleware/multer";
+import { io } from "@/index";
 
 const router = Router();
 
@@ -13,10 +14,11 @@ router.post("/approve/:id", (req: any, res: Response) => {
   GrantService.handleRequest(req.params.id, req.tokenUser.role, true)
     .then((response) => {
       if (!isEmpty(response)) {
+        io.emit('update_request')
         res.status(200).send(response);
         return;
       }
-      throw new Error("Could not find your role.");
+      throw new Error("Could not find the request.");
     })
     .catch((error) => {
       res.status(500).json({ msg: [error.message] });
@@ -28,10 +30,11 @@ router.post("/sign/:id", (req: any, res: Response) => {
   Application.findByIdAndUpdate(req.params.id, {$set: {assigned: req.body.sign}})
   .then((response) => {
       if (!isEmpty(response)) {
+        io.emit('update_request')
         res.status(200).send(response);
         return;
       }
-      throw new Error("Couldn't such data.");
+      throw new Error("Couldn't find such request.");
     })
     .catch((error) => {
       res.status(500).json({ msg: [error.message] });
@@ -43,10 +46,11 @@ router.post("/reject/:id", (req: any, res: Response) => {
   GrantService.handleRequest(req.params.id, req.tokenUser.role, false)
     .then((response) => {
       if (!isEmpty(response)) {
+        io.emit('update_request')
         res.status(200).send(response);
         return;
       }
-      throw new Error("Could not find your role.");
+      throw new Error("Could not find the request.");
     })
     .catch((error) => {
       res.status(500).json({ msg: [error.message] });
@@ -81,6 +85,7 @@ router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res:
                   { $set: { comment: result._id } }
                 )
                   .then((result) => {
+                    io.emit('update_comment', result)
                     res.status(200).send(result);
                   })
                   .catch((error) => {
@@ -99,6 +104,7 @@ router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res:
           )
           .then((result) => {
               if (!isEmpty(result)) {
+                io.emit('update_comment', result)
                 res.status(200).send(result);
               }
             })

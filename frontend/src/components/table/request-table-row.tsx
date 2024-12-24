@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import Popover from "@mui/material/Popover";
 import TableRow from "@mui/material/TableRow";
@@ -22,6 +22,7 @@ import { postComment, signApplication } from "@/services/grantService";
 import { useAppDispatch } from "@/redux/hooks";
 import { fetchRequestData } from "@/redux/slices/requestSlice";
 import CommentDialog from "../dialogs/CommentDialog";
+import { closeSocketAPI, updateRequestRealtime } from "@/services/realtimeUpdateService";
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,12 @@ export function UserTableRow({
 	const user = getCurrentUser();
 
 	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		updateRequestRealtime()
+
+		return closeSocketAPI()
+	}, [])
 
 	const handleAcceptClick = useCallback(() => {
 		setState(true);

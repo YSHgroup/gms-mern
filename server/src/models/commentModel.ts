@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 
-const reviewObject = new Schema({
+const Review = new Schema({
   url: {
     type: String
   },
@@ -12,13 +12,13 @@ const reviewObject = new Schema({
 
 const commentShema = new Schema({
   reviewer_1: {
-    type: reviewObject
+    type: Review
   },
   reviewer_2: {
-    type: reviewObject
+    type: Review
   },
   col_dean: {
-    type: reviewObject
+    type: Review
   },
   grant_dep: {
     text: String,
