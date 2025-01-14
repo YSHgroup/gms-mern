@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
-import uuid from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 import { authRouter } from "./routes/user/auth";
 import { pendingUserRouter } from "./routes/user/pendingUser";
@@ -70,7 +70,6 @@ app.use("/api/grant-application", authVerify, [
 // set env
 initializeServer();
 
-// const httpServer = createServer(app);
 const io = new Server(
 	app.listen(port, () => {
 		console.log("=========================================");
@@ -90,16 +89,16 @@ const io = new Server(
 	}
 );
 
-io.on("connection", (socket) => {
-	console.log('user connected: ' ,socket.client , socket.data)
-});
-
-const count = io.engine.clientsCount;
-// may or may not be similar to the count of Socket instances in the main namespace, depending on your usage
-const count2 = io.of("/").sockets.size;
-
 io.engine.generateId = (req) => {
-	return uuid.v4(); // must be unique across all Socket.IO servers
+	return uuidv4(); // must be unique across all Socket.IO servers
 };
+
+io.on("connection", (socket) => {
+	console.log('A user connected: ' ,socket.id);
+
+	socket.on('disconnect', () => {
+        console.log(`A user disconnected: ${socket.id}`);
+    });
+});
 
 export {io}
