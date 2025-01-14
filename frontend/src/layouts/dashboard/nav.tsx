@@ -8,7 +8,6 @@ import { useTheme } from "@mui/material/styles";
 import ListItemButton from "@mui/material/ListItemButton";
 import Drawer, { drawerClasses } from "@mui/material/Drawer";
 import { Divider, Grid2 } from "@mui/material";
-import { Typography } from "@mui/material";
 
 import { usePathname } from "@/routes/hooks";
 import { RouterLink } from "@/routes/components";
@@ -60,10 +59,7 @@ export function NavDesktop({
 				bgcolor: "var(--layout-nav-bg)",
 				zIndex: "var(--layout-nav-zIndex)",
 				width: "var(--layout-nav-vertical-width)",
-				borderRight: `1px solid var(--layout-nav-border-color, ${varAlpha(
-					theme.vars.palette.grey["500Channel"],
-					0.12
-				)})`,
+				borderRight: `1px solid var(--layout-nav-border-color)`,
 				[theme.breakpoints.up(layoutQuery)]: {
 					display: "flex",
 				},
@@ -123,22 +119,9 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 	return (
 		<>
 			<Grid2 container className="flex justify-center items-center">
-				{/* <Grid2 size={12}>
-          <Typography variant="h4" display={'flex'} justifyContent={'center'} sx={{ color: "primary.main" }}>
-            Grant
-          </Typography>
-        </Grid2>
-
-        <Grid2 size={12}>
-          <Typography variant="h5" display={'flex'} justifyContent={'center'} sx={{ color: "primary.main" }}>{slots?.topArea}</Typography>
-        </Grid2> */}
-				{/* <Box bgcolor={"priamry"}> */}
-					<img src={logo} alt="logo" />
-				{/* </Box> */}
+				<img src={logo} alt="logo" />
 			</Grid2>
-
 			<Divider></Divider>
-			{/* <WorkspacesPopover data={workspaces} sx={{ my: 2 }} /> */}
 
 			<Scrollbar fillContent>
 				<Box
@@ -184,11 +167,9 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 											{/* <Box component="span" sx={{ width: 24, height: 24 }}>
                       {item.icon}
                     </Box> */}
-
 											<Box component="span" flexGrow={1}>
 												{item.title}
 											</Box>
-
 											{item.info && item.info}
 										</ListItemButton>
 									</ListItem>

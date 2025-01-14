@@ -9,7 +9,7 @@ router.get("/", (req: any, res: Response) => {
 
   Announcement.find().then((announcements) => {
     if (isEmpty(announcements)) {
-      res.status(404).json({ msg: ["No announcements"] });
+      res.status(200).json([]);
     } else {
       res.status(200).json(announcements);
     }

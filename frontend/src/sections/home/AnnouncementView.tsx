@@ -38,8 +38,8 @@ export default function AnnouncementView() {
         <Grid size={12}>
         <div ref={viewRef}>
           {
-            announcements?.length === 0? (
-              <Typography>No announcements available.</Typography>
+            !announcements?.length? (
+              <Typography color="primary" variant="h5">No announcements.</Typography>
             ) : (
               announcements?.map((ann: Announcement) => (
                 <AnnouncementBox
