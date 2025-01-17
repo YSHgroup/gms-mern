@@ -23,6 +23,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { fetchRequestData } from "@/redux/slices/requestSlice";
 import CommentDialog from "../dialogs/CommentDialog";
 import {connectSocket, updateRequestRealtime,closeSocketAPI} from "@/services/realtimeUpdateService";
+import AssignDialog from "../dialogs/AssignDialog";
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +50,7 @@ export function UserTableRow({
 	const [state, setState] = useState<boolean | null>(null);
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [openComment, setOpenComment] = useState<boolean>(false);
+	const [openAssign, setOpenAssignDialog] = useState<boolean>(false)
 	const [signState, setSignState] = useState<boolean>(false);
 	const [comment, setComment] = useState("");
 	const [viewCommentState, setViewComment] = useState(false);
@@ -58,13 +60,10 @@ export function UserTableRow({
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		console.log('first call')
 		connectSocket()
 		const cleanup = updateRequestRealtime()
 
-
 		return () => { 
-			console.log('last call')
 			cleanup && cleanup()
 			closeSocketAPI()
 		}
@@ -88,12 +87,6 @@ export function UserTableRow({
 		if (openDialog) {
 			state && onAccept(id);
 			state !== null && !state && onDeny(id);
-			if (signState) {
-				signApplication(id, "approved", () => dispatch(fetchRequestData()));
-				setSignState(false);
-				setOpenDialog(false);
-				return;
-			}
 			setOpenDialog(false);
 			setState(null);
 		}
@@ -139,9 +132,8 @@ export function UserTableRow({
 		setOpenComment(false);
 		setViewComment(false);
 	};
-	const handleSign = () => {
-		setOpenDialog(true);
-		setSignState(true);
+	const openAssignDialog = () => {
+		setOpenAssignDialog(true);
 	};
 
 	const viewComment = () => {
@@ -206,7 +198,7 @@ export function UserTableRow({
 										sx={{ color: "error.main" }}
 									/>
 								) : (
-									<> - </>
+									row[headItem.id] == "pending" ? <> - </> : row[headItem.id]
 								)
 							) : headItem.id == "application" ? (
 								<Link
@@ -229,7 +221,8 @@ export function UserTableRow({
 						<Iconify icon="eva:more-vertical-fill" />
 					</IconButton>
 				</TableCell>
-
+				
+				{/* Action popover */}
 				<Popover
 					open={!!openPopover}
 					anchorEl={openPopover}
@@ -291,38 +284,42 @@ export function UserTableRow({
                 </>
               )
             } */}
-						{(user?.role == "col_dean" || user?.role == "user" || user?.role == "finance" && row["grant_dir"] == "approved") && (
+						{(user?.role == "col_dean" || user?.role == "user" || user?.role == "grant_dep" && row["grant_dir"] == "approved") && (
 							<MenuItem onClick={viewComment} sx={{ color: "success.main" }}>
 								<Iconify icon="solar:paperclip-outline" />
 								View Comments
 							</MenuItem>
 						)}
 						{user?.role == "col_dean" && row.assigned == "pending" && (
-							<MenuItem sx={{ color: "success.main" }} onClick={handleSign}>
+							<MenuItem sx={{ color: "success.main" }} onClick={openAssignDialog}>
 								<Iconify icon="solar:check-circle-linear" />
-								Sign
+								Assign
 							</MenuItem>
 						)}
 					</MenuList>
 				</Popover>
 
+				{/* assign dialog */}
+				<AssignDialog
+					applicationId={row._id}
+					openDialog={openAssign}
+					handleCloseDialog={() => {setOpenAssignDialog(false)}}
+				></AssignDialog>
+				
+
+				{/* confirm dialog */}
 				<Dialog open={openDialog} onClose={handleCloseDialog}>
 					<DialogTitle mb={1}>Confirm action</DialogTitle>
 					<Typography p={2}>
 						Are you sure you want to{" "}
-						{signState ? "sign" : state ? "accept" : "deny"} this application?
+						{state ? "accept" : "deny"} this application?
 					</Typography>
 					<DialogActions>
 						<Button onClick={() => confirmState(row.id)} color="primary">
-							{signState ? "Sign" : "Yes"}
+							Yes
 						</Button>
-						{signState && (
-							<Button onClick={() => denySign(row._id)} color="error">
-								Deny
-							</Button>
-						)}
 						<Button onClick={() => cancelAction()} color="secondary">
-							{signState ? "Close" : "No"}
+							No
 						</Button>
 					</DialogActions>
 				</Dialog>

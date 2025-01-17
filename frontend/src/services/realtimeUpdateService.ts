@@ -14,8 +14,6 @@ export const connectSocket = () => {
 export const updateRequestRealtime = () => {
   if (!socket) return;
 
-  console.log('--- update ---');
-
   const handleUpdateRequest = (response: any) => {
     console.log('update_request: ', response);
   };

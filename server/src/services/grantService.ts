@@ -9,6 +9,7 @@ import { Announcement } from "@/models/announcementModel";
 import { Application } from "@/models/applicationModel";
 import { User } from "@/models/userModel";
 import { sendEmail } from "./autoMailService";
+import { ApplicationStates } from '@/constant/applicationState'
 
 export default {
   approveProcedure: [
@@ -36,11 +37,11 @@ export default {
         throw new Error("Application not found");
       }
       
-      if (application[role] == "approved")
+      if (application[role] == ApplicationStates.APPROVED)
         throw new Error("You have already approved this application");
-      if (application[role] == "rejected")
+      if (application[role] == ApplicationStates.REJECTED)
         throw new Error("You have already rejected this application");
-      if (application[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] == "rejected")
+      if (application[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] == ApplicationStates.REJECTED)
         throw new Error("This application is rejected already.");
 
       const confirmData = this.checkProcedure(role, application);
@@ -52,7 +53,7 @@ export default {
         
         throw new Error("Your previous step was not performed.");
       }
-      application[confirmData.key] = flag ? "approved" : "rejected";
+      application[confirmData.key] = flag ? ApplicationStates.APPROVED : ApplicationStates.REJECTED;
       await application.save();
       // flag && this.autoEmail(role, confirmData.key, application);
       // !flag && sendEmail(denyMail(application.email));
@@ -63,34 +64,34 @@ export default {
   },
   checkProcedure(role: string, data: any): Record<string, any> {
     // if (index <= this.approveProcedure.indexOf(role) - 1) {
-    //   if (data[this.approveProcedure[index]] == "pending")
+    //   if (data[this.approveProcedure[index]] == ApplicationStates.PENDING)
     //     return { result: false };
     //   return this.checkProcedure(index + 1, role, data);
     // } else if (index == this.approveProcedure.indexOf(role)) {
-    //   if (data[this.approveProcedure[index]] == "pending")
+    //   if (data[this.approveProcedure[index]] == ApplicationStates.PENDING)
     //     return { key: this.approveProcedure[index], result: true };
     //   return { result: false, doubleError: true };
     // }
     if(role === this.approveProcedure[0]) {
-      if(data['assigned'] == 'approved') return {result: true, key: role}
-      if(data['assigned'] == 'rejected') return {result: false, rejected: true}
+      if(data['assigned'] == ApplicationStates.APPROVED) return {result: true, key: role}
+      if(data['assigned'] == ApplicationStates.REJECTED) return {result: false, rejected: true}
       return { result: false }
     } else
     if (
       data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
-      "pending"
+      ApplicationStates.PENDING
     ) {
       return { result: false };
     } else if (
       data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
-      "rejected"
+      ApplicationStates.REJECTED
     ) {
       return { result: false };
     } else if (
       data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
-      "approved"
+      ApplicationStates.APPROVED
     ) {
-      if (data[role] == "pending") {
+      if (data[role] == ApplicationStates.PENDING) {
         return { result: true, key: role };
       } else {
         return { result: false, doubleError: true };

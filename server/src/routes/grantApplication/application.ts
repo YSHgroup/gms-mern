@@ -24,18 +24,20 @@ router.get("/", (req: any, res: Response) => {
 router.get("/:email", (req: any, res: Response) => {
   let query: any;
   confirmUserByEmail(req.params.email)
-    .then((comfirmedResult) => {
-      if (!comfirmedResult.confirmed)
+    .then((confirmedResult) => {
+      if (!confirmedResult.confirmed)
         throw new Error("Your email is not available.");
       if (req.tokenUser.role === "user") {
         query = { email: req.params.email };
       } else if (req.tokenUser.role !== "grant_dir" && req.tokenUser.role !== "grant_dep" && req.tokenUser.role !== "finance" ) {
-        query = { department: comfirmedResult.user?.department };
+        query = { department: confirmedResult.user?.department };
       }
       
       Application.find(query)
       .populate("comment")
       .populate("announcement")
+      .populate("assigned")
+      .populate("reviewer_1")
       .then((application) => {
           if (isEmpty(application)) {
             res.status(404).json({ msg: ["No application"] });

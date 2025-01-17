@@ -36,14 +36,14 @@ const ApplicationSchema = new Schema({
     required: true,
   },
   assigned: {
-    type: String,
-    enum: ["pending", "approved", "rejected"],
-    default: "pending",
+    type: Schema.ObjectId,
+    default: null,
+    ref: "User"
   },
   reviewer_1: {
-    type: String,
-    enum: ["pending", "approved", "rejected"],
-    default: "pending",
+    type: Schema.ObjectId,
+    default: null,
+    ref: "User"
   },
   reviewer_2: {
     type: String,

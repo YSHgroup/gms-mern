@@ -17,6 +17,7 @@ import { applicationRouter } from "./routes/grantApplication/application";
 import { requestProcessRouter } from "./routes/grantApplication/requestProcess";
 import { seedRouter } from "./routes/seed";
 import initializeServer from "./services/initializationService";
+import { reviewerRouter } from "./routes/user/reviewers";
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
@@ -67,6 +68,7 @@ app.use("/api/grant-application", authVerify, [
 	applicationRouter,
 	requestProcessRouter,
 ]);
+app.use("/api/reviewer", authVerify, reviewerRouter);
 
 // Create socket server
 const io = new Server(
