@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { Outlet, Navigate, useRoutes } from 'react-router';
+import { lazy, Suspense, useEffect } from 'react';
+import { Outlet, Navigate, useRoutes, useNavigate } from 'react-router';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -11,6 +11,7 @@ import PrivatePage from './privateRouter';
 import AnnouncementPortal from '@/pages/admin/AnnouncementPortal';
 import Profile from '@/pages/Profile'
 import Apply from '@/pages/Apply';
+import { setNavigate } from '@/utils/globalNavigator';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,12 @@ const renderFallback = (
 );
 
 export function Router() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setNavigate(navigate)
+  }, [navigate])
+
   return useRoutes([
     {
       element: (

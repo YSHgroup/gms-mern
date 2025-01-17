@@ -1,9 +1,10 @@
+import { confirmUserByEmail } from '@/utils/confirmUserByEmail';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const secret_key = process.env.SECRET_KEY ?? 'sh'
 
-export const authVerify = (req: any, res: Response, next: NextFunction) => {
+export const authVerify = async (req: any, res: Response, next: NextFunction) => {
   const token = req.header("Authorization");
   if (!token) {
     res.status(401).json({ msg: "Authorization denied" });
@@ -11,7 +12,12 @@ export const authVerify = (req: any, res: Response, next: NextFunction) => {
   }
   try {
     const decoded = jwt.verify(token, secret_key!);
-    // console.log('decoded: ', decoded)
+    const confirmation = await confirmUserByEmail((typeof decoded !== 'string' && 'email' in decoded )? decoded.email: null)
+    console.log('decoded: ', decoded, confirmation)
+    if(!confirmation.confirmed) {
+      res.status(401).json({msg: "Authorization denied"});
+      return
+    }
     req.tokenUser = decoded;
     next();
   } catch (err: any) {
@@ -20,6 +26,6 @@ export const authVerify = (req: any, res: Response, next: NextFunction) => {
       res.status(401).send({ msg: "token expired" });
       return
     }
-    res.status(401).json({ msg: "Authorizaton denied" });
+    res.status(500).json({ msg: "Error in validating authorization" });
   }
 };

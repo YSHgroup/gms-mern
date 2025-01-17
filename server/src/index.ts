@@ -31,7 +31,7 @@ mongoose
 	.connect(process.env.DB_URI!)
 	.then((result) => {
 		console.log("Connection successful: ", result.connection.name);
-		// initializeServer();
+		initializeServer();
 	})
 	.catch((error) => {
 		console.log("Connect error: ", error);
@@ -68,9 +68,7 @@ app.use("/api/grant-application", authVerify, [
 	requestProcessRouter,
 ]);
 
-// set env
-
-
+// Create socket server
 const io = new Server(
 	app.listen(port, () => {
 		console.log("=========================================");

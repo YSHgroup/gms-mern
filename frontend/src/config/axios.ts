@@ -1,4 +1,5 @@
-import { refresh } from '@/services/authService';
+import { logout, refresh } from '@/services/authService';
+import { navigateTo } from '@/utils/globalNavigator';
 import { isTokenExpired } from '@/utils/token';
 import axios, { InternalAxiosRequestConfig } from 'axios'
 
@@ -13,4 +14,11 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
         // refresh()
     } 
     return config
+})
+
+axios.interceptors.response.use((response) => {
+    if(response.status == 401) logout(navigateTo)
+    return response
+}, (error) => {
+    return Promise.reject(error)
 })
