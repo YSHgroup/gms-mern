@@ -48,8 +48,8 @@ export default function ApplySection() {
 		value: string;
 		label: string;
 	} | null>({
-		value: "dollar",
-		label: "Dollar",
+		value: "birr",
+		label: "Birr",
 	});
 
 	const params = useParams();

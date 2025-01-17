@@ -11,7 +11,6 @@ import { Divider, Grid2 } from "@mui/material";
 
 import { usePathname } from "@/routes/hooks";
 import { RouterLink } from "@/routes/components";
-import { varAlpha } from "@/theme/styles";
 import { Scrollbar } from "@/components/scrollbar";
 import {Logo} from '@/components/logo'
 

@@ -1,8 +1,8 @@
 import type { BoxProps } from "@mui/material/Box";
 
-import { useId, forwardRef } from "react";
+import { forwardRef } from "react";
 import Box from "@mui/material/Box";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { RouterLink } from "@/routes/components";
 import { logoClasses } from "./classes";
 
@@ -63,8 +63,6 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
     },
     ref
   ) => {
-    const theme = useTheme();
-
     const baseSize = {
       width: width ?? "100%",
       height: height ?? 80,

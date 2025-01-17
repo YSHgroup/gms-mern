@@ -37,8 +37,8 @@ export default function WorkPanel() {
 		value: string;
 		label: string;
 	} | null>({
-		value: "dollar",
-		label: "Dollar",
+		value: "birr",
+		label: "Birr",
 	});
 	const [date, setDate] = React.useState<any>({
 		from: "",
@@ -109,7 +109,7 @@ export default function WorkPanel() {
 					variant="outlined"
 					multiline
 					fullWidth
-          value={title}
+          			value={title}
 					onChange={(e) => setTitle(e.target.value)}
 				></TextField>
 			</Grid>
@@ -149,7 +149,7 @@ export default function WorkPanel() {
 						},
 					}}
 					type="date"
-          value={date.from}
+          			value={date.from}
 					onChange={(e) =>
 						setDate((pre: any) => ({ ...pre, from: e.target.value }))
 					}
@@ -164,7 +164,7 @@ export default function WorkPanel() {
 						},
 					}}
 					type="date"
-          value={date.until}
+          			value={date.until}
 					onChange={(e) =>
 						setDate((pre: any) => ({ ...pre, until: e.target.value }))
 					}
@@ -183,7 +183,7 @@ export default function WorkPanel() {
 						}}
 						fullWidth
 						type="number"
-            value={budget}
+            			value={budget}
 						onChange={(e) => setBudget(e.target.value)}
 					></TextField>
 				</Grid>
@@ -217,7 +217,7 @@ export default function WorkPanel() {
 					minRows={4}
 					fullWidth
 					margin="normal"
-          value={content}
+          			value={content}
 					onChange={(e) => setContent(e.target.value)}
 				></TextField>
 			</Grid>
