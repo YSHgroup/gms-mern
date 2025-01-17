@@ -13,10 +13,10 @@ import { usePathname } from "@/routes/hooks";
 import { RouterLink } from "@/routes/components";
 import { varAlpha } from "@/theme/styles";
 import { Scrollbar } from "@/components/scrollbar";
+import {Logo} from '@/components/logo'
 
 import type { WorkspacesPopoverProps } from "../components/workspaces-popover";
 import { getCurrentUser } from "@/services/authService";
-import logo from "../../../public/logo.png";
 // ----------------------------------------------------------------------
 
 export type NavContentProps = {
@@ -119,7 +119,8 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 	return (
 		<>
 			<Grid2 container className="flex justify-center items-center">
-				<img src={logo} alt="logo" />
+				{/* <img src={logo} alt="logo" /> */}
+				<Logo></Logo>
 			</Grid2>
 			<Divider></Divider>
 

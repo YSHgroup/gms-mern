@@ -89,17 +89,8 @@ const seedDatabase = async () => {
 			}
 		})
 		.catch((err) => {
-			// superUser
-			// 	.save()
-			// 	.then(() => {
-			// 		console.log("Grant director seeded.");
-			// 	})
-			// 	.catch((err) => {
-			// 		throw new Error(err.message);
-			// 	});
 			console.log(err);
 		});
-		// 
 };
 
 export default function initializeServer() {
