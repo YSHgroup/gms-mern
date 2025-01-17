@@ -13,7 +13,6 @@ export const authVerify = async (req: any, res: Response, next: NextFunction) =>
   try {
     const decoded = jwt.verify(token, secret_key!);
     const confirmation = await confirmUserByEmail((typeof decoded !== 'string' && 'email' in decoded )? decoded.email: null)
-    console.log('decoded: ', decoded, confirmation)
     if(!confirmation.confirmed) {
       res.status(401).json({msg: "Authorization denied"});
       return

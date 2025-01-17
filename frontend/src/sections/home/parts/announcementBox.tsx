@@ -45,7 +45,7 @@ export function AnnouncementBox({
 	const { _id, title, imageUrl, from, until, content, budget, currencyType } =
 	announcement;
 	const timestampOfUntil = new Date(until).getTime();
-	const timestampOfNow = new Date(`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`).getTime();
+	const timestampOfNow = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime();
 	
 	const [showMore, setShowMore] = useState(false);
 	const theme = useTheme();

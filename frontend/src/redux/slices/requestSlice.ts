@@ -1,7 +1,5 @@
-import { logout } from '@/services/authService'
 import { getRequests } from '@/services/grantService'
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import { useNavigate } from 'react-router'
 
 const initialState: Record<string, any> = {
     data: [],
@@ -10,10 +8,8 @@ const initialState: Record<string, any> = {
 }
 
 export const fetchRequestData = createAsyncThunk('request/fetchRequestData', async () => {
-    const navigate = useNavigate()
     try {
         const response = await getRequests()
-        if(response.status === 401) logout(navigate)
         if(!response.data) throw new Error("No fetched data");
 
         const requestData = response.data.map((application: any) => {

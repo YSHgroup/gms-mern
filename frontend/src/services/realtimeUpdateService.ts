@@ -1,38 +1,46 @@
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_BASE_URL)
+let socket: any;
+
+export const connectSocket = () => {
+  if (!socket) {
+    socket = io(import.meta.env.VITE_BASE_URL);
+    socket.on("connect", () => {
+      console.log('Connected: ', socket.id);
+    });
+  }
+};
 
 export const updateRequestRealtime = () => {
-  
-  // client-side
-  socket.on("connect", () => {
-    console.log('Turn on the real-time update request feature. ', socket.id); // x8WIv7-mJelg7on_ALbx
-  });
+  if (!socket) return;
 
-  socket.on('update_request', (response) =>{
-    console.log('update_request: ', response)
-  })
+  console.log('--- update ---');
 
-  socket.on('update_comment', (response) =>{
-    console.log('update_comment: ', response)
-  })
-  
+  const handleUpdateRequest = (response: any) => {
+    console.log('update_request: ', response);
+  };
+
+  const handleUpdateComment = (response: any) => {
+    console.log('update_comment: ', response);
+  };
+
+  socket.on('update_request', handleUpdateRequest);
+  socket.on('update_comment', handleUpdateComment);
+
   socket.on("disconnect", () => {
-    console.log('close the socket server. ', socket.id); // undefined
+    console.log('Disconnected: ', socket.id);
   });
 
-    // socket.onopen = () => {
-    //     console.log('Turn on the real-time update request feature.')
-    // }
-    // socket.onmessage = (response) => {
-    //     console.log('on message: ', response)
-    // }
-    
-    // socket.onclose = () => {
-    //     console.log('close the socket server.')
-    // }
-}
+  // Return cleanup function to remove listeners
+  return () => {
+    socket.off('update_request', handleUpdateRequest);
+    socket.off('update_comment', handleUpdateComment);
+  };
+};
 
 export const closeSocketAPI = () => {
-    socket.close()
-}
+  if (socket) {
+    socket.disconnect();
+    socket = null; // Reset socket instance
+  }
+};

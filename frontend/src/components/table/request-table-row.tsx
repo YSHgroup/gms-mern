@@ -22,7 +22,7 @@ import { postComment, signApplication } from "@/services/grantService";
 import { useAppDispatch } from "@/redux/hooks";
 import { fetchRequestData } from "@/redux/slices/requestSlice";
 import CommentDialog from "../dialogs/CommentDialog";
-import { closeSocketAPI, updateRequestRealtime } from "@/services/realtimeUpdateService";
+import {connectSocket, updateRequestRealtime,closeSocketAPI} from "@/services/realtimeUpdateService";
 
 // ----------------------------------------------------------------------
 
@@ -58,9 +58,16 @@ export function UserTableRow({
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		updateRequestRealtime()
+		console.log('first call')
+		connectSocket()
+		const cleanup = updateRequestRealtime()
 
-		return closeSocketAPI()
+
+		return () => { 
+			console.log('last call')
+			cleanup && cleanup()
+			closeSocketAPI()
+		}
 	}, [])
 
 	const handleAcceptClick = useCallback(() => {
