@@ -31,6 +31,7 @@ mongoose
 	.connect(process.env.DB_URI!)
 	.then((result) => {
 		console.log("Connection successful: ", result.connection.name);
+		// initializeServer();
 	})
 	.catch((error) => {
 		console.log("Connect error: ", error);
@@ -68,7 +69,7 @@ app.use("/api/grant-application", authVerify, [
 ]);
 
 // set env
-initializeServer();
+
 
 const io = new Server(
 	app.listen(port, () => {
