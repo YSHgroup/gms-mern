@@ -25,15 +25,18 @@ router.post("/approve/:id", async (req: any, res: Response) => {
 });
 
 router.post("/assign/:id", (req: any, res: Response) => {
+  console.log('assign: ', req.body)
   Application.findByIdAndUpdate(req.params.id, {$set: {assigned: req.body.assign}})
   .then((response) => {
       Application.findByIdAndUpdate(req.params.id, {$set: {'reviewer_1.user': req.body.reviewers[0], 'reviewer_2.user': req.body.reviewers[1]}}, {new: true})
-      if (!isEmpty(response)) {
-        io.emit('update_request')
-        res.status(200).send(response);
-        return;
-      }
-      throw new Error("Couldn't find such application.");
+        .then(() => {
+          if (!isEmpty(response)) {
+            io.emit('update_request')
+            res.status(200).send(response);
+            return;
+          }
+          throw new Error("Couldn't find such application.");
+        })
     })
     .catch((error) => {
       res.status(500).json({ msg: [error.message] });
