@@ -9,7 +9,6 @@ import { io } from "@/index";
 const router = Router();
 
 router.post("/approve/:id", async (req: any, res: Response) => {
-  // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: true}})
   const role = await applicationPropertyGetter(req.params.id, req.tokenUser.role, req.tokenUser.email)
   GrantService.handleRequest(req.params.id, role, true)
     .then((response) => {
@@ -26,7 +25,6 @@ router.post("/approve/:id", async (req: any, res: Response) => {
 });
 
 router.post("/assign/:id", (req: any, res: Response) => {
-  // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: true}})
   console.log('response: ', req.body, req.body.reviewers[0])
   Application.findByIdAndUpdate(req.params.id, {$set: {assigned: req.body.assign}})
   .then((response) => {
@@ -46,7 +44,6 @@ router.post("/assign/:id", (req: any, res: Response) => {
 });
 
 router.post("/reject/:id", (req: any, res: Response) => {
-  // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: false}})
   GrantService.handleRequest(req.params.id, req.tokenUser.role, false)
     .then((response) => {
       if (!isEmpty(response)) {

@@ -77,7 +77,6 @@ export default {
     //     return { key: this.approveProcedure[index], result: true };
     //   return { result: false, doubleError: true };
     // }
-    console.log('check procedure: ', role)
     if(role === this.approveProcedure[0]) {
       if(data['assigned'] == ApplicationStates.APPROVED) return {result: true, key: role}
       if(data['assigned'] == ApplicationStates.REJECTED) return {result: false, rejected: true}

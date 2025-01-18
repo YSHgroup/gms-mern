@@ -1,3 +1,5 @@
+import { fetchRequestData } from '@/redux/slices/requestSlice';
+import { AppDispatch } from '@/redux/store';
 import { io } from 'socket.io-client';
 
 let socket: any;
@@ -11,15 +13,17 @@ export const connectSocket = () => {
   }
 };
 
-export const updateRequestRealtime = () => {
+export const updateRequestRealtime = (dispatch: AppDispatch) => {
   if (!socket) return;
 
   const handleUpdateRequest = (response: any) => {
     console.log('update_request: ', response);
+    dispatch(fetchRequestData())
   };
 
   const handleUpdateComment = (response: any) => {
     console.log('update_comment: ', response);
+    dispatch(fetchRequestData())
   };
 
   socket.on('update_request', handleUpdateRequest);

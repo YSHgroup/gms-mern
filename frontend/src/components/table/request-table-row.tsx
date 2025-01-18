@@ -9,19 +9,20 @@ import MenuItem, { menuItemClasses } from "@mui/material/MenuItem";
 
 import { Iconify } from "@/components/iconify";
 import {
+	Button,
 	Dialog,
 	DialogActions,
 	DialogTitle,
 	Link,
 	Typography,
+	Tooltip
 } from "@mui/material";
-import { Button } from "@mui/material";
 import { getCurrentUser } from "@/services/authService";
 import { postComment } from "@/services/grantService";
 import CommentDialog from "../dialogs/CommentDialog";
 import {connectSocket, updateRequestRealtime,closeSocketAPI} from "@/services/realtimeUpdateService";
 import AssignDialog from "../dialogs/AssignDialog";
-import { Tooltip } from "@mui/material";
+import { useAppDispatch } from "@/redux/hooks";
 
 // ----------------------------------------------------------------------
 
@@ -54,9 +55,11 @@ export function UserTableRow({
 	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 	const user = getCurrentUser();
 
+	const dispatch = useAppDispatch()
+
 	useEffect(() => {
 		connectSocket()
-		const cleanup = updateRequestRealtime()
+		const cleanup = updateRequestRealtime(dispatch)
 
 		return () => { 
 			cleanup && cleanup()
@@ -147,25 +150,24 @@ export function UserTableRow({
 		}
 	}
 
+	const rowKeys = [
+		"reviewer_1",
+		"reviewer_2",
+		"assigned",
+		"col_dean",
+		"grant_dep",
+		"grant_dir",
+		"finance",
+  ]
+
 	return (
 		<>
 			<TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-				{/* <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
-        </TableCell> */}
 				{headList.map((headItem: any, i) => (
 					<TableCell
 						key={row.id + row[headItem.id] + i}
 						align={
-							[
-								"reviewer_1",
-								"reviewer_2",
-								"assigned",
-								"col_dean",
-								"grant_dep",
-								"grant_dir",
-								"finance",
-							].includes(headItem.id)
+							rowKeys.includes(headItem.id)
 								? "center"
 								: "left"
 						}
@@ -173,15 +175,7 @@ export function UserTableRow({
 						<>
 							{headItem.id === "announcement" ? (
 								row["announcement"].title
-							) : [
-									"reviewer_1",
-									"reviewer_2",
-									"assigned",
-									"col_dean",
-									"grant_dep",
-									"grant_dir",
-									"finance",
-							  ].includes(headItem.id) ? (
+							) : rowKeys.includes(headItem.id) ? (
 								checkStatus(row[headItem.id], "approved") ? (
 									<Iconify
 										width={22}
@@ -280,13 +274,7 @@ export function UserTableRow({
 								Comment
 							</MenuItem>
 						)}
-						{/* {
-              (user?.role != "col_dean" || user?.role != "user") && (row.signed && row.rejected) && (
-                <>
-                  No available action
-                </>
-              )
-            } */}
+						
 						{(user?.role == "col_dean" || user?.role == "user" || user?.role == "grant_dep" && row["grant_dir"] == "approved") && (
 							<MenuItem onClick={viewComment} sx={{ color: "success.main" }}>
 								<Iconify icon="solar:paperclip-outline" />
