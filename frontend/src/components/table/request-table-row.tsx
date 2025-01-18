@@ -11,19 +11,17 @@ import { Iconify } from "@/components/iconify";
 import {
 	Dialog,
 	DialogActions,
-	DialogContent,
 	DialogTitle,
 	Link,
 	Typography,
 } from "@mui/material";
 import { Button } from "@mui/material";
 import { getCurrentUser } from "@/services/authService";
-import { postComment, signApplication } from "@/services/grantService";
-import { useAppDispatch } from "@/redux/hooks";
-import { fetchRequestData } from "@/redux/slices/requestSlice";
+import { postComment } from "@/services/grantService";
 import CommentDialog from "../dialogs/CommentDialog";
 import {connectSocket, updateRequestRealtime,closeSocketAPI} from "@/services/realtimeUpdateService";
 import AssignDialog from "../dialogs/AssignDialog";
+import { Tooltip } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -51,13 +49,10 @@ export function UserTableRow({
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [openComment, setOpenComment] = useState<boolean>(false);
 	const [openAssign, setOpenAssignDialog] = useState<boolean>(false)
-	const [signState, setSignState] = useState<boolean>(false);
 	const [comment, setComment] = useState("");
 	const [viewCommentState, setViewComment] = useState(false);
 	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 	const user = getCurrentUser();
-
-	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		connectSocket()
@@ -91,15 +86,9 @@ export function UserTableRow({
 			setState(null);
 		}
 	};
-	const denySign = (id: string) => {
-		signApplication(id, "rejected", () => dispatch(fetchRequestData()));
-		setOpenDialog(false);
-		setSignState(false);
-	};
 
 	const cancelAction = () => {
 		setOpenDialog(false);
-		setSignState(false);
 		setState(null);
 	};
 
@@ -161,8 +150,7 @@ export function UserTableRow({
 						key={row.id + row[headItem.id] + i}
 						align={
 							[
-								"reviewer_1",
-								"reviewer_2",
+								"reviewer",
 								"assigned",
 								"col_dean",
 								"grant_dep",
@@ -177,8 +165,7 @@ export function UserTableRow({
 							{headItem.id === "announcement" ? (
 								row["announcement"].title
 							) : [
-									"reviewer_1",
-									"reviewer_2",
+									"reviewer",
 									"assigned",
 									"col_dean",
 									"grant_dep",
@@ -198,7 +185,11 @@ export function UserTableRow({
 										sx={{ color: "error.main" }}
 									/>
 								) : (
-									row[headItem.id] == "pending" ? <> - </> : row[headItem.id]
+									(row[headItem.id] == "pending" || !row[headItem.id]) 
+									? <> - </> 
+									: <Tooltip title={row[headItem.id].email}>
+										<Typography>{`${row[headItem.id].firstName} ${row[headItem.id].lastName}`.trim()}</Typography>
+									  </Tooltip>
 								)
 							) : headItem.id == "application" ? (
 								<Link
@@ -290,7 +281,7 @@ export function UserTableRow({
 								View Comments
 							</MenuItem>
 						)}
-						{user?.role == "col_dean" && row.assigned == "pending" && (
+						{user?.role == "col_dean" && row.assigned == 'pending' && (
 							<MenuItem sx={{ color: "success.main" }} onClick={openAssignDialog}>
 								<Iconify icon="solar:check-circle-linear" />
 								Assign

@@ -31,12 +31,8 @@ export const columns: any[] = [
 		label: "Assigned",
 	},
 	{
-		id: "reviewer_1",
-		label: "Reviwer 1",
-	},
-	{
-		id: "reviewer_2",
-		label: "Reviwer 2",
+		id: "reviewer",
+		label: "Reviwer",
 	},
 	{
 		id: "col_dean",

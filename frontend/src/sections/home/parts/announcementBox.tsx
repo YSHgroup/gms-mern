@@ -39,7 +39,7 @@ const TruncatedTextBox = styled(Box)({
 export function AnnouncementBox({
 	announcement,
 }: {
-	announcement: Announcement;
+	announcement: Announcement,
 }) {
 	const user = getCurrentUser();
 	const { _id, title, imageUrl, from, until, content, budget, currencyType } =
@@ -62,7 +62,14 @@ export function AnnouncementBox({
 		dispatch(fetchRequestData());
 	}, []);
 
+	const checkApplied = () => {
+		return !!requestState.filter(
+			(request: any) => request.announcement._id === _id
+		).length
+	}
+
 	const applyForAnnouncement = () => {
+		if(checkApplied()) return
 		router.push("/apply/" + _id);
 	};
 	return (
@@ -168,10 +175,8 @@ export function AnnouncementBox({
 					</Box>
 				</CardContent>
 				{timestampOfUntil > timestampOfNow &&
-					user.role === "user" &&
-					!requestState.filter(
-						(request: any) => request.announcement._id === _id
-					).length && (
+					user.role === "user"
+					 && (
 						<Box
 							sx={{
 								display: "flex",
@@ -181,8 +186,8 @@ export function AnnouncementBox({
 								pb: 1,
 							}}
 						>
-							<Button size="large" onClick={applyForAnnouncement}>
-								Apply
+							<Button size="large" onClick={applyForAnnouncement} disabled={checkApplied()}>
+								{checkApplied()? "Applied": "Apply"}
 							</Button>
 						</Box>
 					)}

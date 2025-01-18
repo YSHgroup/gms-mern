@@ -87,8 +87,7 @@ export default function CommentDialog({
 						Object.keys(row.comment)
 							.filter((key) =>
 								[
-									"reviewer_1",
-									"reviewer_2",
+									"reviewer",
 									"grant_dep",
 									"grant_dir",
 									"col_dean",
@@ -141,8 +140,7 @@ export default function CommentDialog({
 						}}
 					></TextField>
 					{/* <Box> */}
-					{(user.role === "reviewer_1" ||
-						user.role === "reviewer_2" ||
+					{(user.role === "reviewer" ||
 						user.role === "col_dean") &&
 					onUploadFile ? (
 						<Box display={"flex"}>
