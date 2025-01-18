@@ -12,7 +12,8 @@ import { Divider, Grid2 } from "@mui/material";
 import { usePathname } from "@/routes/hooks";
 import { RouterLink } from "@/routes/components";
 import { Scrollbar } from "@/components/scrollbar";
-import {Logo} from '@/components/logo'
+// import {Logo} from '@/components/logo'
+import logo from "../../../public/logo-kue.jpg";
 
 import type { WorkspacesPopoverProps } from "../components/workspaces-popover";
 import { getCurrentUser } from "@/services/authService";
@@ -118,8 +119,8 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 	return (
 		<>
 			<Grid2 container className="flex justify-center items-center">
-				{/* <img src={logo} alt="logo" /> */}
-				<Logo></Logo>
+				<img src={logo} alt="logo" />
+				{/* <Logo></Logo> */}
 			</Grid2>
 			<Divider></Divider>
 
@@ -164,9 +165,6 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 												}),
 											}}
 										>
-											{/* <Box component="span" sx={{ width: 24, height: 24 }}>
-                      {item.icon}
-                    </Box> */}
 											<Box component="span" flexGrow={1}>
 												{item.title}
 											</Box>
