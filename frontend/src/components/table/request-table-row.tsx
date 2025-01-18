@@ -139,6 +139,14 @@ export function UserTableRow({
 		}
 	}
 
+	const checkStatus = (column: any, status: string) => {
+		if(column?.status) {
+			return column?.status === status
+		} else {
+			return column === status
+		}
+	}
+
 	return (
 		<>
 			<TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -150,7 +158,8 @@ export function UserTableRow({
 						key={row.id + row[headItem.id] + i}
 						align={
 							[
-								"reviewer",
+								"reviewer_1",
+								"reviewer_2",
 								"assigned",
 								"col_dean",
 								"grant_dep",
@@ -165,31 +174,34 @@ export function UserTableRow({
 							{headItem.id === "announcement" ? (
 								row["announcement"].title
 							) : [
-									"reviewer",
+									"reviewer_1",
+									"reviewer_2",
 									"assigned",
 									"col_dean",
 									"grant_dep",
 									"grant_dir",
 									"finance",
 							  ].includes(headItem.id) ? (
-								row[headItem.id] == "approved" ? (
+								checkStatus(row[headItem.id], "approved") ? (
 									<Iconify
 										width={22}
 										icon="solar:check-circle-bold"
 										sx={{ color: "success.main" }}
 									/>
-								) : row[headItem.id] == "rejected" ? (
+								) : checkStatus(row[headItem.id], "rejected") ? (
 									<Iconify
 										width={22}
 										icon="solar:close-circle-bold-duotone"
 										sx={{ color: "error.main" }}
 									/>
 								) : (
-									(row[headItem.id] == "pending" || !row[headItem.id]) 
-									? <> - </> 
-									: <Tooltip title={row[headItem.id].email}>
-										<Typography>{`${row[headItem.id].firstName} ${row[headItem.id].lastName}`.trim()}</Typography>
-									  </Tooltip>
+									(headItem.id == 'reviewer_1' || headItem.id == 'reviewer_2') ?
+										<Tooltip title={row[headItem.id]?.user.email}>
+											<Typography>{`${row[headItem.id].user.firstName} ${row[headItem.id].user.lastName}`.trim()}</Typography>
+										</Tooltip>
+									:
+										(checkStatus(row[headItem.id], "pending")) 
+										&& <> - </> 
 								)
 							) : headItem.id == "application" ? (
 								<Link
@@ -239,7 +251,7 @@ export function UserTableRow({
 							},
 						}}
 					>
-						{user?.role != "user" && row[user?.role] == "pending" && (
+						{user?.role != "user" && (row[user?.role] == "pending" || row.reviewer_1.status == "pending" || row.reviewer_2.status == "pending") && (
 							<>
 								<MenuItem
 									onClick={handleAcceptClick}

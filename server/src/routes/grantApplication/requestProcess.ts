@@ -3,15 +3,15 @@ import { Application } from "@/models/applicationModel";
 import GrantService from "@/services/grantService";
 import { Comment } from "@/models/commentModel";
 import { isEmpty } from "@/utils/isEmpty";
-import grantService from "@/services/grantService";
 import { uploadReview } from "@/middleware/multer";
 import { io } from "@/index";
 
 const router = Router();
 
-router.post("/approve/:id", (req: any, res: Response) => {
+router.post("/approve/:id", async (req: any, res: Response) => {
   // Announcement.findOneAndUpdate({_id: req.params.id}, {$set: {[req.tokenUser.role]: true}})
-  GrantService.handleRequest(req.params.id, req.tokenUser.role, true)
+  const role = await applicationPropertyGetter(req.params.id, req.tokenUser.role, req.tokenUser.email)
+  GrantService.handleRequest(req.params.id, role, true)
     .then((response) => {
       if (!isEmpty(response)) {
         io.emit('update_request')
@@ -124,5 +124,22 @@ router.post("/comment/:id", uploadReview.single('reivew'), async (req: any, res:
     res.status(500).json({ msg: [error.message] });
   }
 });
+
+
+const applicationPropertyGetter = async (id: string, role: string, email: string) => {
+  let gotRole;
+  if(role == "reviewer") {
+    const application = await Application.findById(id)
+            .populate("reviewer_1.user")
+            .populate("reviewer_2.user") as any
+
+    gotRole = email === application?.reviewer_1?.user.email ? "reviewer_1" :
+              email === application?.reviewer_2?.user.email ? "reviewer_2" :
+              null;
+  } else {
+    gotRole = role
+  }
+  return gotRole
+}
 
 export { router as requestProcessRouter };

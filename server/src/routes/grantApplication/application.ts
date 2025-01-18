@@ -32,7 +32,7 @@ router.get("/:email", (req: any, res: Response) => {
       } else if (req.tokenUser.role === "reviewer" ) {
         query = { department: confirmedResult.user?.department };
       }
-      console.log('reviewer: ', query)
+
       Application.find(query)
       .populate("comment")
       .populate("announcement")
@@ -43,7 +43,7 @@ router.get("/:email", (req: any, res: Response) => {
           //   res.status(404).json({ msg: ["No application"] });
           // } else {
             const data = application.filter((applicationData: any) => {
-              return req.tokenUser.email == applicationData.assigned?.email || req.tokenUser.email == applicationData.reviewer_1?.email || req.tokenUser.role !== 'reviewer'
+              return req.tokenUser.email == applicationData.reviewer_1.user?.email || req.tokenUser.email == applicationData.reviewer_2.user?.email || req.tokenUser.role !== 'reviewer'
             })
             res.status(200).json(data);
           // }

@@ -10,6 +10,7 @@ import { Application } from "@/models/applicationModel";
 import { User } from "@/models/userModel";
 import { sendEmail } from "./autoMailService";
 import { ApplicationStates } from '@/constant/applicationState'
+import { checkStatus, setNestedProperty } from "@/utils/roleHandler";
 
 export default {
   approveProcedure: [
@@ -29,7 +30,8 @@ export default {
     { grant_dir: "Grant Director" },
     { finance: "Finance Director" },
   ],
-  handleRequest: async function (id: string, role: string, flag: boolean) {
+  handleRequest: async function (id: string, role: string | null, flag: boolean) {
+    if(role == null) throw new Error("Role validation Error")
     if (role === "user") throw new Error("You don't have permission");
     try {
       const application = (await Application.findOne({ _id: id })) as any;
@@ -53,7 +55,10 @@ export default {
         
         throw new Error("Your previous step was not performed.");
       }
-      application[confirmData.key] = flag ? ApplicationStates.APPROVED : ApplicationStates.REJECTED;
+      const statusKey = confirmData.key.includes('reviewer')? `${confirmData.key}.status`: confirmData.key
+      // console.log('status key: ', statusKey)
+      // application[statusKey] = flag ? ApplicationStates.APPROVED : ApplicationStates.REJECTED;
+      setNestedProperty(application, statusKey, flag ? ApplicationStates.APPROVED : ApplicationStates.REJECTED)
       await application.save();
       // flag && this.autoEmail(role, confirmData.key, application);
       // !flag && sendEmail(denyMail(application.email));
@@ -72,26 +77,24 @@ export default {
     //     return { key: this.approveProcedure[index], result: true };
     //   return { result: false, doubleError: true };
     // }
+    console.log('check procedure: ', role)
     if(role === this.approveProcedure[0]) {
       if(data['assigned'] == ApplicationStates.APPROVED) return {result: true, key: role}
       if(data['assigned'] == ApplicationStates.REJECTED) return {result: false, rejected: true}
       return { result: false }
     } else
     if (
-      data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
-      ApplicationStates.PENDING
+      checkStatus(data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]], ApplicationStates.PENDING)
     ) {
       return { result: false };
     } else if (
-      data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
-      ApplicationStates.REJECTED
+      checkStatus(data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]], ApplicationStates.REJECTED)
     ) {
       return { result: false };
     } else if (
-      data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]] ==
-      ApplicationStates.APPROVED
+      checkStatus(data[this.approveProcedure[this.approveProcedure.indexOf(role) - 1]], ApplicationStates.APPROVED)
     ) {
-      if (data[role] == ApplicationStates.PENDING) {
+      if (checkStatus(data[role], ApplicationStates.PENDING)) {
         return { result: true, key: role };
       } else {
         return { result: false, doubleError: true };
