@@ -29,21 +29,24 @@ router.get("/:email", (req: any, res: Response) => {
         throw new Error("Your email is not available.");
       if (req.tokenUser.role === "user") {
         query = { email: req.params.email };
-      } else if (req.tokenUser.role !== "grant_dir" && req.tokenUser.role !== "grant_dep" && req.tokenUser.role !== "finance" ) {
+      } else if (req.tokenUser.role === "reviewer" ) {
         query = { department: confirmedResult.user?.department };
       }
-      
+      console.log('reviewer: ', query)
       Application.find(query)
       .populate("comment")
       .populate("announcement")
-      .populate("assigned")
-      .populate("reviewer_1")
+      .populate("reviewer_1.user", '_id firstName lastName email role')
+      .populate("reviewer_2.user", '_id firstName lastName email role')
       .then((application) => {
-          if (isEmpty(application)) {
-            res.status(404).json({ msg: ["No application"] });
-          } else {
-            res.status(200).json(application);
-          }
+          // if (isEmpty(application)) {
+          //   res.status(404).json({ msg: ["No application"] });
+          // } else {
+            const data = application.filter((applicationData: any) => {
+              return req.tokenUser.email == applicationData.assigned?.email || req.tokenUser.email == applicationData.reviewer_1?.email || req.tokenUser.role !== 'reviewer'
+            })
+            res.status(200).json(data);
+          // }
         })
         .catch((error) => {
           res.status(500).json({ msg: [error.message] });
@@ -81,7 +84,9 @@ router.post(
 
           newApplication
             .save()
-            .then(() => res.status(200).json({ msg: "Application saved" }))
+            .then(() => {
+              res.status(200).json({ msg: "Application saved" })
+            })
             .catch((error) => res.status(500).json({ msg: [error.message] }));
         }
       })

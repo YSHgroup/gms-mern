@@ -36,19 +36,31 @@ const ApplicationSchema = new Schema({
     required: true,
   },
   assigned: {
-    type: Schema.ObjectId,
-    default: null,
-    ref: "User"
-  },
-  reviewer_1: {
-    type: Schema.ObjectId,
-    default: null,
-    ref: "User"
-  },
-  reviewer_2: {
     type: String,
     enum: ["pending", "approved", "rejected"],
     default: "pending",
+  },
+  reviewer_1: {
+    user: {
+      type: Schema.ObjectId,
+      ref: "User",
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+  },
+  reviewer_2: {
+    user: {
+      type: Schema.ObjectId,
+      ref: "User",
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
   },
   col_dean: {
     type: String,
@@ -77,6 +89,11 @@ const ApplicationSchema = new Schema({
   announcement: {
     type: Schema.ObjectId,
     ref: "Announcement",
+  },
+  rejected: {
+    type: {
+      reviewer: String,
+    },
   },
 });
 
