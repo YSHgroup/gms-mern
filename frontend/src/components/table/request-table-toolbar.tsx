@@ -1,4 +1,3 @@
-import Tooltip from "@mui/material/Tooltip";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -87,11 +86,10 @@ export function UserTableToolbar({
           variant="outlined"
         >
           {sxDown ? (
-            <IconButton size="small">
               <Iconify icon="ic:round-filter-list" />
-            </IconButton>
           ) : (
             <>
+              <Iconify icon="solar:filter-bold-duotone" />
               Announcement{" "}
               {announcement.title && (
                 <span className="text-green-600"> - {announcement.title}</span>

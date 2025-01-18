@@ -13,7 +13,6 @@ router.get("/", (req: any, res: Response) => {
         res.status(404).json({ msg: ["No application"] });
       } else {
         res.status(200).json(application);
-        console.log("Application: ", application);
       }
     })
     .catch((error) => {

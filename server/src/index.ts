@@ -56,6 +56,10 @@ app.use(
 	"/application",
 	express.static(path.resolve(__dirname, "..", "public", "applications"))
 );
+app.use(
+	"/additional_doc",
+	express.static(path.resolve(__dirname, "..", "public", "additional_doc"))
+);
 
 // router
 app.use("/api/auth", authRouter);

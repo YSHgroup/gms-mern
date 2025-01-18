@@ -2,6 +2,7 @@ import { DashboardContent } from "@/layouts/dashboard";
 import { getCurrentUser } from "@/services/authService";
 import {
   approveRequest,
+  askMoreInfo,
   rejectRequest,
 } from "@/services/grantService";
 import {
@@ -52,7 +53,7 @@ export default function RequestTable({}: Props) {
 
   const handleAccept = (id: string) => {
     approveRequest(id)
-      .then((response) => {
+      .then((_) => {
         toast.success("Application approved");
         dispatch(fetchRequestData())
       })
@@ -67,7 +68,7 @@ export default function RequestTable({}: Props) {
 
   const handleDeny = (id: string) => {
     rejectRequest(id)
-      .then((response) => {
+      .then((_) => {
         toast.success("Application rejected");
         dispatch(fetchRequestData())
       })
@@ -78,6 +79,10 @@ export default function RequestTable({}: Props) {
           });
       });
   };
+
+  const handleAskInfo = (id: string, value: boolean) => {
+    askMoreInfo(id, value, () => dispatch(fetchRequestData()))
+  }
 
   const selecteAnnouncement = (ann: string) => {
     setFilteredData(
@@ -150,9 +155,9 @@ export default function RequestTable({}: Props) {
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
                       onAccept={handleAccept}
                       onDeny={handleDeny}
+                      onAskInfo={handleAskInfo}
                     />
                   ))}
 

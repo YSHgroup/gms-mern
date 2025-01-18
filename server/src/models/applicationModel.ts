@@ -95,6 +95,14 @@ const ApplicationSchema = new Schema({
       reviewer: String,
     },
   },
+  askMoreInfo: {
+    type: Boolean,
+    default: false
+  },
+  additionalDoc: {
+    type: [String],
+    default: []
+  }
 });
 
 export const Application = model("Application", ApplicationSchema);

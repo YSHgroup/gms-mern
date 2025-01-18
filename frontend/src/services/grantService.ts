@@ -21,15 +21,17 @@ export const requestGrant = (application: File, id: string, budget: number, mile
       },
     })
 };
-
 export const getRequests = () => {
   const user = getCurrentUser();
   return axios.get("api/grant-application/" + user.email);
 };
-
 export const approveRequest = (id: string) => {
   return axios.post("api/grant-application/approve/" + id);
 };
+export const rejectRequest = (id: string) => {
+  return axios.post("api/grant-application/reject/" + id);
+};
+
 export const signApplication = (id: string, data: Record<string, any>, refetchRequest: Function) => {
   axios.post("api/grant-application/assign/" + id, data).then(res => {
     toast.success(`${data.assign === 'approved'? 'Assigned': 'Denied'} this application.`)
@@ -37,8 +39,24 @@ export const signApplication = (id: string, data: Record<string, any>, refetchRe
   })
 };
 
-export const rejectRequest = (id: string) => {
-  return axios.post("api/grant-application/reject/" + id);
+export const askMoreInfo = (id: string, status: boolean, refetchRequest: Function) => {
+  axios.put("api/grant-application/more-info/" + id, {status}).then(res => {
+    toast.success("Asked more information for the applicant")
+    refetchRequest()
+  })
+}
+
+export const submitAdditionalDoc = (id: string, doc: File) => {
+	const formData = new FormData();
+	formData.append("document", doc);
+
+	return axios
+		.post("/api/grant-application/add-doc/" + id, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		})
+		
 };
 
 export const postComment = (id: string, content: string, file?: File | null) => {

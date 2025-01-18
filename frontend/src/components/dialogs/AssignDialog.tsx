@@ -38,7 +38,6 @@ const AssignDialog: React.FC<Props> = ({
   useEffect(() => {
     getReviewer()
       .then((result) => {
-        console.log("data: ", result.data);
         setReviewers(result.data);
       })
       .catch((error) => {
@@ -49,34 +48,35 @@ const AssignDialog: React.FC<Props> = ({
   }, []);
 
   const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-    if(e.target.checked) {
-      setSelectedReviewer(pre => [...pre, id])
-    }else {
-      setSelectedReviewer(selectedReviewer.filter(reviewer => reviewer !== id))
+    if (e.target.checked) {
+      setSelectedReviewer((pre) => [...pre, id]);
+    } else {
+      setSelectedReviewer(
+        selectedReviewer.filter((reviewer) => reviewer !== id)
+      );
     }
-  }
+  };
 
-  useEffect(() => {
-    console.log('reviewer: ', selectedReviewer)
-  },[selectedReviewer])
   const confirmState = () => {
-    if(selectedReviewer?.length !== 2) {
-      toast.error('Please select two reviewers')
-      return
+    if (selectedReviewer?.length !== 2) {
+      toast.error("Please select two reviewers");
+      return;
     }
-    signApplication(applicationId, {assign: 'approved',reviewers: selectedReviewer}, () =>
-      dispatch(fetchRequestData())
+    signApplication(
+      applicationId,
+      { assign: "approved", reviewers: selectedReviewer },
+      () => dispatch(fetchRequestData())
     );
     handleCloseDialog();
   };
 
   const handleClose = () => {
-    setSelectedReviewer([])
-    handleCloseDialog()
-  }
+    setSelectedReviewer([]);
+    handleCloseDialog();
+  };
 
   const denySign = () => {
-    signApplication(applicationId, {assign: 'rejected'}, () =>
+    signApplication(applicationId, { assign: "rejected" }, () =>
       dispatch(fetchRequestData())
     );
     handleCloseDialog();
@@ -85,15 +85,23 @@ const AssignDialog: React.FC<Props> = ({
   return (
     <Dialog open={openDialog} onClose={handleClose}>
       <DialogTitle>Select reviwer</DialogTitle>
-      <DialogContent sx={{p: 1, minWidth: '320px'}}>
+      <DialogContent sx={{ p: 1, minWidth: "320px" }}>
         <List>
           {!reviewers?.length ? (
             <Typography>Couldn't find any reviewer there</Typography>
           ) : (
             reviewers.sort(objectCompare("firstName")).map((reviewer) => (
-              <ListItem key={reviewer._id} color={selectedReviewer == reviewer._id? 'primary': 'secondary'} divider 
-              sx={{display: 'flex', justifyContent: 'space-between'}}>
-                <Checkbox onChange={(e) => handleCheck(e, reviewer._id)}></Checkbox>
+              <ListItem
+                key={reviewer._id}
+                color={
+                  selectedReviewer == reviewer._id ? "primary" : "secondary"
+                }
+                divider
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Checkbox
+                  onChange={(e) => handleCheck(e, reviewer._id)}
+                ></Checkbox>
                 <Typography>
                   {`${reviewer.firstName} ${reviewer.lastName}`.trim()}
                 </Typography>
@@ -104,7 +112,13 @@ const AssignDialog: React.FC<Props> = ({
         </List>
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={confirmState} disabled={selectedReviewer.length < 2}>Assign</Button>
+        <Button
+          color="primary"
+          onClick={confirmState}
+          disabled={selectedReviewer.length < 2}
+        >
+          Assign
+        </Button>
         <Button onClick={() => denySign()} color="error">
           Deny
         </Button>

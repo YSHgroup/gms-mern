@@ -18,11 +18,13 @@ import {
 	Tooltip
 } from "@mui/material";
 import { getCurrentUser } from "@/services/authService";
-import { postComment } from "@/services/grantService";
+import { askMoreInfo, postComment } from "@/services/grantService";
 import CommentDialog from "../dialogs/CommentDialog";
 import {connectSocket, updateRequestRealtime,closeSocketAPI} from "@/services/realtimeUpdateService";
 import AssignDialog from "../dialogs/AssignDialog";
 import { useAppDispatch } from "@/redux/hooks";
+import AddDocDialog from "../dialogs/AddDocDialog";
+import DocPopover from "../dialogs/DocPopover";
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +32,7 @@ type UserTableRowProps = {
 	row: any;
 	headList: string[];
 	selected: boolean;
-	onSelectRow: () => void;
+	onAskInfo: (...value: any) => void;
 	onAccept: (...value: any) => void;
 	onDeny: (...value: any) => void;
 };
@@ -39,7 +41,7 @@ export function UserTableRow({
 	headList,
 	row,
 	selected,
-	// onSelectRow,
+	onAskInfo,
 	onAccept,
 	onDeny,
 }: UserTableRowProps) {
@@ -50,6 +52,9 @@ export function UserTableRow({
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 	const [openComment, setOpenComment] = useState<boolean>(false);
 	const [openAssign, setOpenAssignDialog] = useState<boolean>(false)
+	const [openAskInfo, setOpenAskInfo] = useState<boolean>(false)
+	const [docModal, setDocModal] = useState<boolean>(false)
+	const [applicationView, setApplicationView] = useState<HTMLButtonElement | null>(null)
 	const [comment, setComment] = useState("");
 	const [viewCommentState, setViewComment] = useState(false);
 	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -101,6 +106,20 @@ export function UserTableRow({
 		},
 		[]
 	);
+
+	const handleClosePopover = useCallback(() => {
+		setOpenPopover(null);
+	}, []);
+
+	// Comment dialog
+	const handleCloseCommentDialog = () => {
+		setOpenComment(false);
+		setViewComment(false);
+	};
+	const viewComment = () => {
+		setOpenComment(true);
+		setViewComment(true);
+	};
 	const submitComment = (id: string) => {
 		if (comment.trim()) {
 			postComment(id, comment, uploadedFile);
@@ -110,27 +129,24 @@ export function UserTableRow({
 			if(uploadedFile) setUploadedFile(null)
 		}
 	};
-
 	const cancelComment = () => {
 		setOpenComment(false);
 		setViewComment(false)
 		setComment("");
 	};
-
-	const handleClosePopover = useCallback(() => {
-		setOpenPopover(null);
-	}, []);
-	const handleCloseCommentDialog = () => {
-		setOpenComment(false);
-		setViewComment(false);
-	};
+	
+	// Assign dialog
 	const openAssignDialog = () => {
 		setOpenAssignDialog(true);
 	};
-
-	const viewComment = () => {
-		setOpenComment(true);
-		setViewComment(true);
+	
+	// Handlers ask more info
+	const openAskInfoDialog = () => {
+		setOpenAskInfo(true);
+	};
+	const confirmAskInfo = (id: string) => {
+		onAskInfo(id, true)
+		setOpenAskInfo(false)
 	};
 
 	const uploadFile = (file: File) => {
@@ -141,6 +157,18 @@ export function UserTableRow({
 			setUploadedFile(null)
 		}
 	}
+
+	// Add information doc
+	const openAddDocDialog = () => {
+		setDocModal(true)
+	}
+
+	const openApplicationDoc = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setApplicationView(event.currentTarget)
+	}
+	const closeViewPopover = useCallback(() => {
+		setApplicationView(null);
+	}, []);
 
 	const checkStatus = (column: any, status: string) => {
 		if(column?.status) {
@@ -158,7 +186,7 @@ export function UserTableRow({
 		"grant_dep",
 		"grant_dir",
 		"finance",
-  ]
+    ]
 
 	return (
 		<>
@@ -189,23 +217,26 @@ export function UserTableRow({
 										sx={{ color: "error.main" }}
 									/>
 								) : (
-									(headItem.id == 'reviewer_1' || headItem.id == 'reviewer_2') ?
+									(headItem.id == 'reviewer_1' || headItem.id == 'reviewer_2') && row[headItem.id]?.user?.email ?
 										<Tooltip title={row[headItem.id]?.user.email}>
 											<Typography>{`${row[headItem.id].user.firstName} ${row[headItem.id].user.lastName}`.trim()}</Typography>
 										</Tooltip>
 									:
 										(checkStatus(row[headItem.id], "pending")) 
-										&& <> - </> 
+										&& ( row["askMoreInfo"] && headItem.id == "assigned")
+											? <Typography color="primary">Info asked</Typography>
+											: <> - </> 
 								)
 							) : headItem.id == "application" ? (
-								<Link
-									href={`${import.meta.env.VITE_BASE_URL}/application/${
-										row[headItem.id]
-									}`}
-									target="_blank"
-								>
-									View
-								</Link>
+								// <Link
+								// 	href={`${import.meta.env.VITE_BASE_URL}/application/${
+								// 		row[headItem.id]
+								// 	}`}
+								// 	target="_blank"
+								// >
+								// 	View
+								// </Link>
+								<Button variant="text" onClick={(e) => openApplicationDoc(e)}>View</Button>
 							) : (
 								row[headItem.id]
 							)}
@@ -282,11 +313,29 @@ export function UserTableRow({
 							</MenuItem>
 						)}
 						{user?.role == "col_dean" && row.assigned == 'pending' && (
-							<MenuItem sx={{ color: "success.main" }} onClick={openAssignDialog}>
-								<Iconify icon="solar:check-circle-linear" />
-								Assign
-							</MenuItem>
+							<>
+								<MenuItem sx={{ color: "success.main" }} onClick={openAssignDialog}>
+									<Iconify icon="solar:check-circle-linear" />
+									Assign
+								</MenuItem>
+								{
+									!row.askMoreInfo && (
+										<MenuItem sx={{ color: "info.main" }} onClick={openAskInfoDialog}>
+											<Iconify icon="solar:info-circle-broken" />
+											Ask more Info
+										</MenuItem>
+									)
+								}
+							</>
 						)}
+						{
+							user?.role == "user" && row["askMoreInfo"] && (
+								<MenuItem sx={{ color: "info.main" }} onClick={openAddDocDialog}>
+									<Iconify icon="solar:clapperboard-edit-broken" />
+									Add document
+								</MenuItem>
+							)
+						}
 					</MenuList>
 				</Popover>
 
@@ -296,7 +345,36 @@ export function UserTableRow({
 					openDialog={openAssign}
 					handleCloseDialog={() => {setOpenAssignDialog(false)}}
 				></AssignDialog>
-				
+
+				{/* Add doc */}
+				<AddDocDialog
+					applicationId={row.id}
+					openDialog={docModal}
+					handleDialogClose={() => setDocModal(false)}
+				></AddDocDialog>
+
+				{/* View doc */}
+				<DocPopover
+					openPopover={applicationView}
+					rowData={row}
+					handleClosePopover={closeViewPopover}
+				></DocPopover>	
+
+				{/* Ask more info confirm */}
+				<Dialog open={openAskInfo} onClose={() => setOpenAskInfo(false)}>
+					<DialogTitle mb={1}>Confirm action</DialogTitle>
+					<Typography p={2}>
+						Ask more information for applicant
+					</Typography>
+					<DialogActions>
+						<Button onClick={() => confirmAskInfo(row.id)} color="primary">
+							Yes
+						</Button>
+						<Button onClick={() => setOpenAskInfo(false)} color="secondary">
+							No
+						</Button>
+					</DialogActions>
+				</Dialog>
 
 				{/* confirm dialog */}
 				<Dialog open={openDialog} onClose={handleCloseDialog}>

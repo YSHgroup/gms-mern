@@ -68,15 +68,6 @@ export default {
     }
   },
   checkProcedure(role: string, data: any): Record<string, any> {
-    // if (index <= this.approveProcedure.indexOf(role) - 1) {
-    //   if (data[this.approveProcedure[index]] == ApplicationStates.PENDING)
-    //     return { result: false };
-    //   return this.checkProcedure(index + 1, role, data);
-    // } else if (index == this.approveProcedure.indexOf(role)) {
-    //   if (data[this.approveProcedure[index]] == ApplicationStates.PENDING)
-    //     return { key: this.approveProcedure[index], result: true };
-    //   return { result: false, doubleError: true };
-    // }
     if(role === this.approveProcedure[0]) {
       if(data['assigned'] == ApplicationStates.APPROVED) return {result: true, key: role}
       if(data['assigned'] == ApplicationStates.REJECTED) return {result: false, rejected: true}
